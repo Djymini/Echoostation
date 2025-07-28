@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private void readMusicOfDevice(){
         Log.d("Test EchooStation", "Bienvenue sur Echoostation");
         String[] projection = new String[] {
-                MediaStore.Audio.Media.RELATIVE_PATH,
+                MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.ARTIST,
@@ -76,19 +76,13 @@ public class MainActivity extends AppCompatActivity {
         );
 
         while (cursor.moveToNext()) {
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-            Log.d("Test EchooStation", title);
+            String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+            Log.d("Test EchooStation", path);
         }
     }
 
     private void checkAndRequestMusicPermission() {
-        String permission;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permission = Manifest.permission.READ_MEDIA_AUDIO;
-        } else {
-            permission = Manifest.permission.READ_EXTERNAL_STORAGE;
-        }
+        String permission = adaptPermissionWithVersion();
 
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
             readMusicOfDevice();
@@ -96,13 +90,19 @@ public class MainActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle("Accès requis")
                     .setMessage("L'application a besoin d'accéder à vos musiques pour fonctionner correctement.")
-                    .setPositiveButton("Autoriser", (dialog, which) -> {
-                        requestPermissionLauncher.launch(permission);
-                    })
+                    .setPositiveButton("Autoriser", (dialog, which) -> requestPermissionLauncher.launch(permission))
                     .setNegativeButton("Annuler", null)
                     .show();
         } else {
             requestPermissionLauncher.launch(permission);
+        }
+    }
+
+    private String adaptPermissionWithVersion() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return Manifest.permission.READ_MEDIA_AUDIO;
+        } else {
+            return Manifest.permission.READ_EXTERNAL_STORAGE;
         }
     }
 
