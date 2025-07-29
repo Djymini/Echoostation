@@ -27,7 +27,7 @@ import androidx.room.Index;
                 @Index("id_playlist")
         }
 )
-public class musicPlaylist {
+public class MusicPlaylist {
     @ColumnInfo(name = "id_music")
     public int idMusic;
 
