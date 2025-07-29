@@ -26,7 +26,6 @@ public class Artist {
     @ColumnInfo(name = "name")
     public String name;
 
-    @NonNull
     @ColumnInfo(name = "path_photo")
     public String pathPhoto;
 
@@ -35,4 +34,11 @@ public class Artist {
 
     @ColumnInfo(name = "id_statistic")
     public int idStatistic;
+
+    public Artist(@NonNull String name,String pathPhoto, String description, int idStatistic) {
+        this.name = name;
+        this.pathPhoto = pathPhoto;
+        this.description = description;
+        this.idStatistic = idStatistic;
+    }
 }

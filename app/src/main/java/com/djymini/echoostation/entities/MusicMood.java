@@ -6,7 +6,7 @@ import androidx.room.ForeignKey;
 import androidx.room.Index;
 
 @Entity(
-        tableName = "artist_music",
+        tableName = "music_mood",
         primaryKeys = {"id_music", "id_mood"},
         foreignKeys = {
                 @ForeignKey(
