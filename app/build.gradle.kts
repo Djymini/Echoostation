@@ -32,7 +32,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -40,4 +39,14 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+    //Room dependencies
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.rxjava2)
+    implementation(libs.room.rxjava3)
+    implementation(libs.room.guava)
+    testImplementation(libs.room.testing)
+    implementation(libs.room.paging)
 }
