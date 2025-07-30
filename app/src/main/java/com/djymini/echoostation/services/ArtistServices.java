@@ -14,6 +14,8 @@ public class ArtistServices {
         this.statisticDao = statisticDao;
     }
 
+    // TODO: Faire la gestion de plusieurs artiste sur une musique
+
     public void modifyPhoto(Artist artist, String newPhotoPath){
         if(artistDao.existsById(artist.id)){
             Artist artistForUpdate = new Artist(artist.id,artist.name, newPhotoPath, artist.description, artist.idStatistic);

@@ -212,4 +212,6 @@ public class ArtistDaoTest {
         assertEquals(750, resultStatistic.listeningTime);
         assertEquals(0, resultStatistic.monthListeningTime);
     }
+
+    //TODO : Make the test for search
 }

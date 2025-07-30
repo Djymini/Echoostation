@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -20,13 +21,25 @@ import androidx.room.PrimaryKey;
 )
 public class Genre {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @NonNull
     @ColumnInfo(name = "name")
     public String name;
 
     @ColumnInfo(name = "id_statistic")
-    public int idStatistic;
+    public long idStatistic;
+
+    public Genre(@NonNull String name, long idStatistic) {
+        this.name = name;
+        this.idStatistic = idStatistic;
+    }
+
+    @Ignore
+    public Genre(long id, @NonNull String name, long idStatistic) {
+        this.id = id;
+        this.name = name;
+        this.idStatistic = idStatistic;
+    }
 }
 
