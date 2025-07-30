@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
@@ -20,7 +21,7 @@ import androidx.room.PrimaryKey;
 )
 public class Artist {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @NonNull
     @ColumnInfo(name = "name")
@@ -33,9 +34,18 @@ public class Artist {
     public String description;
 
     @ColumnInfo(name = "id_statistic")
-    public int idStatistic;
+    public long idStatistic;
 
-    public Artist(@NonNull String name,String pathPhoto, String description, int idStatistic) {
+    public Artist(@NonNull String name,String pathPhoto, String description, long idStatistic) {
+        this.name = name;
+        this.pathPhoto = pathPhoto;
+        this.description = description;
+        this.idStatistic = idStatistic;
+    }
+
+    @Ignore
+    public Artist(long id, @NonNull String name, String pathPhoto, String description, long idStatistic) {
+        this.id = id;
         this.name = name;
         this.pathPhoto = pathPhoto;
         this.description = description;

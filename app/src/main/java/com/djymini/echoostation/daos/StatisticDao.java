@@ -14,7 +14,7 @@ import java.util.List;
 @Dao
 public interface StatisticDao {
     @Insert
-    void insertAll(Statistic... statistics);
+    long insert(Statistic statistics);
 
     @Delete
     void delete(Statistic statistic);
@@ -23,11 +23,11 @@ public interface StatisticDao {
     void update(Statistic statistic);
 
     @Query("SELECT EXISTS(SELECT 1 FROM statistic WHERE id = :id)")
-    boolean existsById(int id);
+    boolean existsById(long id);
 
     @Query("SELECT * FROM statistic")
     List<Statistic> getAll();
 
     @Query("SELECT * FROM statistic WHERE id = :id")
-    Statistic getById(int id);
+    Statistic getById(long id);
 }

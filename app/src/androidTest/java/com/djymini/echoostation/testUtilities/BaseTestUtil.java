@@ -1,4 +1,4 @@
-package com.djymini.echoostation;
+package com.djymini.echoostation.testUtilities;
 
 import android.content.Context;
 import android.provider.MediaStore;
@@ -6,10 +6,12 @@ import android.provider.MediaStore;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
+import com.djymini.echoostation.EchooStationDatabase;
+
 import java.util.List;
 import java.util.Map;
 
-public class BaseForTest {
+public class BaseTestUtil {
     public static void createDb(EchooStationDatabase db){
         Context context = ApplicationProvider.getApplicationContext();
         db = Room.inMemoryDatabaseBuilder(context, EchooStationDatabase.class)
@@ -56,7 +58,7 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track4.mp3",
                         MediaStore.Audio.Media.TITLE, "Jazzology",
                         MediaStore.Audio.Media.ALBUM, "Smooth Lines",
-                        MediaStore.Audio.Media.ARTIST, "The Sax Bros",
+                        MediaStore.Audio.Media.ARTIST, "The Sax Bros/Aurora",
                         MediaStore.Audio.Media.DURATION, 245000,
                         MediaStore.Audio.Media.GENRE, "Jazz",
                         MediaStore.Audio.Media.TRACK, 4,
@@ -67,7 +69,7 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track5.mp3",
                         MediaStore.Audio.Media.TITLE, "Cosmic Dust",
                         MediaStore.Audio.Media.ALBUM, "Galaxy Ride",
-                        MediaStore.Audio.Media.ARTIST, "Starlight",
+                        MediaStore.Audio.Media.ARTIST, "Starlight, Starlord",
                         MediaStore.Audio.Media.DURATION, 210000,
                         MediaStore.Audio.Media.GENRE, "Electronic",
                         MediaStore.Audio.Media.TRACK, 5,
@@ -78,7 +80,7 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track6.mp3",
                         MediaStore.Audio.Media.TITLE, "Blues at Dusk",
                         MediaStore.Audio.Media.ALBUM, "Twilight Songs",
-                        MediaStore.Audio.Media.ARTIST, "Dusty Strings",
+                        MediaStore.Audio.Media.ARTIST, "Dusty Strings feat. Gerard",
                         MediaStore.Audio.Media.DURATION, 200000,
                         MediaStore.Audio.Media.GENRE, "Blues",
                         MediaStore.Audio.Media.TRACK, 6,
@@ -100,12 +102,12 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track8.mp3",
                         MediaStore.Audio.Media.TITLE, "Turbo Drive",
                         MediaStore.Audio.Media.ALBUM, "HyperSpeed",
-                        MediaStore.Audio.Media.ARTIST, "Volt",
+                        MediaStore.Audio.Media.ARTIST, "Echo Waves",
                         MediaStore.Audio.Media.DURATION, 190000,
                         MediaStore.Audio.Media.GENRE, "Techno",
                         MediaStore.Audio.Media.TRACK, 8,
                         MediaStore.Audio.Media.YEAR, 2022,
-                        MediaStore.Audio.Media.ALBUM_ARTIST, "Volt"
+                        MediaStore.Audio.Media.ALBUM_ARTIST, "Echo Waves"
                 ),
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track9.mp3",
@@ -133,12 +135,12 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track11.mp3",
                         MediaStore.Audio.Media.TITLE, "Sunken Memories",
                         MediaStore.Audio.Media.ALBUM, "Deep Blue",
-                        MediaStore.Audio.Media.ARTIST, "Nocturne",
+                        MediaStore.Audio.Media.ARTIST, "Echo Waves",
                         MediaStore.Audio.Media.DURATION, 235000,
                         MediaStore.Audio.Media.GENRE, "Instrumental",
                         MediaStore.Audio.Media.TRACK, 11,
                         MediaStore.Audio.Media.YEAR, 2019,
-                        MediaStore.Audio.Media.ALBUM_ARTIST, "Nocturne"
+                        MediaStore.Audio.Media.ALBUM_ARTIST, "Echo Waves"
                 ),
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track12.mp3",
@@ -177,7 +179,7 @@ public class BaseForTest {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track15.mp3",
                         MediaStore.Audio.Media.TITLE, "Infinite Loop",
                         MediaStore.Audio.Media.ALBUM, "Code Vibes",
-                        MediaStore.Audio.Media.ARTIST, "Stack Overflow",
+                        MediaStore.Audio.Media.ARTIST, "Stack Overflow; GitHub",
                         MediaStore.Audio.Media.DURATION, 210000,
                         MediaStore.Audio.Media.GENRE, "IDM",
                         MediaStore.Audio.Media.TRACK, 15,

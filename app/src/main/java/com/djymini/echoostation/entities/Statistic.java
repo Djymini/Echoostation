@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "statistic")
 public class Statistic {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @ColumnInfo(name = "listening_number")
     public int listeningNumber;
@@ -26,7 +26,7 @@ public class Statistic {
     public long monthListeningTime;
 
     @Ignore
-    public Statistic(int id, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime) {
+    public Statistic(long id, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime) {
         this.id = id;
         this.listeningNumber = listeningNumber;
         this.monthListeningNumber = monthListeningNumber;
