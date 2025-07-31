@@ -13,7 +13,6 @@ import androidx.test.core.app.ApplicationProvider;
 
 import com.djymini.echoostation.daos.GenreDao;
 import com.djymini.echoostation.daos.StatisticDao;
-import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.entities.Statistic;
 import com.djymini.echoostation.services.GenreService;
@@ -120,7 +119,7 @@ public class GenreDaoTest {
             genreDao.insert(genreForAddInDb);
         }
         Genre genreTest = genreDao.getById(1);
-        genreService.incrementListeningNumberGenre(genreTest, statisticService);
+        genreService.incrementListeningNumberStatistic(genreTest, statisticService);
 
         List<Genre> result = genreDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -135,7 +134,7 @@ public class GenreDaoTest {
             genreDao.insert(genreForAddInDb);
         }
         Genre genreTest = genreDao.getById(1);
-        genreService.incrementListeningTimeGenre(genreTest, statisticService, 750);
+        genreService.incrementListeningTimeStatistic(genreTest, statisticService, 750);
 
         List<Genre> result = genreDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -150,7 +149,7 @@ public class GenreDaoTest {
             genreDao.insert(genreForAddInDb);
         }
         Genre genreTest = genreDao.getById(1);
-        genreService.incrementAllListeningGenre(genreTest, statisticService, 750);
+        genreService.incrementAllListeningStatistic(genreTest, statisticService, 750);
 
         List<Genre> result = genreDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -167,8 +166,8 @@ public class GenreDaoTest {
             genreDao.insert(genreForAddInDb);
         }
         Genre genreTest = genreDao.getById(1);
-        genreService.incrementAllListeningGenre(genreTest, statisticService, 750);
-        genreService.reinitializeMonthValuesGenre(genreTest, statisticService);
+        genreService.incrementAllListeningStatistic(genreTest, statisticService, 750);
+        genreService.reinitializeMonthValuesStatistic(genreTest, statisticService);
 
         List<Genre> result = genreDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);

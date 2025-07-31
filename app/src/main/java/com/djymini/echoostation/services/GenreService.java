@@ -5,7 +5,6 @@ import android.content.Context;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.GenreDao;
 import com.djymini.echoostation.daos.StatisticDao;
-import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.entities.Statistic;
 import com.google.gson.Gson;
@@ -15,8 +14,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,6 @@ public class GenreService {
         this.statisticDao = statisticDao;
     }
 
-    // TODO: Faire la gestion de plusieurs genre sur une musique
     public long addGenre(String genreName, StatisticService statisticService, Context context){
         long idGenre;
         String nameCheck = fixNameGenre(genreName, context);
@@ -66,7 +62,7 @@ public class GenreService {
         }
     }
 
-    public void incrementListeningNumberGenre(Genre genre, StatisticService statisticService){
+    public void incrementListeningNumberStatistic(Genre genre, StatisticService statisticService){
         long idGenre = genre.id;
         long idStatistic = genre.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -76,7 +72,7 @@ public class GenreService {
         }
     }
 
-    public void incrementListeningTimeGenre(Genre genre, StatisticService statisticService, long time){
+    public void incrementListeningTimeStatistic(Genre genre, StatisticService statisticService, long time){
         long idGenre = genre.id;
         long idStatistic = genre.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -86,7 +82,7 @@ public class GenreService {
         }
     }
 
-    public void incrementAllListeningGenre(Genre genre, StatisticService statisticService, long time){
+    public void incrementAllListeningStatistic(Genre genre, StatisticService statisticService, long time){
         long idGenre = genre.id;
         long idStatistic = genre.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -96,7 +92,7 @@ public class GenreService {
         }
     }
 
-    public void reinitializeMonthValuesGenre(Genre genre, StatisticService statisticService){
+    public void reinitializeMonthValuesStatistic(Genre genre, StatisticService statisticService){
         long idGenre = genre.id;
         long idStatistic = genre.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);

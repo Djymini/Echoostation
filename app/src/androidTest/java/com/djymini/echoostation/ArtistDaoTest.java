@@ -71,7 +71,7 @@ public class ArtistDaoTest {
         }
 
         try {
-            List<Artist> result1 = LiveDataTestUtil.getOrAwaitValue(artistDao.getAllArtistLive());
+            List<Artist> result1 = LiveDataTestUtil.getOrAwaitValue(artistDao.getAllLive());
             System.out.println(result1);
             assertEquals(15, result1.size());
 
@@ -79,7 +79,7 @@ public class ArtistDaoTest {
             e.printStackTrace();
         }
 
-        List<Artist> result2 = artistDao.getAllArtist();
+        List<Artist> result2 = artistDao.getAll();
         assertEquals(15, result2.size());
         assertEquals(1, result2.get(0).id);
         assertEquals("Yoko Shimomura & Yoshitaka Suzuki", result2.get(0).name);
@@ -96,7 +96,7 @@ public class ArtistDaoTest {
         Artist artistToDelete = artistDao.getById(1);
         artistDao.delete(artistToDelete);
 
-        List<Artist> result2 = artistDao.getAllArtist();
+        List<Artist> result2 = artistDao.getAll();
         assertEquals(14, result2.size());
         assertEquals(2, result2.get(0).id);
         assertNotEquals("Aurora", result2.get(0).name);
@@ -112,7 +112,7 @@ public class ArtistDaoTest {
         artistService.modifyPhoto(artistDao.getById(1), newPathPhoto);
 
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         assertEquals(newPathPhoto, result.get(0).pathPhoto);
     }
 
@@ -127,7 +127,7 @@ public class ArtistDaoTest {
 
         artistService.modifyDescription(artistDao.getById(1), newDescription);
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         assertEquals(newDescription, result.get(0).description);
     }
 
@@ -142,7 +142,7 @@ public class ArtistDaoTest {
 
         artistDao.update(new Artist(1, "Aurora", newPathPhoto, newDescription, 1));
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         assertEquals(newPathPhoto, result.get(0).pathPhoto);
         assertEquals(newDescription, result.get(0).description);
     }
@@ -154,9 +154,9 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistService.incrementListeningNumberArtist(artistTest, statisticService);
+        artistService.incrementListeningNumberStatistic(artistTest, statisticService);
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
         assertEquals(1, resultStatistic.listeningNumber);
         assertEquals(1, resultStatistic.monthListeningNumber);
@@ -169,9 +169,9 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistService.incrementListeningTimeArtist(artistTest, statisticService, 750);
+        artistService.incrementListeningTimeStatistic(artistTest, statisticService, 750);
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
         assertEquals(750, resultStatistic.listeningTime);
         assertEquals(750, resultStatistic.monthListeningTime);
@@ -184,9 +184,9 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistService.incrementAllListeningArtist(artistTest, statisticService, 750);
+        artistService.incrementAllListeningStatistic(artistTest, statisticService, 750);
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
         assertEquals(1, resultStatistic.listeningNumber);
         assertEquals(1, resultStatistic.monthListeningNumber);
@@ -201,10 +201,10 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistService.incrementAllListeningArtist(artistTest, statisticService, 750);
-        artistService.reinitializeMonthValuesArtist(artistTest, statisticService);
+        artistService.incrementAllListeningStatistic(artistTest, statisticService, 750);
+        artistService.reinitializeMonthValuesStatistic(artistTest, statisticService);
 
-        List<Artist> result = artistDao.getAllArtist();
+        List<Artist> result = artistDao.getAll();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
         assertEquals(1, resultStatistic.listeningNumber);
         assertEquals(0, resultStatistic.monthListeningNumber);
@@ -219,9 +219,9 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
 
-        List<Artist> result1 = artistDao.searchArtist("yoko");
-        List<Artist> result2 = artistDao.searchArtist("utada");
-        List<Artist> result3 = artistDao.searchArtist("or");
+        List<Artist> result1 = artistDao.search("yoko");
+        List<Artist> result2 = artistDao.search("utada");
+        List<Artist> result3 = artistDao.search("or");
         assertEquals(1, result1.size());
         assertEquals(2, result2.size());
         assertEquals(3, result3.size());
@@ -239,7 +239,7 @@ public class ArtistDaoTest {
         }
 
         try {
-            List<Artist> result1 = LiveDataTestUtil.getOrAwaitValue(artistDao.getAllArtistLive());
+            List<Artist> result1 = LiveDataTestUtil.getOrAwaitValue(artistDao.getAllLive());
             for (Artist artist : result1){
                 Log.d("TestArtistName", artist.name);
             }
@@ -249,7 +249,7 @@ public class ArtistDaoTest {
             e.printStackTrace();
         }
 
-        List<Artist> result2 = artistDao.getAllArtist();
+        List<Artist> result2 = artistDao.getAll();
         assertEquals(22, result2.size());
         assertEquals(1, result2.get(0).id);
         assertEquals("Yoko Shimomura", result2.get(0).name);

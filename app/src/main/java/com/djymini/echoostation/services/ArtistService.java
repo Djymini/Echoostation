@@ -1,7 +1,6 @@
 package com.djymini.echoostation.services;
 
 import android.content.Context;
-import android.provider.MediaStore;
 
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.ArtistDao;
@@ -82,7 +81,7 @@ public class ArtistService {
         }
     }
 
-    public void incrementListeningNumberArtist(Artist artist, StatisticService statisticService){
+    public void incrementListeningNumberStatistic(Artist artist, StatisticService statisticService){
         long idArtist = artist.id;
         long idStatistic = artist.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -92,7 +91,7 @@ public class ArtistService {
         }
     }
 
-    public void incrementListeningTimeArtist(Artist artist, StatisticService statisticService, long time){
+    public void incrementListeningTimeStatistic(Artist artist, StatisticService statisticService, long time){
         long idArtist = artist.id;
         long idStatistic = artist.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -102,7 +101,7 @@ public class ArtistService {
         }
     }
 
-    public void incrementAllListeningArtist(Artist artist, StatisticService statisticService, long time){
+    public void incrementAllListeningStatistic(Artist artist, StatisticService statisticService, long time){
         long idArtist = artist.id;
         long idStatistic = artist.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);
@@ -112,7 +111,7 @@ public class ArtistService {
         }
     }
 
-    public void reinitializeMonthValuesArtist(Artist artist, StatisticService statisticService){
+    public void reinitializeMonthValuesStatistic(Artist artist, StatisticService statisticService){
         long idArtist = artist.id;
         long idStatistic = artist.idStatistic;
         Statistic statistic = statisticDao.getById(idStatistic);

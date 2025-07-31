@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.djymini.echoostation.entities.Artist;
-import com.djymini.echoostation.entities.Statistic;
 
 import java.util.List;
 
@@ -30,10 +29,10 @@ public interface ArtistDao {
     boolean existsByName(String name);
 
     @Query("SELECT * FROM artist")
-    LiveData<List<Artist>> getAllArtistLive();
+    LiveData<List<Artist>> getAllLive();
 
     @Query("SELECT * FROM artist")
-    List<Artist> getAllArtist();
+    List<Artist> getAll();
 
     @Query("SELECT * FROM artist WHERE id = :id")
     Artist getById(int id);
@@ -42,7 +41,7 @@ public interface ArtistDao {
     Artist getByName(String name);
 
     @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
-    List<Artist> searchArtist(String query);
+    List<Artist> search(String query);
 
     // TODO: Récuperer tous les artistes d'une musique
 }
