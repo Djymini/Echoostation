@@ -5,8 +5,8 @@ import static org.junit.Assert.assertNotEquals;
 
 import android.content.Context;
 import android.provider.MediaStore;
+import android.util.Log;
 
-import androidx.lifecycle.Observer;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
@@ -16,7 +16,7 @@ import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Statistic;
-import com.djymini.echoostation.services.ArtistServices;
+import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.StatisticService;
 import com.djymini.echoostation.testUtilities.BaseTestUtil;
 import com.djymini.echoostation.testUtilities.LiveDataTestUtil;
@@ -29,14 +29,13 @@ import org.junit.runner.RunWith;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
 @RunWith(AndroidJUnit4.class)
 public class ArtistDaoTest {
     private EchooStationDatabase db;
     private ArtistDao artistDao;
     private StatisticDao statisticDao;
-    private ArtistServices artistServices;
+    private ArtistService artistService;
     private StatisticService statisticService;
 
     private List<Map<String, Object>> fakeMediaStoreData;
@@ -53,7 +52,7 @@ public class ArtistDaoTest {
 
         artistDao = db.artistDao();
         statisticDao = db.statisticDao();
-        artistServices = new ArtistServices(artistDao, statisticDao);
+        artistService = new ArtistService(artistDao, statisticDao);
         statisticService = new StatisticService(statisticDao);
 
         fakeMediaStoreData = BaseTestUtil.createFakeData();
@@ -83,8 +82,8 @@ public class ArtistDaoTest {
         List<Artist> result2 = artistDao.getAllArtist();
         assertEquals(15, result2.size());
         assertEquals(1, result2.get(0).id);
-        assertEquals("Aurora", result2.get(0).name);
-        assertEquals("Stack Overflow; GitHub", result2.get(14).name);
+        assertEquals("Yoko Shimomura & Yoshitaka Suzuki", result2.get(0).name);
+        assertEquals("", result2.get(14).name);
     }
 
     @Test
@@ -110,7 +109,7 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         String newPathPhoto = "newPathPhoto";
-        artistServices.modifyPhoto(artistDao.getById(1), newPathPhoto);
+        artistService.modifyPhoto(artistDao.getById(1), newPathPhoto);
 
 
         List<Artist> result = artistDao.getAllArtist();
@@ -126,7 +125,7 @@ public class ArtistDaoTest {
 
         String newDescription = "voici la nouvelle description de l'artiste";
 
-        artistServices.modifyDescription(artistDao.getById(1), newDescription);
+        artistService.modifyDescription(artistDao.getById(1), newDescription);
 
         List<Artist> result = artistDao.getAllArtist();
         assertEquals(newDescription, result.get(0).description);
@@ -155,7 +154,7 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistServices.incrementListeningNumberArtist(artistTest, statisticService);
+        artistService.incrementListeningNumberArtist(artistTest, statisticService);
 
         List<Artist> result = artistDao.getAllArtist();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -170,7 +169,7 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistServices.incrementListeningTimeArtist(artistTest, statisticService, 750);
+        artistService.incrementListeningTimeArtist(artistTest, statisticService, 750);
 
         List<Artist> result = artistDao.getAllArtist();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -185,7 +184,7 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistServices.incrementAllListeningArtist(artistTest, statisticService, 750);
+        artistService.incrementAllListeningArtist(artistTest, statisticService, 750);
 
         List<Artist> result = artistDao.getAllArtist();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -202,8 +201,8 @@ public class ArtistDaoTest {
             artistDao.insert(artistForAddInDb);
         }
         Artist artistTest = artistDao.getById(1);
-        artistServices.incrementAllListeningArtist(artistTest, statisticService, 750);
-        artistServices.reinitializeMonthValuesArtist(artistTest, statisticService);
+        artistService.incrementAllListeningArtist(artistTest, statisticService, 750);
+        artistService.reinitializeMonthValuesArtist(artistTest, statisticService);
 
         List<Artist> result = artistDao.getAllArtist();
         Statistic resultStatistic = statisticDao.getById(result.get(0).idStatistic);
@@ -213,5 +212,47 @@ public class ArtistDaoTest {
         assertEquals(0, resultStatistic.monthListeningTime);
     }
 
-    //TODO : Make the test for search
+    @Test
+    public void insertAndSearchArtist() {
+        for (Map<String, Object> fakeMedia : fakeMediaStoreData){
+            Artist artistForAddInDb = new Artist(fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), "pathPhoto", "description de l'artiste", statisticService.createStatistic());
+            artistDao.insert(artistForAddInDb);
+        }
+
+        List<Artist> result1 = artistDao.searchArtist("yoko");
+        List<Artist> result2 = artistDao.searchArtist("utada");
+        List<Artist> result3 = artistDao.searchArtist("or");
+        assertEquals(1, result1.size());
+        assertEquals(2, result2.size());
+        assertEquals(3, result3.size());
+        assertEquals("Yoko Shimomura & Yoshitaka Suzuki", result1.get(0).name);
+        assertEquals("Utada", result2.get(0).name);
+        assertEquals("The Sax Bros/Aurora", result3.get(0).name);
+    }
+
+    @Test
+    public void insertAndGetArtistWithService() {
+        Context context = ApplicationProvider.getApplicationContext();
+        for (Map<String, Object> fakeMedia : fakeMediaStoreData){
+            List<Long> listId = artistService.addAllMusicArtist(fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), statisticService, context);
+            Log.d(fakeMedia.get(MediaStore.Audio.Media.TITLE).toString(), listId.toString());
+        }
+
+        try {
+            List<Artist> result1 = LiveDataTestUtil.getOrAwaitValue(artistDao.getAllArtistLive());
+            for (Artist artist : result1){
+                Log.d("TestArtistName", artist.name);
+            }
+            assertEquals(22, result1.size());
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<Artist> result2 = artistDao.getAllArtist();
+        assertEquals(22, result2.size());
+        assertEquals(1, result2.get(0).id);
+        assertEquals("Yoko Shimomura", result2.get(0).name);
+        assertEquals("Alice Duport-Percier", result2.get(14).name);
+    }
 }

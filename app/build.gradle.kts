@@ -36,14 +36,15 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+    implementation ("com.google.code.gson:gson:2.10.1")
     testImplementation(libs.junit)
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("androidx.test:core:1.5.0")
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation ("androidx.test:core:1.6.1")
     androidTestImplementation ("androidx.test.ext:junit:1.2.1")
     androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
-    testImplementation ("junit:junit:4.13.2")
-    testImplementation ("androidx.test:core:1.5.0")
 
     //Room dependencies
     implementation(libs.room.runtime)

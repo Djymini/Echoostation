@@ -42,4 +42,3 @@ public class Genre {
         this.idStatistic = idStatistic;
     }
 }
-

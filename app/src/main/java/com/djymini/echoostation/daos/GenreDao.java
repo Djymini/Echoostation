@@ -7,7 +7,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Genre;
 
 import java.util.List;
@@ -30,11 +29,14 @@ public interface GenreDao {
     boolean existsByName(String name);
 
     @Query("SELECT * FROM genre")
-    LiveData<List<Genre>> getAllGenreLive();
+    LiveData<List<Genre>> getAllLive();
 
     @Query("SELECT * FROM genre")
-    List<Genre> getAllGenre();
+    List<Genre> getAll();
 
     @Query("SELECT * FROM genre WHERE id = :id")
     Genre getById(int id);
+
+    @Query("SELECT * FROM genre WHERE name = :name")
+    Genre getByName(String name);
 }

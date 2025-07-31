@@ -1,20 +1,72 @@
 package com.djymini.echoostation.services;
 
+import android.content.Context;
+import android.provider.MediaStore;
+
+import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Statistic;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-public class ArtistServices {
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+public class ArtistService {
     private ArtistDao artistDao;
     private StatisticDao statisticDao;
 
-    public ArtistServices(ArtistDao artistDao, StatisticDao statisticDao) {
+    public ArtistService(ArtistDao artistDao, StatisticDao statisticDao) {
         this.artistDao = artistDao;
         this.statisticDao = statisticDao;
     }
 
-    // TODO: Faire la gestion de plusieurs artiste sur une musique
+    public List<Long> addAllMusicArtist(String artistName, StatisticService statisticService, Context context){
+        List<Long> listIdArtist = new ArrayList<Long>();
+        String[] artistArray = separateArtist(artistName);
+        for (String artist : artistArray) {
+            String nameCheck = fixNameArtist(artist, context);
+            if(!artistDao.existsByName(nameCheck)){
+                Artist artistForAddInDb = new Artist(nameCheck, "", "", statisticService.createStatistic());
+                listIdArtist.add(artistDao.insert(artistForAddInDb));
+            }else {
+                ;
+                listIdArtist.add(artistDao.getByName(nameCheck).id);
+            }
+        }
+
+        return listIdArtist;
+    }
+
+    private String[] separateArtist(String artistName){
+        String regex = "(?<!/)(?<!/)(?:,\\s&\\s|,\\s|;\\s|\\s&\\s|\\sfeat\\.\\s|\\sand\\s|/)(?!/)(?!/)";
+        return artistName.split(regex);
+    }
+
+    private String fixNameArtist(String artistName, Context context){
+        InputStream inputStream = context.getResources().openRawResource(R.raw.artist_name_aliases);
+        String jsonString = new BufferedReader(new InputStreamReader(inputStream))
+                .lines().collect(Collectors.joining("\n"));
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<Map<String, String>>() {}.getType();
+        Map<String, String> nameAliases = gson.fromJson(jsonString, type);
+
+        if(nameAliases.get(artistName) != null){
+            return nameAliases.get(artistName);
+        }
+        else {
+            return artistName;
+        }
+    }
 
     public void modifyPhoto(Artist artist, String newPhotoPath){
         if(artistDao.existsById(artist.id)){

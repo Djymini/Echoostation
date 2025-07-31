@@ -15,7 +15,7 @@ import java.util.List;
 @Dao
 public interface ArtistDao {
     @Insert
-    void insert(Artist artist);
+    long insert(Artist artist);
 
     @Delete
     void delete(Artist artist);
@@ -37,6 +37,9 @@ public interface ArtistDao {
 
     @Query("SELECT * FROM artist WHERE id = :id")
     Artist getById(int id);
+
+    @Query("SELECT * FROM artist WHERE name = :name")
+    Artist getByName(String name);
 
     @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
     List<Artist> searchArtist(String query);
