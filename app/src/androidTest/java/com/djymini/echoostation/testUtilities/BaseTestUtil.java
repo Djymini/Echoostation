@@ -167,7 +167,7 @@ public class BaseTestUtil {
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track14.mp3",
                         MediaStore.Audio.Media.TITLE, "Glass Waves",
-                        MediaStore.Audio.Media.ALBUM, "Reflect",
+                        MediaStore.Audio.Media.ALBUM, "",
                         MediaStore.Audio.Media.ARTIST, "Crystal Sound",
                         MediaStore.Audio.Media.DURATION, 195000,
                         MediaStore.Audio.Media.GENRE, "Ambient",
@@ -178,7 +178,7 @@ public class BaseTestUtil {
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track15.mp3",
                         MediaStore.Audio.Media.TITLE, "Infinite Loop",
-                        MediaStore.Audio.Media.ALBUM, "Code Vibes",
+                        MediaStore.Audio.Media.ALBUM, "",
                         MediaStore.Audio.Media.ARTIST, "",
                         MediaStore.Audio.Media.DURATION, 210000,
                         MediaStore.Audio.Media.GENRE, "",

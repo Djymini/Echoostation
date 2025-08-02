@@ -19,13 +19,13 @@
       <SelectionState runConfigName="GenreDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="insertAndGetArtistWithService()">
+      <SelectionState runConfigName="InsertAndGet()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="insertAndSearchArtist()">
+      <SelectionState runConfigName="AlbumDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="insertAndGetGenreWithService()">
+      <SelectionState runConfigName="addAndGetArtistWithService()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

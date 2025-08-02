@@ -22,7 +22,7 @@ public class AlbumService {
         this.statisticDao = statisticDao;
     }
 
-    public long addAlbum(String albumName,String coverPath,int year, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
+    public long add(String albumName,String coverPath,int year, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
         long idAlbum;
         long idArtist = artistService.addAllMusicArtist(artistName, statisticService, context).get(0);
 
@@ -71,6 +71,23 @@ public class AlbumService {
         long idArtist = artistService.addAllMusicArtist(newArtistName, statisticService, context).get(0);
         Album albumForUpdate = new Album(album.id, album.name, album.coverPath, album.year, idArtist, album.idStatistic);
         albumDao.update(albumForUpdate);
+    }
+
+    public void modify(Album album, String newName, String newCoverPath, int newYear, String newArtistName, ArtistService artistService, StatisticService statisticService, Context context){
+        if(!albumDao.existsById(album.id))
+            return;
+
+        long idArtist = artistService.addAllMusicArtist(newArtistName, statisticService, context).get(0);
+
+        if(albumDao.existsByNameAndArtist(newName, idArtist)){
+            //TODO: Change the idAlbum of music for exitent album
+            albumDao.delete(album);
+        }
+        else{
+            Album albumForUpdate = new Album(album.id, newName, newCoverPath, newYear, idArtist, album.idStatistic);
+            albumDao.update(albumForUpdate);
+        }
+
     }
 
     public void incrementListeningNumberStatistic(Album album, StatisticService statisticService){

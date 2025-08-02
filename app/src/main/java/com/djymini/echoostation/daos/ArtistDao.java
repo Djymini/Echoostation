@@ -35,7 +35,7 @@ public interface ArtistDao {
     List<Artist> getAll();
 
     @Query("SELECT * FROM artist WHERE id = :id")
-    Artist getById(int id);
+    Artist getById(long id);
 
     @Query("SELECT * FROM artist WHERE name = :name")
     Artist getByName(String name);

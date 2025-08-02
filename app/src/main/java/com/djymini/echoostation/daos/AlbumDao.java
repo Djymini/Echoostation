@@ -39,7 +39,7 @@ public interface AlbumDao {
     List<Album> getAll();
 
     @Query("SELECT * FROM album WHERE id = :id")
-    Album getById(int id);
+    Album getById(long id);
 
     @Query("SELECT * FROM album WHERE name = :name")
     Album getByName(String name);
@@ -48,7 +48,7 @@ public interface AlbumDao {
     Album getByNameAndArtist(String name, long idArtist);
 
     @Query("SELECT * FROM album WHERE name LIKE '%' || :query || '%'")
-    List<Artist> search(String query);
+    List<Album> search(String query);
 
     @Query("SELECT * FROM album WHERE id_artist = :idArtist")
     List<Album> getAllByArtist(long idArtist);
