@@ -177,7 +177,7 @@ public class BaseTestUtil {
                 ),
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track15.mp3",
-                        MediaStore.Audio.Media.TITLE, "Infinite Loop",
+                        MediaStore.Audio.Media.TITLE, "",
                         MediaStore.Audio.Media.ALBUM, "",
                         MediaStore.Audio.Media.ARTIST, "",
                         MediaStore.Audio.Media.DURATION, 210000,
