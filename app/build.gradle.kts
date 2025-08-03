@@ -46,6 +46,10 @@ dependencies {
     androidTestImplementation ("androidx.test.ext:junit:1.2.1")
     androidTestImplementation ("androidx.arch.core:core-testing:2.2.0")
 
+    //Recycler view
+    implementation("androidx.recyclerview:recyclerview:1.4.0")
+    implementation("androidx.recyclerview:recyclerview-selection:1.2.0")
+
     //Room dependencies
     implementation(libs.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
