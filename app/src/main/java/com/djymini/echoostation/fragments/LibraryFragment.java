@@ -12,43 +12,33 @@ import android.view.ViewGroup;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LibraryFragment extends Fragment {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerAdapter viewPagerAdapter;
 
-   @Override
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_library, container, false);
-       tabLayout = view.findViewById(R.id.tablayout);
-       viewPager2 = view.findViewById(R.id.view_pager);
-       viewPagerAdapter = new ViewPagerAdapter(requireActivity());
-       viewPager2.setAdapter(viewPagerAdapter);
-       tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-           @Override
-           public void onTabSelected(TabLayout.Tab tab) {
-               viewPager2.setCurrentItem(tab.getPosition());
-           }
+        View view = inflater.inflate(R.layout.fragment_library, container, false);
+        tabLayout = view.findViewById(R.id.tablayout);
+        viewPager2 = view.findViewById(R.id.view_pager);
+        viewPagerAdapter = new ViewPagerAdapter(requireActivity());
+        viewPager2.setAdapter(viewPagerAdapter);
 
-           @Override
-           public void onTabUnselected(TabLayout.Tab tab) {
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            switch (position) {
+                case 0: tab.setText("Musiques"); break;
+                case 1: tab.setText("Albums"); break;
+                case 2: tab.setText("Artistes"); break;
+                case 3: tab.setText("Genres"); break;
+                case 4: tab.setText("Playlist"); break;
+            }
+        }).attach();
 
-           }
-
-           @Override
-           public void onTabReselected(TabLayout.Tab tab) {
-
-           }
-       });
-       viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-           @Override
-           public void onPageSelected(int position) {
-               super.onPageSelected(position);
-               tabLayout.getTabAt(position).select();
-           }
-       });
-       return view;
+        return view;
     }
+
 }
