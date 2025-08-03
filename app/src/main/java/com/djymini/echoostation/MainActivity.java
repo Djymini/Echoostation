@@ -8,6 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,6 +25,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> requestPermissionLauncher;
+    private RelativeLayout authorizationLayout, appLayout;
+    private Button confirmButton, quitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +39,36 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        requestPermissionLauncher =
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                    if (isGranted) {
-                        Toast.makeText(this, "Permission accordée", Toast.LENGTH_SHORT).show();
-                        readMusicOfDevice();
-                    } else {
-                        Toast.makeText(this, "Permission refusée", Toast.LENGTH_SHORT).show();
-                    }
-                });
+        authorizationLayout = (RelativeLayout)findViewById(R.id.authorization_layout);
+        appLayout = (RelativeLayout)findViewById(R.id.app_layout);
+        confirmButton = (Button)findViewById(R.id.confirm_button);
+        quitButton = (Button)findViewById(R.id.quit_button);
 
-        checkAndRequestMusicPermission();
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                checkAndRequestMusicPermission();
+            }
+        });
+
+        quitButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+                System.exit(0);
+            }
+        });
+
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                authorizationLayout.setVisibility(View.GONE);
+                appLayout.setVisibility(View.VISIBLE);
+                readMusicOfDevice();
+            } else {
+                authorizationLayout.setVisibility(View.VISIBLE);
+                appLayout.setVisibility(View.GONE);
+            }
+        });
+
+        checkPermission();
     }
 
     private void readMusicOfDevice(){
@@ -95,6 +119,18 @@ public class MainActivity extends AppCompatActivity {
                     .show();
         } else {
             requestPermissionLauncher.launch(permission);
+        }
+    }
+
+    private void checkPermission(){
+        String permission = adaptPermissionWithVersion();
+
+        if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
+            authorizationLayout.setVisibility(View.GONE);
+            appLayout.setVisibility(View.VISIBLE);
+        } else {
+            authorizationLayout.setVisibility(View.VISIBLE);
+            appLayout.setVisibility(View.GONE);
         }
     }
 

@@ -3,6 +3,10 @@
     <style name="Base.Theme.EchooStation" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorText</item>
+        <item name="colorAccent">@color/accentColor</item>
+        <item name="colorSurface">@color/transparenceColor</item>
     </style>
 
     <style name="Theme.EchooStation" parent="Base.Theme.EchooStation" />

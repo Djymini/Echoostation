@@ -3,5 +3,9 @@
     <style name="Base.Theme.EchooStation" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:textColorPrimary">@color/colorText</item>
+        <item name="colorAccent">@color/accentColor</item>
+        <item name="colorSurface">@color/transparenceColor</item>
     </style>
 </resources>
