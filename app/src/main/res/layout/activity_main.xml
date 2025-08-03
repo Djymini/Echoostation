@@ -11,7 +11,7 @@
         android:id="@+id/authorization_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
         <TextView
             android:id="@+id/intro_text_1"
             android:layout_width="300dp"
@@ -75,22 +75,23 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/app_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
-        <TextView
-            android:id="@+id/test_text"
-            android:layout_width="300dp"
+        android:visibility="visible">
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_menu"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_nav_menu"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginVertical="16dp"
-            android:fontFamily="@font/m_plus_rounded_1c_bold"
-            android:text="Ceci est un test"
-            android:textSize="20sp"
-            android:textColor="@color/colorText"
-            android:textAlignment="center"
-            android:lineSpacingExtra="-10sp"/>
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/main_menu"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,4 +5,10 @@
     <string name="intro_text_1">Bienvenue sur Echoo Station, pour commencer nous avons besoin de votre autorisation</string>
     <string name="intro_text_2">L\'autorisation d\'accès au stockage en lecture et écriture est nécessaire pour correctement lire et éditer les fichiers audio.</string>
     <string name="confirm_authorization">AUTORISER</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="home_fragment">Accueil</string>
+    <string name="library_fragment">Bibliothèque</string>
+    <string name="search_fragment">Recherche</string>
+    <string name="settings_fragment">Paramètres</string>
+    <string name="equalizer_fragment">Egaliseur</string>
 </resources>

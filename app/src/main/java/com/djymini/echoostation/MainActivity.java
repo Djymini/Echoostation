@@ -17,16 +17,27 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+
+import com.djymini.echoostation.fragments.EqualizerFragment;
+import com.djymini.echoostation.fragments.HomeFragment;
+import com.djymini.echoostation.fragments.LibraryFragment;
+import com.djymini.echoostation.fragments.SearchFragment;
+import com.djymini.echoostation.fragments.SettingsFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> requestPermissionLauncher;
-    private RelativeLayout authorizationLayout, appLayout;
+    private RelativeLayout authorizationLayout;
+    private ConstraintLayout appLayout;
     private Button confirmButton, quitButton;
+    private BottomNavigationView bottomNavMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +51,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         authorizationLayout = (RelativeLayout)findViewById(R.id.authorization_layout);
-        appLayout = (RelativeLayout)findViewById(R.id.app_layout);
+        appLayout = (ConstraintLayout)findViewById(R.id.app_layout);
         confirmButton = (Button)findViewById(R.id.confirm_button);
         quitButton = (Button)findViewById(R.id.quit_button);
+        bottomNavMenu = (BottomNavigationView)findViewById(R.id.bottom_nav_menu);
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -57,6 +69,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        bottomNavMenu.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.home) {
+                loadFragment(new HomeFragment());
+                return true;
+            } else if (itemId == R.id.library) {
+                loadFragment(new LibraryFragment());
+                return true;
+            } else if (itemId == R.id.search) {
+                loadFragment(new SearchFragment());
+                return true;
+            } else if (itemId == R.id.equalizer) {
+                loadFragment(new EqualizerFragment());
+                return true;
+            } else if (itemId == R.id.settings) {
+                loadFragment(new SettingsFragment());
+                return true;
+            }
+            return false;
+        });
+
         requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
                 authorizationLayout.setVisibility(View.GONE);
@@ -69,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         checkPermission();
+
+        if (savedInstanceState == null) {
+            loadFragment(new HomeFragment());
+            bottomNavMenu.setSelectedItemId(R.id.home); // Sélection visuelle
+        }
     }
 
     private void readMusicOfDevice(){
@@ -141,5 +180,13 @@ public class MainActivity extends AppCompatActivity {
             return Manifest.permission.READ_EXTERNAL_STORAGE;
         }
     }
+
+    private void loadFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.frame_layout, fragment)
+                .commit();
+    }
+
 
 }
