@@ -41,11 +41,11 @@ public interface AlbumDao {
     @Query("SELECT * FROM album WHERE id = :id")
     Album getById(long id);
 
-    @Query("SELECT * FROM album WHERE name = :name")
-    Album getByName(String name);
-
     @Query("SELECT * FROM album WHERE name = :name AND id_artist = :idArtist")
     Album getByNameAndArtist(String name, long idArtist);
+
+    @Query("SELECT COUNT(*) FROM album")
+    long count();
 
     @Query("SELECT * FROM album WHERE name LIKE '%' || :query || '%'")
     List<Album> search(String query);

@@ -49,6 +49,9 @@ public interface MusicDao {
     @Query("SELECT * FROM music WHERE path = :path")
     Music getByPath(String path);
 
+    @Query("SELECT COUNT(*) FROM music")
+    long count();
+
     @Query("SELECT * FROM music WHERE title LIKE '%' || :query || '%'")
     List<Music> search(String query);
 

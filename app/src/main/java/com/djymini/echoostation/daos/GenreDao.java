@@ -39,4 +39,7 @@ public interface GenreDao {
 
     @Query("SELECT * FROM genre WHERE name = :name")
     Genre getByName(String name);
+
+    @Query("SELECT COUNT(*) FROM genre")
+    long count();
 }

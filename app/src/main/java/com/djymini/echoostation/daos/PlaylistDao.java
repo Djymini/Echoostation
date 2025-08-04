@@ -1,5 +1,6 @@
 package com.djymini.echoostation.daos;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -23,4 +24,7 @@ public interface PlaylistDao {
 
     @Delete
     void delete(Playlist playlist);
+
+    @Query("SELECT COUNT(*) FROM playlist")
+    long count();
 }

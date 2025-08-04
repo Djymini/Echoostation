@@ -45,4 +45,7 @@ public interface ArtistDao {
 
     @Query("SELECT artist.* FROM artist JOIN artist_music ON artist.id = artist_music.id_artist JOIN music ON music.id = artist_music.id_music WHERE music.id = :idMusic")
     List<Artist> getAllByMusic(long idMusic);
+
+    @Query("SELECT COUNT(*) FROM artist")
+    long count();
 }

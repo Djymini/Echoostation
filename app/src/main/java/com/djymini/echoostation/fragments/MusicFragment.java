@@ -32,23 +32,9 @@ import com.djymini.echoostation.services.StatisticService;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MusicFragment extends Fragment {
+public class MusicFragment extends EchoostationFragment {
     private RecyclerView recyclerView;
     private MusicAdapter adapter;
-
-    private AlbumDao albumDao;
-    private ArtistDao artistDao;
-    private GenreDao genreDao;
-    private MoodDao moodDao;
-    private MusicDao musicDao;
-    private PlaylistDao playlistDao;
-    private StatisticDao statisticDao;
-
-    private AlbumService albumService;
-    private ArtistService artistService;
-    private GenreService genreService;
-    private MusicService musicService;
-    private StatisticService statisticService;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,12 +42,7 @@ public class MusicFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
 
         EchooStationDatabase db = DatabaseClient.getInstance(requireContext()).getDatabase();
-        musicDao = db.musicDao();
-        statisticDao = db.statisticDao();
-        artistDao = db.artistDao();
-        albumDao = db.albumDao();
-        artistService = new ArtistService(artistDao, statisticDao);
-        albumService = new AlbumService(albumDao, statisticDao);
+        setupDaoAndService(db);
 
         recyclerView = view.findViewById(R.id.recycler_view_song);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
