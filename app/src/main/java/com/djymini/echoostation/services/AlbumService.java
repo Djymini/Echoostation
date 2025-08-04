@@ -1,6 +1,7 @@
 package com.djymini.echoostation.services;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
@@ -34,6 +35,10 @@ public class AlbumService {
         }
 
         return idAlbum;
+    }
+
+    public Uri getCover(long idAlbum){
+        return Uri.parse(albumDao.getById(idAlbum).coverPath);
     }
 
     public void modifyCover(Album album, String newCoverPath){

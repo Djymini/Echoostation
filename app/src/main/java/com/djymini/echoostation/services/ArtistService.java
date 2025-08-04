@@ -30,7 +30,14 @@ public class ArtistService {
 
     public List<Long> addAllMusicArtist(String artistName, StatisticService statisticService, Context context){
         List<Long> listIdArtist = new ArrayList<Long>();
-        String[] artistArray = separateArtist(artistName);
+        String[] artistArray;
+        if (artistName != null) {
+            artistArray = separateArtist(artistName);
+        }
+        else{
+            artistArray = new String[] {""};
+        }
+
         for (String artist : artistArray) {
             String nameCheck = fixNameArtist(artist, context);
             if(!artistDao.existsByName(nameCheck)){
@@ -65,6 +72,17 @@ public class ArtistService {
         else {
             return artistName;
         }
+    }
+
+    public String getArtistsNameOfMusic(long idMusic){
+        List<Artist> artistList = artistDao.getAllByMusic(idMusic);
+        List<String> nameList = new ArrayList<>();
+
+        for (Artist artist : artistList){
+            nameList.add(artist.name);
+        }
+
+        return String.join(", ", nameList);
     }
 
     public void modifyPhoto(Artist artist, String newPhotoPath){

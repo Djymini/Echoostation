@@ -4,4 +4,5 @@
     <color name="colorText">#0d172f</color>
     <color name="accentColor">#2892d7</color>
     <color name="transparenceColor">#0D0D172F</color>
+    <color name="trueTransparenceColor">#000D172F</color>
 </resources>

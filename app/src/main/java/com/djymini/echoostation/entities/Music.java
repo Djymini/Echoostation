@@ -27,10 +27,7 @@ import androidx.room.PrimaryKey;
                         onDelete = ForeignKey.CASCADE
                 )
         },
-        indices = {
-                @Index(value = {"title"}, unique = true),
-                @Index(value = {"path"}, unique = true)
-        }
+        indices = {@Index(value = {"path"}, unique = true)}
 )
 public class Music {
     @PrimaryKey(autoGenerate = true)

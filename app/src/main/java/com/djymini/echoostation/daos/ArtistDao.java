@@ -43,5 +43,6 @@ public interface ArtistDao {
     @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
     List<Artist> search(String query);
 
-    // TODO: Récuperer tous les artistes d'une musique
+    @Query("SELECT artist.* FROM artist JOIN artist_music ON artist.id = artist_music.id_artist JOIN music ON music.id = artist_music.id_music WHERE music.id = :idMusic")
+    List<Artist> getAllByMusic(long idMusic);
 }

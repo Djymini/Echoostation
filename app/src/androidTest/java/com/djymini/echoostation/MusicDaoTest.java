@@ -13,6 +13,7 @@ import com.djymini.echoostation.daos.GenreDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Album;
+import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
@@ -99,14 +100,39 @@ public class MusicDaoTest {
         }
 
         List<Music> result2 = musicDao.getAll();
+        List<Artist> result3 = artistDao.getAll();
         for(Music music : result2){
             String string = String.format("id : %s, path : %s", String.valueOf(music.id), music.path);
             Log.d(music.title, string);
         }
+        for(Artist artist : result3){
+            Log.d("echoostationTest", artist.name);
+        }
+
         assertEquals(15, result2.size());
         assertEquals(1, result2.get(0).id);
         assertEquals("Morning Light", result2.get(0).title);
         assertEquals("track15.mp3", result2.get(14).title);
+    }
+
+    @Test
+    public void getArtistsNameOfMusicTest(){
+        Context context = ApplicationProvider.getApplicationContext();
+        for (Map<String, Object> fakeMedia : fakeMediaStoreData){
+            long idGenre = genreService.addGenre(fakeMedia.get(MediaStore.Audio.Media.GENRE).toString(), statisticService, context);
+            long idAlbum = albumService.add(fakeMedia.get(MediaStore.Audio.Media.ALBUM).toString(), "album_cover_path", (int)fakeMedia.get(MediaStore.Audio.Media.YEAR), fakeMedia.get(MediaStore.Audio.Media.ALBUM_ARTIST).toString(), artistService, statisticService, context);
+            long idMusic = musicService.add(fakeMedia.get(MediaStore.Audio.Media.DATA).toString(), fakeMedia.get(MediaStore.Audio.Media.TITLE).toString(), Long.parseLong(fakeMedia.get(MediaStore.Audio.Media.DURATION).toString()), Integer.parseInt(fakeMedia.get(MediaStore.Audio.Media.TRACK).toString()), fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), idAlbum, idGenre, artistService, statisticService, context);
+        }
+
+        List<Music> result = musicDao.getAll();
+        for (Music music : result){
+            String finalResult = artistService.getArtistsNameOfMusic(music.id);
+            Log.d("echoostationTest", finalResult);
+        }
+
+        String finalResult = artistService.getArtistsNameOfMusic(result.get(0).id);
+
+        assertEquals("Yoko Shimomura, Yoshitaka Suzuki", finalResult);
     }
 }
 

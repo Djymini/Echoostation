@@ -34,7 +34,14 @@ public class GenreService {
 
     public long addGenre(String genreName, StatisticService statisticService, Context context){
         long idGenre;
-        String nameCheck = fixNameGenre(genreName, context);
+        String nameCheck;
+        if(genreName != null){
+            nameCheck = fixNameGenre(genreName, context);
+        }
+        else {
+            nameCheck = "";
+        }
+
         if(!genreDao.existsByName(nameCheck)){
             Genre genreForAddInDb = new Genre(nameCheck, statisticService.createStatistic());
             idGenre = genreDao.insert(genreForAddInDb);

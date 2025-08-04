@@ -80,7 +80,7 @@ public class BaseTestUtil {
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track6.mp3",
                         MediaStore.Audio.Media.TITLE, "Blues at Dusk",
                         MediaStore.Audio.Media.ALBUM, "Twilight Songs",
-                        MediaStore.Audio.Media.ARTIST, "Naoshi Mizuta, Masayoshi Soken, & Nobuo Uematsu",
+                        MediaStore.Audio.Media.ARTIST, "Yoko Shimomura, Yoshitaka Suzuki, Naoshi Mizuta, Masayoshi Soken, & Nobuo Uematsu",
                         MediaStore.Audio.Media.DURATION, 200000,
                         MediaStore.Audio.Media.GENRE, "Dance",
                         MediaStore.Audio.Media.TRACK, 6,

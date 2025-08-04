@@ -2,8 +2,10 @@ package com.djymini.echoostation;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.ContentUris;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,12 +26,27 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+import com.djymini.echoostation.daos.AlbumDao;
+import com.djymini.echoostation.daos.ArtistDao;
+import com.djymini.echoostation.daos.GenreDao;
+import com.djymini.echoostation.daos.MoodDao;
+import com.djymini.echoostation.daos.MusicDao;
+import com.djymini.echoostation.daos.PlaylistDao;
+import com.djymini.echoostation.daos.StatisticDao;
+import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
 import com.djymini.echoostation.fragments.LibraryFragment;
 import com.djymini.echoostation.fragments.SearchFragment;
 import com.djymini.echoostation.fragments.SettingsFragment;
+import com.djymini.echoostation.services.AlbumService;
+import com.djymini.echoostation.services.ArtistService;
+import com.djymini.echoostation.services.GenreService;
+import com.djymini.echoostation.services.MusicService;
+import com.djymini.echoostation.services.StatisticService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +55,20 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout appLayout;
     private Button confirmButton, quitButton;
     private BottomNavigationView bottomNavMenu;
+
+    private AlbumDao albumDao;
+    private ArtistDao artistDao;
+    private GenreDao genreDao;
+    private MoodDao moodDao;
+    private MusicDao musicDao;
+    private PlaylistDao playlistDao;
+    private StatisticDao statisticDao;
+
+    private AlbumService albumService;
+    private ArtistService artistService;
+    private GenreService genreService;
+    private MusicService musicService;
+    private StatisticService statisticService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +80,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        EchooStationDatabase db = DatabaseClient.getInstance(this).getDatabase();
+        albumDao = db.albumDao();
+        artistDao = db.artistDao();
+        genreDao = db.genreDao();
+        moodDao = db.moodDao();
+        musicDao = db.musicDao();
+        playlistDao = db.playlistDao();
+        statisticDao = db.statisticDao();
+        albumService = new AlbumService(albumDao, statisticDao);
+        artistService = new ArtistService(artistDao, statisticDao);
+        genreService = new GenreService(genreDao, statisticDao);
+        musicService = new MusicService(musicDao, statisticDao);
+        statisticService = new StatisticService(statisticDao);
 
         authorizationLayout = (RelativeLayout)findViewById(R.id.authorization_layout);
         appLayout = (ConstraintLayout)findViewById(R.id.app_layout);
@@ -111,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readMusicOfDevice(){
-        Log.d("Test EchooStation", "Bienvenue sur Echoostation");
         String[] projection = new String[] {
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE,
@@ -121,7 +165,8 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.GENRE,
                 MediaStore.Audio.Media.TRACK,
                 MediaStore.Audio.Media.YEAR,
-                MediaStore.Audio.Media.ALBUM_ARTIST
+                MediaStore.Audio.Media.ALBUM_ARTIST,
+                MediaStore.Audio.Media.ALBUM_ID
         };
 
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != ?";
@@ -140,7 +185,24 @@ public class MainActivity extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-            Log.d("Test EchooStation", path);
+            String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+            String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+            String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+            long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+            String genre = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE));
+            int track = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK));
+            int year = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR));
+            String albumArtist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
+            long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+            Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+            String coverAlbum = albumArtUri.toString();
+
+            Executor executor = Executors.newSingleThreadExecutor();
+            executor.execute(() -> {
+                long idGenre = genreService.addGenre(genre, statisticService, this);
+                long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService, this);
+                musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService, this);
+            });
         }
     }
 
@@ -167,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED) {
             authorizationLayout.setVisibility(View.GONE);
             appLayout.setVisibility(View.VISIBLE);
+            readMusicOfDevice();
         } else {
             authorizationLayout.setVisibility(View.VISIBLE);
             appLayout.setVisibility(View.GONE);
