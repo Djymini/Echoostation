@@ -9,11 +9,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -199,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
             Executor executor = Executors.newSingleThreadExecutor();
             executor.execute(() -> {
-                long idGenre = genreService.addGenre(genre, statisticService, this);
+                long idGenre = genreService.add(genre, statisticService, this);
                 long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService, this);
                 musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService, this);
             });

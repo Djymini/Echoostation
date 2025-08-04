@@ -12,7 +12,6 @@ import androidx.test.ext.junit.runners.AndroidJUnit4;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Statistic;
 import com.djymini.echoostation.services.StatisticService;
-import com.djymini.echoostation.testUtilities.BaseTestUtil;
 
 import org.junit.After;
 import org.junit.Before;
@@ -20,15 +19,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import java.util.List;
-import java.util.Map;
 
 @RunWith(AndroidJUnit4.class)
-public class StatisticDaoTest {
+public class StatisticTest {
     private EchooStationDatabase db;
     private StatisticDao statisticDao;
     private StatisticService statisticService;
-
-    private List<Map<String, Object>> fakeMediaStoreData;
 
     @Before
     public void createDb() {
@@ -39,8 +35,6 @@ public class StatisticDaoTest {
 
         statisticDao = db.statisticDao();
         statisticService = new StatisticService(statisticDao);
-
-        fakeMediaStoreData = BaseTestUtil.createFakeData();
     }
 
     @After

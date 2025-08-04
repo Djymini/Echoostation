@@ -4,15 +4,10 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.djymini.echoostation.daos.AlbumDao;
-import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Artist;
-import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.entities.Statistic;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.djymini.echoostation.utilities.Constants;
 
 public class AlbumService {
     private AlbumDao albumDao;
@@ -25,7 +20,10 @@ public class AlbumService {
 
     public long add(String albumName,String coverPath,int year, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
         long idAlbum;
-        long idArtist = artistService.addAllMusicArtist(artistName, statisticService, context).get(0);
+        long idArtist = artistService.addAllArtist(artistName, statisticService, context).get(0);
+
+        if (albumName == "" || albumName == null)
+            albumName = Constants.UNKNOWN_ALBUM;
 
         if(!albumDao.existsByNameAndArtist(albumName, idArtist)){
             Album albumForAddInDb = new Album(albumName, coverPath, year, idArtist, statisticService.createStatistic());
@@ -73,7 +71,7 @@ public class AlbumService {
         if(!albumDao.existsById(album.id))
             return;
 
-        long idArtist = artistService.addAllMusicArtist(newArtistName, statisticService, context).get(0);
+        long idArtist = artistService.addAllArtist(newArtistName, statisticService, context).get(0);
         Album albumForUpdate = new Album(album.id, album.name, album.coverPath, album.year, idArtist, album.idStatistic);
         albumDao.update(albumForUpdate);
     }
@@ -82,7 +80,7 @@ public class AlbumService {
         if(!albumDao.existsById(album.id))
             return;
 
-        long idArtist = artistService.addAllMusicArtist(newArtistName, statisticService, context).get(0);
+        long idArtist = artistService.addAllArtist(newArtistName, statisticService, context).get(0);
 
         if(albumDao.existsByNameAndArtist(newName, idArtist)){
             //TODO: Change the idAlbum of music for exitent album

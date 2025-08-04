@@ -28,7 +28,7 @@ public class ArtistService {
         this.statisticDao = statisticDao;
     }
 
-    public List<Long> addAllMusicArtist(String artistName, StatisticService statisticService, Context context){
+    public List<Long> addAllArtist(String artistName, StatisticService statisticService, Context context){
         List<Long> listIdArtist = new ArrayList<Long>();
         String[] artistArray;
         if (artistName != null) {

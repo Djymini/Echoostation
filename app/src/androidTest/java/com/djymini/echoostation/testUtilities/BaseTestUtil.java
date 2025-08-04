@@ -7,6 +7,11 @@ import androidx.room.Room;
 import androidx.test.core.app.ApplicationProvider;
 
 import com.djymini.echoostation.EchooStationDatabase;
+import com.djymini.echoostation.services.AlbumService;
+import com.djymini.echoostation.services.ArtistService;
+import com.djymini.echoostation.services.GenreService;
+import com.djymini.echoostation.services.MusicService;
+import com.djymini.echoostation.services.StatisticService;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +29,7 @@ public class BaseTestUtil {
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track1.mp3",
                         MediaStore.Audio.Media.TITLE, "Morning Light",
-                        MediaStore.Audio.Media.ALBUM, "Sunrise Vibes",
+                        MediaStore.Audio.Media.ALBUM, "City Nights",
                         MediaStore.Audio.Media.ARTIST, "Yoko Shimomura & Yoshitaka Suzuki",
                         MediaStore.Audio.Media.DURATION, 215000,
                         MediaStore.Audio.Media.GENRE, "Afrobeat",
@@ -166,14 +171,14 @@ public class BaseTestUtil {
                 ),
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track14.mp3",
-                        MediaStore.Audio.Media.TITLE, "Glass Waves",
+                        MediaStore.Audio.Media.TITLE, "",
                         MediaStore.Audio.Media.ALBUM, "",
-                        MediaStore.Audio.Media.ARTIST, "Crystal Sound",
+                        MediaStore.Audio.Media.ARTIST, "",
                         MediaStore.Audio.Media.DURATION, 195000,
-                        MediaStore.Audio.Media.GENRE, "Ambient",
+                        MediaStore.Audio.Media.GENRE, "",
                         MediaStore.Audio.Media.TRACK, 14,
                         MediaStore.Audio.Media.YEAR, 2023,
-                        MediaStore.Audio.Media.ALBUM_ARTIST, "Crystal Sound"
+                        MediaStore.Audio.Media.ALBUM_ARTIST, ""
                 ),
                 Map.of(
                         MediaStore.Audio.Media.DATA, "/storage/emulated/0/Music/track15.mp3",
@@ -184,8 +189,16 @@ public class BaseTestUtil {
                         MediaStore.Audio.Media.GENRE, "",
                         MediaStore.Audio.Media.TRACK, 15,
                         MediaStore.Audio.Media.YEAR, 2025,
-                        MediaStore.Audio.Media.ALBUM_ARTIST, "Stack Overflow"
+                        MediaStore.Audio.Media.ALBUM_ARTIST, ""
                 )
         );
+    }
+
+    public static void addContentInDb(GenreService genreService, AlbumService albumService, ArtistService artistService, MusicService musicService, StatisticService statisticService, Context context){
+        for (Map<String, Object> fakeMedia : createFakeData()){
+            long idGenre = genreService.add(fakeMedia.get(MediaStore.Audio.Media.GENRE).toString(), statisticService, context);
+            long idAlbum = albumService.add(fakeMedia.get(MediaStore.Audio.Media.ALBUM).toString(), "album_cover_path", (int)fakeMedia.get(MediaStore.Audio.Media.YEAR), fakeMedia.get(MediaStore.Audio.Media.ALBUM_ARTIST).toString(), artistService, statisticService, context);
+            musicService.add(fakeMedia.get(MediaStore.Audio.Media.DATA).toString(), fakeMedia.get(MediaStore.Audio.Media.TITLE).toString(), Long.parseLong(fakeMedia.get(MediaStore.Audio.Media.DURATION).toString()), Integer.parseInt(fakeMedia.get(MediaStore.Audio.Media.TRACK).toString()), fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), idAlbum, idGenre, artistService, statisticService, context);
+        }
     }
 }

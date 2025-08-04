@@ -20,12 +20,12 @@ import androidx.room.PrimaryKey;
 )
 public class Mood {
     @PrimaryKey(autoGenerate = true)
-    public int id;
+    public long id;
 
     @NonNull
     @ColumnInfo(name = "name")
     public String name;
 
     @ColumnInfo(name = "id_statistic")
-    public int idStatistic;
+    public long idStatistic;
 }

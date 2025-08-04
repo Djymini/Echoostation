@@ -32,7 +32,7 @@ public class GenreService {
         this.statisticDao = statisticDao;
     }
 
-    public long addGenre(String genreName, StatisticService statisticService, Context context){
+    public long add(String genreName, StatisticService statisticService, Context context){
         long idGenre;
         String nameCheck;
         if(genreName != null){

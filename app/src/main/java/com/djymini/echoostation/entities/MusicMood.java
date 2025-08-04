@@ -29,9 +29,9 @@ import androidx.room.Index;
 )
 public class MusicMood {
     @ColumnInfo(name = "id_music")
-    public int idMusic;
+    public long idMusic;
 
     @ColumnInfo(name = "id_mood")
-    public int idMood;
+    public long idMood;
 }
 

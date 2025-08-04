@@ -2,10 +2,8 @@ package com.djymini.echoostation.services;
 
 import android.content.Context;
 
-import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.StatisticDao;
-import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.entities.Statistic;
 
@@ -22,8 +20,8 @@ public class MusicService {
 
     public long add(String musicPath, String musicTitle, long musicDuration, int musicTrack, String artistName, long idAlbum, long idGenre, ArtistService artistService, StatisticService statisticService, Context context){
         long idMusic;
-        List<Long> idArtists = artistService.addAllMusicArtist(artistName, statisticService, context);
-        if (musicTitle == "")
+        List<Long> idArtists = artistService.addAllArtist(artistName, statisticService, context);
+        if (musicTitle == "" || musicTitle == null)
             musicTitle = getNameFile(musicPath);
 
         if(!musicDao.existsByPath(musicPath)){
