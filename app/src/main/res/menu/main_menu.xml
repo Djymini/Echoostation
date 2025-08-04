@@ -9,10 +9,6 @@
         android:title="Bibliothèque"
         android:icon="@drawable/ic_menu_library"/>
     <item
-        android:id="@+id/search"
-        android:title="Recherche"
-        android:icon="@drawable/ic_menu_search"/>
-    <item
         android:id="@+id/equalizer"
         android:title="Egaliseur"
         android:icon="@drawable/ic_menu_equalizer"/>

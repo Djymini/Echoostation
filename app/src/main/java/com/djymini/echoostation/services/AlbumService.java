@@ -46,6 +46,7 @@ public class AlbumService {
         }
     }
 
+    /*
     public void modifyName(Album album, String newName){
         if(!albumDao.existsById(album.id))
             return;
@@ -131,5 +132,5 @@ public class AlbumService {
         if(albumDao.existsById(idArtist)){
             statisticService.reinitializeMonthValues(statistic);
         }
-    }
+    }*/
 }

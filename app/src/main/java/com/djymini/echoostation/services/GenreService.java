@@ -69,6 +69,7 @@ public class GenreService {
         }
     }
 
+    /*
     public void incrementListeningNumberStatistic(Genre genre, StatisticService statisticService){
         long idGenre = genre.id;
         long idStatistic = genre.idStatistic;
@@ -108,4 +109,5 @@ public class GenreService {
             statisticService.reinitializeMonthValues(statistic);
         }
     }
+    */
 }

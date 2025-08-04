@@ -38,13 +38,13 @@ import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
 import com.djymini.echoostation.fragments.LibraryFragment;
-import com.djymini.echoostation.fragments.SearchFragment;
 import com.djymini.echoostation.fragments.SettingsFragment;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
+import com.djymini.echoostation.utilities.Constants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
     private MusicService musicService;
     private StatisticService statisticService;
 
+    private final Executor executor = Executors.newSingleThreadExecutor();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,88 +81,30 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        EchooStationDatabase db = DatabaseClient.getInstance(this).getDatabase();
-        albumDao = db.albumDao();
-        artistDao = db.artistDao();
-        genreDao = db.genreDao();
-        moodDao = db.moodDao();
-        musicDao = db.musicDao();
-        playlistDao = db.playlistDao();
-        statisticDao = db.statisticDao();
-        albumService = new AlbumService(albumDao, statisticDao);
-        artistService = new ArtistService(artistDao, statisticDao);
-        genreService = new GenreService(genreDao, statisticDao);
-        musicService = new MusicService(musicDao, statisticDao);
-        statisticService = new StatisticService(statisticDao);
+        setupDbAndDao();
+        setupServices();
+        setupViews();
 
-        authorizationLayout = (RelativeLayout)findViewById(R.id.authorization_layout);
-        appLayout = (ConstraintLayout)findViewById(R.id.app_layout);
-        confirmButton = (Button)findViewById(R.id.confirm_button);
-        quitButton = (Button)findViewById(R.id.quit_button);
-        bottomNavMenu = (BottomNavigationView)findViewById(R.id.bottom_nav_menu);
+        setAuthorizationButton();
+        setBottomNavMenu();
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                checkAndRequestMusicPermission();
-            }
-        });
-
-        quitButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
-                System.exit(0);
-            }
-        });
-
-        bottomNavMenu.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.home) {
-                loadFragment(new HomeFragment());
-                return true;
-            } else if (itemId == R.id.library) {
-                loadFragment(new LibraryFragment());
-                return true;
-            } else if (itemId == R.id.search) {
-                loadFragment(new SearchFragment());
-                return true;
-            } else if (itemId == R.id.equalizer) {
-                loadFragment(new EqualizerFragment());
-                return true;
-            } else if (itemId == R.id.settings) {
-                loadFragment(new SettingsFragment());
-                return true;
-            }
-            return false;
-        });
-
-        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                authorizationLayout.setVisibility(View.GONE);
-                appLayout.setVisibility(View.VISIBLE);
-                readMusicOfDevice();
-            } else {
-                authorizationLayout.setVisibility(View.VISIBLE);
-                appLayout.setVisibility(View.GONE);
-            }
-        });
-
+        applyRequestPermission();
         checkPermission();
 
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
-            bottomNavMenu.setSelectedItemId(R.id.home); // Sélection visuelle
+            bottomNavMenu.setSelectedItemId(R.id.home);
         }
     }
 
     private void readMusicOfDevice(){
         String[] projection = new String[] {
+                MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.DATA,
                 MediaStore.Audio.Media.TITLE,
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.GENRE,
                 MediaStore.Audio.Media.TRACK,
                 MediaStore.Audio.Media.YEAR,
                 MediaStore.Audio.Media.ALBUM_ARTIST,
@@ -168,9 +112,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         String selection = MediaStore.Audio.Media.IS_MUSIC + " != ?";
-
         String[] selectionArgs = new String[] { "0" };
-
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
 
         Cursor cursor = getApplicationContext().getContentResolver().query(
@@ -180,28 +122,33 @@ public class MainActivity extends AppCompatActivity {
                 selectionArgs,
                 sortOrder
         );
+        executor.execute(() -> {
+            if (cursor != null) {
+                try {
+                    while (cursor.moveToNext()) {
+                        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                        String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                        String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
+                        String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
+                        long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
+                        long audioId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
+                        String genre = getGenreFromAudioId(audioId);
+                        int track = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK));
+                        int year = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR));
+                        String albumArtist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
+                        long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+                        Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+                        String coverAlbum = albumArtUri.toString();
 
-        while (cursor.moveToNext()) {
-            String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-            String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-            String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-            String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-            long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-            String genre = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE));
-            int track = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK));
-            int year = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR));
-            String albumArtist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
-            long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-            Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-            String coverAlbum = albumArtUri.toString();
-
-            Executor executor = Executors.newSingleThreadExecutor();
-            executor.execute(() -> {
-                long idGenre = genreService.add(genre, statisticService, this);
-                long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService, this);
-                musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService, this);
-            });
-        }
+                        long idGenre = genreService.add(genre, statisticService, this);
+                        long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService, this);
+                        musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService, this);
+                    }
+                } finally {
+                    cursor.close();
+                }
+            }
+        });
     }
 
     private void checkAndRequestMusicPermission() {
@@ -247,6 +194,89 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.frame_layout, fragment)
                 .commit();
+    }
+
+    private void setupDbAndDao(){
+        EchooStationDatabase db = DatabaseClient.getInstance(this).getDatabase();
+        albumDao = db.albumDao();
+        artistDao = db.artistDao();
+        genreDao = db.genreDao();
+        moodDao = db.moodDao();
+        musicDao = db.musicDao();
+        playlistDao = db.playlistDao();
+        statisticDao = db.statisticDao();
+    }
+
+    private void setupServices(){
+        albumService = new AlbumService(albumDao, statisticDao);
+        artistService = new ArtistService(artistDao, statisticDao);
+        genreService = new GenreService(genreDao, statisticDao);
+        musicService = new MusicService(musicDao, statisticDao);
+        statisticService = new StatisticService(statisticDao);
+    }
+
+    private void setupViews(){
+        authorizationLayout = findViewById(R.id.authorization_layout);
+        appLayout = findViewById(R.id.app_layout);
+        confirmButton = findViewById(R.id.confirm_button);
+        quitButton = findViewById(R.id.quit_button);
+        bottomNavMenu = findViewById(R.id.bottom_nav_menu);
+    }
+
+    private void setAuthorizationButton(){
+        confirmButton.setOnClickListener(v -> checkAndRequestMusicPermission());
+
+        quitButton.setOnClickListener(v -> {
+            finish();
+            System.exit(0);
+        });
+    }
+
+    private void setBottomNavMenu(){
+        bottomNavMenu.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+
+            if (itemId == R.id.home) {
+                loadFragment(new HomeFragment());
+                return true;
+            } else if (itemId == R.id.library) {
+                loadFragment(new LibraryFragment());
+                return true;
+            } else if (itemId == R.id.equalizer) {
+                loadFragment(new EqualizerFragment());
+                return true;
+            } else if (itemId == R.id.settings) {
+                loadFragment(new SettingsFragment());
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private void applyRequestPermission(){
+        requestPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+            if (isGranted) {
+                authorizationLayout.setVisibility(View.GONE);
+                appLayout.setVisibility(View.VISIBLE);
+                readMusicOfDevice();
+            } else {
+                authorizationLayout.setVisibility(View.VISIBLE);
+                appLayout.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private String getGenreFromAudioId(long audioId) {
+        String genre = Constants.UNKNOWN_GENRE;
+        Uri uri = MediaStore.Audio.Genres.getContentUriForAudioId("external", (int) audioId);
+        Cursor genreCursor = getContentResolver().query(uri, new String[]{MediaStore.Audio.Genres.NAME}, null, null, null);
+        if (genreCursor != null) {
+            if (genreCursor.moveToFirst()) {
+                genre = genreCursor.getString(genreCursor.getColumnIndexOrThrow(MediaStore.Audio.Genres.NAME));
+            }
+            genreCursor.close();
+        }
+        return genre;
     }
 
 

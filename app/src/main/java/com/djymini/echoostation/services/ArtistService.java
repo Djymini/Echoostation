@@ -85,6 +85,7 @@ public class ArtistService {
         return String.join(", ", nameList);
     }
 
+    /*
     public void modifyPhoto(Artist artist, String newPhotoPath){
         if(artistDao.existsById(artist.id)){
             Artist artistForUpdate = new Artist(artist.id,artist.name, newPhotoPath, artist.description, artist.idStatistic);
@@ -137,5 +138,5 @@ public class ArtistService {
         if(artistDao.existsById(idArtist)){
             statisticService.reinitializeMonthValues(statistic);
         }
-    }
+    }*/
 }

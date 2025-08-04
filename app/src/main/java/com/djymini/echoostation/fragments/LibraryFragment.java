@@ -15,17 +15,13 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LibraryFragment extends Fragment {
-    private TabLayout tabLayout;
-    private ViewPager2 viewPager2;
-    private ViewPagerAdapter viewPagerAdapter;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        tabLayout = view.findViewById(R.id.tablayout);
-        viewPager2 = view.findViewById(R.id.view_pager);
-        viewPagerAdapter = new ViewPagerAdapter(requireActivity());
+        TabLayout tabLayout = view.findViewById(R.id.tablayout);
+        ViewPager2 viewPager2 = view.findViewById(R.id.view_pager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(requireActivity());
         viewPager2.setAdapter(viewPagerAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {

@@ -41,6 +41,7 @@ public class MusicService {
         return newString[newString.length-1];
     }
 
+    /*
     public void incrementListeningNumberStatistic(Music music, StatisticService statisticService){
         long idMusic = music.id;
         long idStatistic = music.idStatistic;
@@ -80,4 +81,5 @@ public class MusicService {
             statisticService.reinitializeMonthValues(statistic);
         }
     }
+    */
 }
