@@ -279,5 +279,9 @@ public class MainActivity extends AppCompatActivity {
         return genre;
     }
 
+    public void openLibraryTab(int tabIndex) {
+        bottomNavMenu.setSelectedItemId(R.id.library);
+        loadFragment(LibraryFragment.newInstance(tabIndex));
+    }
 
 }

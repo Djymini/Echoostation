@@ -15,6 +15,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LibraryFragment extends Fragment {
+    private static final String ARG_TAB_INDEX = "tab_index";
+    private int selectedTabIndex = 0;
+
+    public static LibraryFragment newInstance(int tabIndex) {
+        LibraryFragment fragment = new LibraryFragment();
+        Bundle args = new Bundle();
+        args.putInt(ARG_TAB_INDEX, tabIndex);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -24,15 +35,21 @@ public class LibraryFragment extends Fragment {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(requireActivity());
         viewPager2.setAdapter(viewPagerAdapter);
 
+        if (getArguments() != null) {
+            selectedTabIndex = getArguments().getInt(ARG_TAB_INDEX, 0);
+        }
+
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("Musiques"); break;
-                case 1: tab.setText("Albums"); break;
-                case 2: tab.setText("Artistes"); break;
-                case 3: tab.setText("Genres"); break;
-                case 4: tab.setText("Playlist"); break;
+                case 0: tab.setText("MUSIQUES"); break;
+                case 1: tab.setText("ALBUMS"); break;
+                case 2: tab.setText("ARTISTES"); break;
+                case 3: tab.setText("GENRES"); break;
+                case 4: tab.setText("PLAYLISTS"); break;
             }
         }).attach();
+
+        viewPager2.setCurrentItem(selectedTabIndex, false);
 
         return view;
     }

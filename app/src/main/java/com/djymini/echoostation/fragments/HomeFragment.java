@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.EchooStationDatabase;
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.views.ViewHomeData;
@@ -42,6 +44,12 @@ public class HomeFragment extends EchoostationFragment {
         genreData.setTitle("GENRES");
         playlistData.setTitle("PLAYLISTS");
 
+        musicData.setOnClickListener(v -> openLibraryTab(0));
+        albumData.setOnClickListener(v -> openLibraryTab(1));
+        artisteData.setOnClickListener(v -> openLibraryTab(2));
+        genreData.setOnClickListener(v -> openLibraryTab(3));
+        playlistData.setOnClickListener(v -> openLibraryTab(4));
+
         Executor executor = Executors.newSingleThreadExecutor();
         executor.execute(() -> {
             musicData.setData(String.valueOf(musicDao.count()));
@@ -53,4 +61,12 @@ public class HomeFragment extends EchoostationFragment {
 
         return view;
     }
+
+    private void openLibraryTab(int tabIndex) {
+        FragmentActivity activity = requireActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).openLibraryTab(tabIndex);
+        }
+    }
+
 }
