@@ -2,8 +2,7 @@ package com.djymini.echoostation.fragments;
 
 import android.os.Bundle;
 
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,26 +16,19 @@ import android.widget.Spinner;
 import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
-import com.djymini.echoostation.daos.AlbumDao;
-import com.djymini.echoostation.daos.ArtistDao;
-import com.djymini.echoostation.daos.GenreDao;
-import com.djymini.echoostation.daos.MoodDao;
-import com.djymini.echoostation.daos.MusicDao;
-import com.djymini.echoostation.daos.PlaylistDao;
-import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dataBase.DatabaseClient;
-import com.djymini.echoostation.entities.Music;
-import com.djymini.echoostation.services.AlbumService;
-import com.djymini.echoostation.services.ArtistService;
-import com.djymini.echoostation.services.GenreService;
-import com.djymini.echoostation.services.MusicService;
-import com.djymini.echoostation.services.StatisticService;
+import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.viewModels.ShareSearchViewModel;
+
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MusicFragment extends EchoostationFragment {
     private RecyclerView recyclerView;
+    private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
     private Spinner spinner;
     private final String[] sortCategories = new String[] {
@@ -53,6 +45,7 @@ public class MusicFragment extends EchoostationFragment {
             "Date d'ajout (récent -> ancien)",
             "Date d'ajout (ancien -> récent)"
     };
+    private String search;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,15 +59,22 @@ public class MusicFragment extends EchoostationFragment {
         spinner = view.findViewById(R.id.spinner);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MusicAdapter(artistService, albumService);
+        adapter = new MusicAdapter();
         recyclerView.setAdapter(adapter);
+
+        ShareSearchViewModel searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
+
+        searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
+            search = query;
+            sortAndDisplayMusics(spinner.getSelectedItemPosition());
+        });
 
         ArrayAdapter arrayAdapter = new ArrayAdapter<>(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item , sortCategories);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Appelle une méthode de tri selon le choix
+                sortAndDisplayMusics(position);
             }
 
             @Override
@@ -89,8 +89,66 @@ public class MusicFragment extends EchoostationFragment {
     }
 
     private void loadMusics() {
-        musicDao.getAllLive().observe(getViewLifecycleOwner(), musics -> {
-            adapter.submitList(musics);
+        musicDao.getAllMusicDetailLive().observe(getViewLifecycleOwner(), musics -> {
+            currentMusicList = new ArrayList<>(musics); // copie pour éviter les effets de bord
+            sortAndDisplayMusics(spinner.getSelectedItemPosition()); // trie selon l'option sélectionnée
         });
+    }
+
+    private void sortAndDisplayMusics(int position) {
+        if (currentMusicList == null) return;
+
+        List<MusicDto> sortedList = new ArrayList<>(fullTextSearchByLogicalOr(currentMusicList, search));
+
+        switch (position) {
+            case 0:
+                sortedList.sort((m1, m2) -> m1.title.compareToIgnoreCase(m2.title));
+                break;
+            case 1:
+                sortedList.sort((m1, m2) -> m2.title.compareToIgnoreCase(m1.title));
+                break;
+            case 2:
+                sortedList.sort(Comparator.comparingLong(m -> m.duration));
+                break;
+            case 3:
+                sortedList.sort((m1, m2) -> Long.compare(m2.duration, m1.duration));
+                break;
+            case 4: // Album A -> Z
+                sortedList.sort((m1, m2) -> m1.nameAlbum.compareToIgnoreCase(m2.nameAlbum));
+                break;
+            case 5: // Album Z -> A
+                sortedList.sort((m1, m2) -> m2.nameAlbum.compareToIgnoreCase(m1.nameAlbum));
+                break;
+            case 6: // Artiste A -> Z
+                sortedList.sort((m1, m2) -> m1.nameArtist.compareToIgnoreCase(m2.nameArtist));
+                break;
+            case 7: // Artiste Z -> A
+                sortedList.sort((m1, m2) -> m2.nameArtist.compareToIgnoreCase(m1.nameArtist));
+                break;
+            case 8: // Écoutes + -> -
+                sortedList.sort((m1, m2) -> Integer.compare(m2.listeningNumber, m1.listeningNumber));
+                break;
+            case 9: // Écoutes - -> +
+                sortedList.sort(Comparator.comparingInt(m -> m.listeningNumber));
+                break;
+            case 10: // Date ajout récent -> ancien
+                sortedList.sort((m1, m2) -> Long.compare(m2.id, m1.id));
+                break;
+            case 11: // Date ajout ancien -> récent
+                sortedList.sort(Comparator.comparingLong(m -> m.id));
+                break;
+        }
+
+        adapter.submitList(sortedList);
+    }
+
+    private List<MusicDto> fullTextSearchByLogicalOr(List<MusicDto> musicDtoList, String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) return musicDtoList;
+
+        return musicDtoList.stream()
+                .filter(musicDto -> musicDto.title != null && musicDto.title.toLowerCase().contains(keyword.toLowerCase())
+                || musicDto.nameAlbum != null && musicDto.nameAlbum.toLowerCase().contains(keyword.toLowerCase())
+                || musicDto.nameArtist != null && musicDto.nameArtist.toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

@@ -1,5 +1,7 @@
 package com.djymini.echoostation.dtos;
 
+import android.net.Uri;
+
 public class MusicDto {
     public long id;
     public String path;
@@ -41,5 +43,9 @@ public class MusicDto {
         this.monthListeningNumber = monthListeningNumber;
         this.listeningTime = listeningTime;
         this.monthListeningTime = monthListeningTime;
+    }
+
+    public Uri getCover(){
+        return Uri.parse(coverPath);
     }
 }

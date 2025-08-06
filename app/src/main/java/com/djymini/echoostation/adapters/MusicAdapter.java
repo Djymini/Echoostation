@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
@@ -28,16 +29,12 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
-    private List<Music> musics = new ArrayList<>();
-    private ArtistService artistService;
-    private AlbumService albumService;
+    private List<MusicDto> musics = new ArrayList<>();
 
-    public MusicAdapter(ArtistService artistService, AlbumService albumService) {
-        this.artistService = artistService;
-        this.albumService = albumService;
+    public MusicAdapter() {
     }
 
-    public void submitList(List<Music> newMusics) {
+    public void submitList(List<MusicDto> newMusics) {
         musics.clear();
         musics.addAll(newMusics);
         notifyDataSetChanged();
@@ -52,27 +49,20 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
-        Music music = musics.get(position);
+        MusicDto music = musics.get(position);
         holder.title.setText(music.title);
+        holder.artist.setText(music.nameArtist);
 
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            // Traitement en arrière-plan
-            String artistName = artistService.getArtistsNameOfMusic(music.id);
-            String durationStr = formatDuration(music.duration);
-            Uri albumArt = albumService.getCover(music.idAlbum);
+        String durationStr = formatDuration(music.duration);
+        holder.duration.setText(durationStr);
 
-            new Handler(Looper.getMainLooper()).post(() -> {
-                holder.artist.setText(artistName);
-                holder.duration.setText(durationStr);
+        Uri albumArt = music.getCover();
+        Glide.with(holder.itemView.getContext())
+                .load(albumArt)
+                .placeholder(R.drawable.echoostation_placeholder_music_3x)
+                .error(R.drawable.echoostation_placeholder_music_3x)
+                .into(holder.cover);
 
-                Glide.with(holder.itemView.getContext())
-                        .load(albumArt)
-                        .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                        .error(R.drawable.echoostation_placeholder_music_3x)
-                        .into(holder.cover);
-            });
-        });
     }
 
 
