@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/home"
-        android:title="Accueil"
+        android:title="ACCUEIL"
         android:icon="@drawable/ic_menu_home"/>
     <item
         android:id="@+id/library"
-        android:title="Bibliothèque"
+        android:title="BIBLIOTHEQUE"
         android:icon="@drawable/ic_menu_library"/>
     <item
         android:id="@+id/equalizer"
-        android:title="Egaliseur"
+        android:title="EGALISEUR"
         android:icon="@drawable/ic_menu_equalizer"/>
     <item
         android:id="@+id/settings"
-        android:title="paramètres"
+        android:title="PARAMETRES"
         android:icon="@drawable/ic_menu_settings"/>
 </menu>

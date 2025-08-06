@@ -62,15 +62,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             String durationStr = formatDuration(music.duration);
             Uri albumArt = albumService.getCover(music.idAlbum);
 
-            // Mise à jour de l’UI sur le thread principal
             new Handler(Looper.getMainLooper()).post(() -> {
                 holder.artist.setText(artistName);
                 holder.duration.setText(durationStr);
 
                 Glide.with(holder.itemView.getContext())
                         .load(albumArt)
-                        .placeholder(R.drawable.ic_launcher_background)
-                        .error(R.drawable.ic_launcher_background)
+                        .placeholder(R.drawable.echoostation_placeholder_music_3x)
+                        .error(R.drawable.echoostation_placeholder_music_3x)
                         .into(holder.cover);
             });
         });

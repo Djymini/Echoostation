@@ -25,20 +25,20 @@ public class Genre {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public String nameGenre;
 
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
 
     public Genre(@NonNull String name, long idStatistic) {
-        this.name = name;
+        this.nameGenre = name;
         this.idStatistic = idStatistic;
     }
 
     @Ignore
     public Genre(long id, @NonNull String name, long idStatistic) {
         this.id = id;
-        this.name = name;
+        this.nameGenre = name;
         this.idStatistic = idStatistic;
     }
 }

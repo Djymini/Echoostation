@@ -8,6 +8,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.djymini.echoostation.MusicDetail;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Mood;
 import com.djymini.echoostation.entities.Music;
@@ -40,8 +41,34 @@ public interface MusicDao {
     @Query("SELECT * FROM music")
     LiveData<List<Music>> getAllLive();
 
+    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
+            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
+            "GROUP BY m.id")
+    LiveData<List<MusicDetail>> getAllMusicDetailLive();
+
     @Query("SELECT * FROM music")
     List<Music> getAll();
+
+    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
+            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
+            "GROUP BY m.id")
+    List<MusicDetail> getAllMusicDetail();
 
     @Query("SELECT * FROM music WHERE id = :id")
     Music getById(long id);
@@ -60,4 +87,5 @@ public interface MusicDao {
 
     @Query("SELECT music.* FROM music JOIN artist_music ON music.id = artist_music.id_music JOIN artist ON artist.id = artist_music.id_artist WHERE artist.id = :idArtist;")
     List<Music> getAllByArtist(long idArtist);
+
 }

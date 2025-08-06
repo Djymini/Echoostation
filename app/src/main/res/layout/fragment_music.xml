@@ -1,13 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.MusicFragment">
+   <RelativeLayout
+       android:id="@+id/button_container"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:paddingHorizontal="4dp">
+      <ImageView
+         android:id="@+id/icon_sort"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+         android:src="@drawable/ic_sort"
+          android:layout_alignParentStart="true"/>
+      <Spinner
+          android:id="@+id/spinner"
+          android:layout_width="150dp"
+          android:layout_height="wrap_content"
+          android:layout_toEndOf="@id/icon_sort"
+          android:entries="@array/sort_categories"/>
+      <ImageButton
+          android:id="@+id/button_shuffle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_toStartOf="@id/number_music"
+          android:layout_marginEnd="8dp"
+          android:src="@drawable/ic_shuffle_mini"
+          android:background="@color/trueTransparenceColor"/>
+      <TextView
+          android:id="@+id/number_music"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:layout_alignParentEnd="true"
+          android:text="9999 Morceaux"/>
+   </RelativeLayout>
 
    <androidx.recyclerview.widget.RecyclerView
        android:id="@+id/recycler_view_song"
        android:layout_width="match_parent"
-       android:layout_height="match_parent"/>
+       android:layout_height="match_parent"
+       android:layout_below="@id/button_container"/>
 
-</FrameLayout>
+
+</RelativeLayout>

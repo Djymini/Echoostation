@@ -6,7 +6,6 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Artist;
-import com.djymini.echoostation.entities.Statistic;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -79,7 +78,7 @@ public class ArtistService {
         List<String> nameList = new ArrayList<>();
 
         for (Artist artist : artistList){
-            nameList.add(artist.name);
+            nameList.add(artist.nameArtist);
         }
 
         return String.join(", ", nameList);

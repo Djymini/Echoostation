@@ -10,4 +10,19 @@
     <string name="library_fragment">Bibliothèque</string>
     <string name="settings_fragment">Paramètres</string>
     <string name="equalizer_fragment">Egaliseur</string>
+    
+    <string-array name="sort_categories">
+        <item>Nom (A -> Z)</item>
+        <item>Nom (Z -> A)</item>
+        <item>Durée (Courte -> Longue)</item>
+        <item>Durée (Longue -> Courte)</item>
+        <item>Album (A -> Z)</item>
+        <item>Album (Z -> A)</item>
+        <item>Artiste (A -> Z)</item>
+        <item>Artiste (Z -> A)</item>
+        <item>Nombre d\'écoutes (plus -> moins)</item>
+        <item>Nombre d\'écoutes (moins -> plus)</item>
+        <item>Date d\'ajout (récent -> ancien)</item>
+        <item>Date d\'ajout (ancien -> récent)</item>
+    </string-array>
 </resources>

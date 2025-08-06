@@ -6,7 +6,6 @@ import android.net.Uri;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Statistic;
 import com.djymini.echoostation.utilities.Constants;
 
 public class AlbumService {
@@ -41,7 +40,7 @@ public class AlbumService {
 
     public void modifyCover(Album album, String newCoverPath){
         if(albumDao.existsById(album.id)){
-            Album albumForUpdate = new Album(album.id, album.name, newCoverPath, album.year, album.idArtist, album.idStatistic);
+            Album albumForUpdate = new Album(album.id, album.nameAlbum, newCoverPath, album.year, album.idArtist, album.idStatistic);
             albumDao.update(albumForUpdate);
         }
     }

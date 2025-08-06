@@ -24,7 +24,7 @@ public class Mood {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public String nameMood;
 
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;

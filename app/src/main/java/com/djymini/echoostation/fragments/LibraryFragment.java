@@ -8,11 +8,14 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ViewPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.List;
 
 public class LibraryFragment extends Fragment {
     private static final String ARG_TAB_INDEX = "tab_index";
@@ -48,6 +51,17 @@ public class LibraryFragment extends Fragment {
                 case 4: tab.setText("PLAYLISTS"); break;
             }
         }).attach();
+
+        String[] tabTitles = {"MUSIQUE", "ALBUM", "ARTISTE", "GENRE", "PLAYLIST"};
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            TabLayout.Tab tab = tabLayout.getTabAt(i);
+            if (tab != null) {
+                TextView customTab = (TextView) LayoutInflater.from(requireContext())
+                        .inflate(R.layout.custom_tab, null);
+                customTab.setText(tabTitles[i]);
+                tab.setCustomView(customTab);
+            }
+        }
 
         viewPager2.setCurrentItem(selectedTabIndex, false);
 

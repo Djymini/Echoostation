@@ -29,13 +29,13 @@ public class GenreTest extends EchoostationTest{
 
         List<Genre> result2 = genreDao.getAll();
         for(Genre genre : result2){
-            String string = String.format("id : %s, name : %s", genre.id, genre.name);
+            String string = String.format("id : %s, name : %s", genre.id, genre.nameGenre);
             Log.d("genre", string);
         }
 
         assertEquals(11, result2.size());
         assertEquals(1, result2.get(0).id);
-        assertEquals("Afrobeat", result2.get(0).name);
-        assertEquals("Genre inconnu", result2.get(result2.size() - 1).name);
+        assertEquals("Afrobeat", result2.get(0).nameGenre);
+        assertEquals("Genre inconnu", result2.get(result2.size() - 1).nameGenre);
     }
 }

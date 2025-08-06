@@ -29,7 +29,7 @@ public class Album {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public String nameAlbum;
 
     @ColumnInfo(name = "cover_path")
     public String coverPath;
@@ -44,7 +44,7 @@ public class Album {
     public long idStatistic;
 
     public Album(@NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
-        this.name = name;
+        this.nameAlbum = name;
         this.coverPath = coverPath;
         this.year = year;
         this.idArtist = idArtist;
@@ -54,7 +54,7 @@ public class Album {
     @Ignore
     public Album(long id, @NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
         this.id = id;
-        this.name = name;
+        this.nameAlbum = name;
         this.coverPath = coverPath;
         this.year = year;
         this.idArtist = idArtist;

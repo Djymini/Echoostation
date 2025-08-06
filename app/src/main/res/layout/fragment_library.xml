@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.LibraryFragment">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,29 +19,31 @@
             android:id="@+id/tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title">
+            android:layout_below="@id/title"
+            app:tabIndicatorColor="@color/accentColor"
+            app:tabSelectedTextColor="@color/accentColor">
             <com.google.android.material.tabs.TabItem
-                android:text="Musiques"
+                android:text="MUSIQUE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
-                android:text="Albums"
+                android:text="ALBUM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
-                android:text="Artistes"
+                android:text="ARTISTE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
-                android:text="Genres"
+                android:text="GENRE"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
-                android:text="Playlist"
+                android:text="PLAYLIST"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.tabs.TabLayout>

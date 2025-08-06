@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/accentColor</item>
         <item name="colorSurface">@color/transparenceColor</item>
     </style>
+
+    <style name="ThemeOverlay.BottomNavigation" parent="">
+        <item name="bottomNavigationStyle">@style/CustomBottomNavigation</item>
+    </style>
+
+    <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemTextAppearanceActive">@style/BottomNavTextAppearance</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextAppearance</item>
+    </style>
+
 </resources>

@@ -33,14 +33,14 @@ public class ArtistTest extends EchoostationTest{
 
         List<Artist> result2 = artistDao.getAll();
         for(Artist artist : result2){
-            String string = String.format("id : %s, name : %s", artist.id, artist.name);
+            String string = String.format("id : %s, name : %s", artist.id, artist.nameArtist);
             Log.d("artist", string);
         }
 
         assertEquals(21, result2.size());
         assertEquals(1, result2.get(0).id);
-        assertEquals("Yoko Shimomura", result2.get(0).name);
-        assertEquals("Artiste inconnu", result2.get(20).name);
+        assertEquals("Yoko Shimomura", result2.get(0).nameArtist);
+        assertEquals("Artiste inconnu", result2.get(20).nameArtist);
     }
 
     @Test
