@@ -3,14 +3,11 @@ package com.djymini.echoostation.daos;
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
-import androidx.room.Index;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.djymini.echoostation.MusicDetail;
-import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Mood;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
 
 import java.util.List;
@@ -52,7 +49,7 @@ public interface MusicDao {
             "JOIN statistic s ON m.id_statistic = s.id " +
             "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
             "GROUP BY m.id")
-    LiveData<List<MusicDetail>> getAllMusicDetailLive();
+    LiveData<List<MusicDto>> getAllMusicDetailLive();
 
     @Query("SELECT * FROM music")
     List<Music> getAll();
@@ -68,7 +65,7 @@ public interface MusicDao {
             "JOIN statistic s ON m.id_statistic = s.id " +
             "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
             "GROUP BY m.id")
-    List<MusicDetail> getAllMusicDetail();
+    List<MusicDto> getAllMusicDetail();
 
     @Query("SELECT * FROM music WHERE id = :id")
     Music getById(long id);

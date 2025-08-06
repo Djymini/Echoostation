@@ -16,7 +16,10 @@ import androidx.room.PrimaryKey;
                         onDelete = ForeignKey.CASCADE
                 )
         },
-        indices = {@Index(value = {"name"})}
+        indices = {
+                @Index(value = {"name"}),
+                @Index(value = {"id_statistic"})
+        }
 )
 public class Mood {
     @PrimaryKey(autoGenerate = true)

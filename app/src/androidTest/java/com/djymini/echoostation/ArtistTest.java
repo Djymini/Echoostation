@@ -33,14 +33,14 @@ public class ArtistTest extends EchoostationTest{
 
         List<Artist> result2 = artistDao.getAll();
         for(Artist artist : result2){
-            String string = String.format("id : %s, name : %s", artist.id, artist.nameArtist);
+            String string = String.format("id : %s, name : %s", artist.id, artist.name);
             Log.d("artist", string);
         }
 
         assertEquals(21, result2.size());
         assertEquals(1, result2.get(0).id);
-        assertEquals("Yoko Shimomura", result2.get(0).nameArtist);
-        assertEquals("Artiste inconnu", result2.get(20).nameArtist);
+        assertEquals("Yoko Shimomura", result2.get(0).name);
+        assertEquals("Artiste inconnu", result2.get(20).name);
     }
 
     @Test
@@ -51,5 +51,12 @@ public class ArtistTest extends EchoostationTest{
         String finalResult = artistService.getArtistsNameOfMusic(result.get(0).id);
 
         assertEquals("Yoko Shimomura, Yoshitaka Suzuki", finalResult);
+    }
+
+    @Test
+    public void count(){
+        BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
+
+        assertEquals(21, artistDao.count());
     }
 }

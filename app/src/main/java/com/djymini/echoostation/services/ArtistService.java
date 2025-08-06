@@ -78,7 +78,7 @@ public class ArtistService {
         List<String> nameList = new ArrayList<>();
 
         for (Artist artist : artistList){
-            nameList.add(artist.nameArtist);
+            nameList.add(artist.name);
         }
 
         return String.join(", ", nameList);

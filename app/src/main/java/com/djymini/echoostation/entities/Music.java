@@ -29,7 +29,10 @@ import androidx.room.PrimaryKey;
         },
         indices = {
                 @Index(value = {"path"}, unique = true),
-                @Index(value = {"title"})
+                @Index(value = {"title"}),
+                @Index(value = {"id_album"}),
+                @Index(value = {"id_genre"}),
+                @Index(value = {"id_statistic"})
         }
 )
 public class Music {

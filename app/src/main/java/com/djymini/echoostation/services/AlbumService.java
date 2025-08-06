@@ -40,7 +40,7 @@ public class AlbumService {
 
     public void modifyCover(Album album, String newCoverPath){
         if(albumDao.existsById(album.id)){
-            Album albumForUpdate = new Album(album.id, album.nameAlbum, newCoverPath, album.year, album.idArtist, album.idStatistic);
+            Album albumForUpdate = new Album(album.id, album.name, newCoverPath, album.year, album.idArtist, album.idStatistic);
             albumDao.update(albumForUpdate);
         }
     }

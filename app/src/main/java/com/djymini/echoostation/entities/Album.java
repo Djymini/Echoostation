@@ -21,7 +21,11 @@ import androidx.room.PrimaryKey;
                         onDelete = ForeignKey.CASCADE
                 )
         },
-        indices = {@Index(value = {"name"})}
+        indices = {
+                @Index(value = {"name"}),
+                @Index(value = {"id_artist"}),
+                @Index(value = {"id_statistic"})
+        }
 )
 public class Album {
     @PrimaryKey(autoGenerate = true)
@@ -29,7 +33,7 @@ public class Album {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String nameAlbum;
+    public String name;
 
     @ColumnInfo(name = "cover_path")
     public String coverPath;
@@ -44,7 +48,7 @@ public class Album {
     public long idStatistic;
 
     public Album(@NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
-        this.nameAlbum = name;
+        this.name = name;
         this.coverPath = coverPath;
         this.year = year;
         this.idArtist = idArtist;
@@ -54,7 +58,7 @@ public class Album {
     @Ignore
     public Album(long id, @NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
         this.id = id;
-        this.nameAlbum = name;
+        this.name = name;
         this.coverPath = coverPath;
         this.year = year;
         this.idArtist = idArtist;

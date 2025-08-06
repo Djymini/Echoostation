@@ -1,6 +1,7 @@
 package com.djymini.echoostation;
 import android.util.Log;
 
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.testUtilities.BaseTestUtil;
 import com.djymini.echoostation.testUtilities.LiveDataTestUtil;
@@ -17,7 +18,7 @@ import java.util.List;
 @RunWith(AndroidJUnit4.class)
 public class MusicTest extends EchoostationTest{
     @Test
-    public void GetAll(){
+    public void getAll(){
         BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
 
         try {
@@ -38,6 +39,42 @@ public class MusicTest extends EchoostationTest{
         assertEquals(1, result2.get(0).id);
         assertEquals("Morning Light", result2.get(0).title);
         assertEquals("track15.mp3", result2.get(14).title);
+    }
+
+    @Test
+    public void count(){
+        BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
+
+        assertEquals(15, musicDao.count());
+    }
+
+    @Test
+    public void getAllMusicDetail(){
+        BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
+
+        try {
+            List<MusicDto> result1 = LiveDataTestUtil.getOrAwaitValue(musicDao.getAllMusicDetailLive());
+            assertEquals(15, result1.size());
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<MusicDto> result2 = musicDao.getAllMusicDetail();
+        for(MusicDto music : result2){
+            String string = String.format("id : %s, path : %s, title : %s, album : %s, artist : %s", music.id, music.path, music.title, music.nameAlbum, music.nameArtist);
+            Log.d(music.title, string);
+        }
+
+        assertEquals(15, result2.size());
+        assertEquals(1, result2.get(0).id);
+        assertEquals("Morning Light", result2.get(0).title);
+        assertEquals("track15.mp3", result2.get(14).title);
+        assertEquals("City Nights", result2.get(0).nameAlbum);
+        assertEquals("1, 2", result2.get(0).idArtist);
+        assertEquals("Yoko Shimomura, Yoshitaka Suzuki", result2.get(0).nameArtist);
+        assertEquals("Afrobeat", result2.get(0).nameGenre);
+        assertEquals(0, result2.get(14).listeningNumber);
     }
 }
 
