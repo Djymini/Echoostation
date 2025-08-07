@@ -20,6 +20,7 @@ import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
 
@@ -30,6 +31,7 @@ import java.util.concurrent.Executors;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
     private List<MusicDto> musics = new ArrayList<>();
+    private OnMusicMenuClickListener menuClickListener;
 
     public MusicAdapter() {
     }
@@ -63,6 +65,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                 .error(R.drawable.echoostation_placeholder_music_3x)
                 .into(holder.cover);
 
+        holder.menuButton.setOnClickListener(v -> {
+            if (menuClickListener != null) {
+                menuClickListener.onMenuClick(music, holder.menuButton);
+            }
+        });
     }
 
 
@@ -90,5 +97,9 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         long minutes = (durationMs / 1000) / 60;
         long seconds = (durationMs / 1000) % 60;
         return String.format("%02d:%02d", minutes, seconds);
+    }
+
+    public void setOnMusicMenuClickListener(OnMusicMenuClickListener listener) {
+        this.menuClickListener = listener;
     }
 }

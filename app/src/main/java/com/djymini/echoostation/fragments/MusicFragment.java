@@ -1,5 +1,6 @@
 package com.djymini.echoostation.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.lifecycle.ViewModelProvider;
@@ -14,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.djymini.echoostation.EchooStationDatabase;
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
@@ -79,7 +81,14 @@ public class MusicFragment extends EchoostationFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Optionnel : ne rien faire
+
+            }
+        });
+
+        adapter.setOnMusicMenuClickListener((music, anchorView) -> {
+            Activity activity = getActivity();
+            if (activity instanceof MainActivity) {
+                ((MainActivity) activity).showBottomDialog(music);
             }
         });
 
@@ -90,8 +99,8 @@ public class MusicFragment extends EchoostationFragment {
 
     private void loadMusics() {
         musicDao.getAllMusicDetailLive().observe(getViewLifecycleOwner(), musics -> {
-            currentMusicList = new ArrayList<>(musics); // copie pour éviter les effets de bord
-            sortAndDisplayMusics(spinner.getSelectedItemPosition()); // trie selon l'option sélectionnée
+            currentMusicList = new ArrayList<>(musics);
+            sortAndDisplayMusics(spinner.getSelectedItemPosition());
         });
     }
 
