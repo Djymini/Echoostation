@@ -1,5 +1,6 @@
 package com.djymini.echoostation.fragments;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -58,6 +59,11 @@ public class HomeFragment extends EchoostationFragment {
             genreData.setData(String.valueOf(genreDao.count()));
             playlistData.setData(String.valueOf(playlistDao.count()));
         });
+
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).modifyTitle("Accueil");
+        }
 
         return view;
     }

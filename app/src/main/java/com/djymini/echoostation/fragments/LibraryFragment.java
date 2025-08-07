@@ -74,7 +74,7 @@ public class LibraryFragment extends Fragment {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
                 TextView customTab = (TextView) LayoutInflater.from(requireContext())
-                        .inflate(R.layout.custom_tab, null);
+                        .inflate(R.layout.custom_tab, tabLayout, false);
                 customTab.setText(tabTitles[i]);
                 tab.setCustomView(customTab);
             }

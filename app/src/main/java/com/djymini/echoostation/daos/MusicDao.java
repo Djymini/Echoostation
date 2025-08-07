@@ -17,8 +17,8 @@ public interface MusicDao {
     @Insert
     long insert(Music music);
 
-    @Query("INSERT INTO artist_music (id_artist, id_music) VALUES (:idArtist, :idMusic)")
-    void insertArtistMusic(long idArtist, long idMusic);
+    @Query("INSERT INTO artist_music (id_artist, id_music, position) VALUES (:idArtist, :idMusic, :position)")
+    void insertArtistMusic(long idArtist, long idMusic, int position);
 
     @Delete
     void delete(Music music);
@@ -41,51 +41,82 @@ public interface MusicDao {
     @Query("SELECT * FROM music")
     LiveData<List<Music>> getAllLive();
 
-    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
-            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
-            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
-            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.idArtist, artist_data.nameArtist " +
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
-            "GROUP BY m.id")
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS idArtist, " +
+            "          GROUP_CONCAT(a.name, ', ') AS nameArtist " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id")
     LiveData<List<MusicDto>> getAllMusicDetailLive();
 
     @Query("SELECT * FROM music")
     List<Music> getAll();
 
-    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
-            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
-            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
-            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.idArtist, artist_data.nameArtist " +
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
-            "GROUP BY m.id")
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS idArtist, " +
+            "          GROUP_CONCAT(a.name, ', ') AS nameArtist " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id")
     List<MusicDto> getAllMusicDetail();
 
     @Query("SELECT * FROM music WHERE id = :id")
     Music getById(long id);
 
-    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
-            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
-            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
-            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.idArtist, artist_data.nameArtist " +
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
-            "WHERE m.id = :id " +
-            "GROUP BY m.id")
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS idArtist, " +
+            "          GROUP_CONCAT(a.name, ', ') AS nameArtist " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id " +
+            "WHERE m.id = :id")
     MusicDto getMusicDetailById(long id);
+
 
     @Query("SELECT * FROM music WHERE path = :path")
     Music getByPath(String path);

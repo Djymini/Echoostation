@@ -39,11 +39,15 @@ public class Artist {
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
 
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
+
     public Artist(@NonNull String name,String pathPhoto, String description, long idStatistic) {
         this.name = name;
         this.pathPhoto = pathPhoto;
         this.description = description;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
@@ -53,5 +57,6 @@ public class Artist {
         this.pathPhoto = pathPhoto;
         this.description = description;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 }

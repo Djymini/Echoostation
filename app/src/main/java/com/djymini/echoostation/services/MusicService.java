@@ -28,7 +28,7 @@ public class MusicService {
             Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, false, idAlbum, idGenre, statisticService.createStatistic());
             idMusic = musicDao.insert(musicForAddInDb);
             for (long idArtist : idArtists)
-                musicDao.insertArtistMusic(idArtist, idMusic);
+                musicDao.insertArtistMusic(idArtist, idMusic, idArtists.indexOf(idArtist));
         }else {
             idMusic = musicDao.getByPath(musicPath).id;
         }
@@ -49,7 +49,7 @@ public class MusicService {
             musicDao.update(musicModified);
 
             for (long idArtist : idArtists)
-                musicDao.insertArtistMusic(idArtist, musicModified.id);
+                musicDao.insertArtistMusic(idArtist, musicModified.id, idArtists.indexOf(idArtist));
         }
     }
 

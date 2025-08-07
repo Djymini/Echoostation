@@ -47,12 +47,16 @@ public class Album {
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
 
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
+
     public Album(@NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
         this.name = name;
         this.coverPath = coverPath;
         this.year = year;
         this.idArtist = idArtist;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
@@ -63,5 +67,6 @@ public class Album {
         this.year = year;
         this.idArtist = idArtist;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 }

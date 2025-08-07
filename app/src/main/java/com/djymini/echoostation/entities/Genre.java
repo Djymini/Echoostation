@@ -33,9 +33,13 @@ public class Genre {
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
 
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
+
     public Genre(@NonNull String name, long idStatistic) {
         this.name = name;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
@@ -43,5 +47,6 @@ public class Genre {
         this.id = id;
         this.name = name;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 }

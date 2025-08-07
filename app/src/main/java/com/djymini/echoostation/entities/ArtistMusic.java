@@ -33,4 +33,7 @@ public class ArtistMusic {
 
     @ColumnInfo(name = "id_artist")
     public int idArtist;
+
+    @ColumnInfo(name = "position")
+    public int position;
 }

@@ -84,7 +84,7 @@ public class MusicTest extends EchoostationTest{
         BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
 
         Music musicTest = musicDao.getById(15);
-        musicService.modify(musicTest, "Nouveau titre", 100, 1, 1, "Kevin, Jean", artistService, statisticService, ApplicationProvider.getApplicationContext());
+        musicService.modify(musicTest, "Nouveau titre", 100, 1, 1, "Kevin, Utada", artistService, statisticService, ApplicationProvider.getApplicationContext());
         MusicDto musicResult = musicDao.getMusicDetailById(15);
 
         assertEquals(15, musicTest.id);
@@ -101,7 +101,7 @@ public class MusicTest extends EchoostationTest{
         assertEquals(100, musicResult.track);
         assertEquals("City Nights", musicResult.nameAlbum);
         assertEquals("Afrobeat", musicResult.nameGenre);
-        assertEquals("Kevin, Jean", musicResult.nameArtist);
+        assertEquals("Kevin, Utada Hikaru", musicResult.nameArtist);
     }
 }
 

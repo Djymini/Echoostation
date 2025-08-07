@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
@@ -32,6 +33,7 @@ public class MusicFragment extends EchoostationFragment {
     private RecyclerView recyclerView;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
+    private TextView counterMusic;
     private Spinner spinner;
     private final String[] sortCategories = new String[] {
             "Nom (A -> Z)",
@@ -58,7 +60,15 @@ public class MusicFragment extends EchoostationFragment {
         setupDaoAndService(db);
 
         recyclerView = view.findViewById(R.id.recycler_view_song);
+        counterMusic = view.findViewById(R.id.number_music);
         spinner = view.findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapterSpinner = ArrayAdapter.createFromResource(
+                requireContext(),
+                R.array.sort_categories,
+                R.layout.spinner_item
+        );
+        adapterSpinner.setDropDownViewResource(R.layout.spinner_item);
+        spinner.setAdapter(adapterSpinner);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MusicAdapter();
@@ -92,6 +102,11 @@ public class MusicFragment extends EchoostationFragment {
             }
         });
 
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).modifyTitle("Titres");
+        }
+
         loadMusics();
 
         return view;
@@ -101,6 +116,7 @@ public class MusicFragment extends EchoostationFragment {
         musicDao.getAllMusicDetailLive().observe(getViewLifecycleOwner(), musics -> {
             currentMusicList = new ArrayList<>(musics);
             sortAndDisplayMusics(spinner.getSelectedItemPosition());
+            counterMusic.setText(musics.size() + " Titres");
         });
     }
 
@@ -141,10 +157,10 @@ public class MusicFragment extends EchoostationFragment {
                 sortedList.sort(Comparator.comparingInt(m -> m.listeningNumber));
                 break;
             case 10: // Date ajout récent -> ancien
-                sortedList.sort((m1, m2) -> Long.compare(m2.id, m1.id));
+                sortedList.sort((m1, m2) -> Long.compare(m2.createdAt, m1.createdAt));
                 break;
             case 11: // Date ajout ancien -> récent
-                sortedList.sort(Comparator.comparingLong(m -> m.id));
+                sortedList.sort(Comparator.comparingLong(m -> m.createdAt));
                 break;
         }
 

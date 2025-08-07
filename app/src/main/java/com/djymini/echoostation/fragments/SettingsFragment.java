@@ -1,5 +1,6 @@
 package com.djymini.echoostation.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 
 public class SettingsFragment extends Fragment {
@@ -15,6 +17,10 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //TODO: Make the setting fragment (features/settings)
+        Activity activity = getActivity();
+        if (activity instanceof MainActivity) {
+            ((MainActivity) activity).modifyTitle("Paramêtres");
+        }
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 }

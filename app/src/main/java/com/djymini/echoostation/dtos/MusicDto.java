@@ -22,8 +22,9 @@ public class MusicDto {
     public int monthListeningNumber;
     public long listeningTime;
     public long monthListeningTime;
+    public long createdAt;
 
-    public MusicDto(long id, String path, String title, long duration, int track, boolean isFavorite, long idAlbum, String nameAlbum, String coverPath, int year, String idArtist, String nameArtist, long idGenre, String nameGenre, long idStatistic, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime) {
+    public MusicDto(long id, String path, String title, long duration, int track, boolean isFavorite, long idAlbum, String nameAlbum, String coverPath, int year, String idArtist, String nameArtist, long idGenre, String nameGenre, long idStatistic, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
         this.id = id;
         this.path = path;
         this.title = title;
@@ -43,6 +44,7 @@ public class MusicDto {
         this.monthListeningNumber = monthListeningNumber;
         this.listeningTime = listeningTime;
         this.monthListeningTime = monthListeningTime;
+        this.createdAt = createdAt;
     }
 
     public Uri getCover(){

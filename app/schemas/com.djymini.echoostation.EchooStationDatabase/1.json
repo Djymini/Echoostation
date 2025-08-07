@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d67d5833d0887fd4836ef391a8197126",
+    "identityHash": "2be7c9ac8d8386215686d684e80ca759",
     "entities": [
       {
         "tableName": "album",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `cover_path` TEXT, `year` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `cover_path` TEXT, `year` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -40,6 +40,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -106,7 +112,7 @@
       },
       {
         "tableName": "artist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `path_photo` TEXT, `description` TEXT, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `path_photo` TEXT, `description` TEXT, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -133,6 +139,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -179,7 +191,7 @@
       },
       {
         "tableName": "artist_music",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_music` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, PRIMARY KEY(`id_music`, `id_artist`), FOREIGN KEY(`id_music`) REFERENCES `music`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id_music` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, `position` INTEGER NOT NULL, PRIMARY KEY(`id_music`, `id_artist`), FOREIGN KEY(`id_music`) REFERENCES `music`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "idMusic",
@@ -190,6 +202,12 @@
           {
             "fieldPath": "idArtist",
             "columnName": "id_artist",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -248,7 +266,7 @@
       },
       {
         "tableName": "genre",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -265,6 +283,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -311,7 +335,7 @@
       },
       {
         "tableName": "mood",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -328,6 +352,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -374,7 +404,7 @@
       },
       {
         "tableName": "music",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT NOT NULL, `title` TEXT NOT NULL, `duration` INTEGER NOT NULL, `track` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, `id_album` INTEGER NOT NULL, `id_genre` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_album`) REFERENCES `album`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_genre`) REFERENCES `genre`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT NOT NULL, `title` TEXT NOT NULL, `duration` INTEGER NOT NULL, `track` INTEGER NOT NULL, `isFavorite` INTEGER NOT NULL, `id_album` INTEGER NOT NULL, `id_genre` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_album`) REFERENCES `album`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_genre`) REFERENCES `genre`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -427,6 +457,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -660,7 +696,7 @@
       },
       {
         "tableName": "playlist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -677,6 +713,12 @@
           {
             "fieldPath": "idStatistic",
             "columnName": "id_statistic",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAt",
+            "columnName": "created_at",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -766,7 +808,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd67d5833d0887fd4836ef391a8197126')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2be7c9ac8d8386215686d684e80ca759')"
     ]
   }
 }

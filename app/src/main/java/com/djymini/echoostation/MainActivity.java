@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
     private ConstraintLayout appLayout;
     private Button confirmButton, quitButton;
     private BottomNavigationView bottomNavMenu;
+    private Toolbar toolbar;
 
     private AlbumDao albumDao;
     private ArtistDao artistDao;
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -497,6 +498,8 @@ public class MainActivity extends AppCompatActivity {
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
-
+    public void modifyTitle(String newText){
+        toolbar.setTitle(newText);
+    }
 
 }

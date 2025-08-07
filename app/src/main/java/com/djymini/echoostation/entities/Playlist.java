@@ -31,4 +31,7 @@ public class Playlist {
 
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
+
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
 }

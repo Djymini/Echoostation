@@ -4,4 +4,10 @@
         <item name="fontFamily">@font/m_plus_rounded_1c_bold</item>
         <item name="android:textSize">10sp</item>
     </style>
+
+    <style name="SpinnerAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="fontFamily">@font/m_plus_rounded_1c_medium</item>
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

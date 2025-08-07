@@ -65,6 +65,9 @@ public class Music {
     @ColumnInfo(name = "id_statistic")
     public long idStatistic;
 
+    @ColumnInfo(name = "created_at")
+    public long createdAt;
+
     public Music(@NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long idAlbum, long idGenre, long idStatistic) {
         this.path = path;
         this.title = title;
@@ -74,6 +77,7 @@ public class Music {
         this.idAlbum = idAlbum;
         this.idGenre = idGenre;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
@@ -87,6 +91,7 @@ public class Music {
         this.idAlbum = idAlbum;
         this.idGenre = idGenre;
         this.idStatistic = idStatistic;
+        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
@@ -100,5 +105,6 @@ public class Music {
         this.idAlbum = idAlbum;
         this.idGenre = idGenre;
         this.idStatistic = music.idStatistic;
+        this.createdAt = music.createdAt;
     }
 }

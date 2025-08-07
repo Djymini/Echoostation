@@ -10,6 +10,21 @@
     <string name="library_fragment">Bibliothèque</string>
     <string name="settings_fragment">Paramètres</string>
     <string name="equalizer_fragment">Egaliseur</string>
+
+    //Image description
+    <string name="logo_desciption">Echoo Station logo</string>
+    <string name="ic_remove_bottom_sheet">Bottom sheet layout top icon</string>
+    <string name="ic_close_bottom_sheet">Bottom sheet close icon</string>
+    <string name="ic_button_play_with_circle">Icon play</string>
+    <string name="ic_edit">Icone modifier</string>
+    <string name="ic_delete">Icone supprimer</string>
+    <string name="ic_sort">Icone trier</string>
+    <string name="ic_shuffle">Icone aléatoire</string>
+    <string name="album_cover">Couverture d\'album</string>
+    <string name="ic_menu_dots">Icone menu</string>
+
+    <string name="search_bar_text">Recherche</string>
+
     
     <string-array name="sort_categories">
         <item>Nom (A -> Z)</item>

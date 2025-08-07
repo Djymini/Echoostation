@@ -1,9 +1,6 @@
 package com.djymini.echoostation.adapters;
 
 import android.net.Uri;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +8,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
-import com.djymini.echoostation.daos.AlbumDao;
-import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
-import com.djymini.echoostation.services.AlbumService;
-import com.djymini.echoostation.services.ArtistService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+import java.util.Locale;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
     private List<MusicDto> musics = new ArrayList<>();
@@ -96,7 +88,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     private String formatDuration(long durationMs) {
         long minutes = (durationMs / 1000) / 60;
         long seconds = (durationMs / 1000) % 60;
-        return String.format("%02d:%02d", minutes, seconds);
+        return String.format(Locale.US, "%02d:%02d", minutes, seconds);
     }
 
     public void setOnMusicMenuClickListener(OnMusicMenuClickListener listener) {
