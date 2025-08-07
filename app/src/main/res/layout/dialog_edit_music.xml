@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <EditText
+        android:id="@+id/editTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Titre" />
+
+    <EditText
+        android:id="@+id/editArtist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Artiste" />
+
+    <EditText
+        android:id="@+id/editAlbum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Album" />
+
+    <EditText
+        android:id="@+id/editTrack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Numero de piste" />
+
+    <EditText
+        android:id="@+id/editGenre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Genre" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enregistrer" />
+
+</LinearLayout>

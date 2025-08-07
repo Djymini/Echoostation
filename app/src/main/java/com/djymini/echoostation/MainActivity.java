@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -57,6 +58,8 @@ import com.djymini.echoostation.daos.PlaylistDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.entities.Album;
+import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
@@ -340,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
         title.setText(musicDto.title);
 
         LinearLayout videoLayout = dialog.findViewById(R.id.layoutVideo);
-        LinearLayout shortsLayout = dialog.findViewById(R.id.layoutShorts);
+        LinearLayout editLayout = dialog.findViewById(R.id.layout_edit);
         LinearLayout deleteLayout = dialog.findViewById(R.id.layout_delete);
         ImageView cancelButton = dialog.findViewById(R.id.cancelButton);
 
@@ -354,13 +357,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        shortsLayout.setOnClickListener(new View.OnClickListener() {
+        editLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 dialog.dismiss();
-                Toast.makeText(MainActivity.this,"Create a short is Clicked",Toast.LENGTH_SHORT).show();
-
+                showEditMusicDialog(musicDto);
             }
         });
 
@@ -446,6 +447,56 @@ public class MainActivity extends AppCompatActivity {
 
         return id;
     }
+
+    public void showEditMusicDialog(MusicDto musicDto) {
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_edit_music);
+
+        EditText titleEdit = dialog.findViewById(R.id.editTitle);
+        EditText artistEdit = dialog.findViewById(R.id.editArtist);
+        EditText albumEdit = dialog.findViewById(R.id.editAlbum);
+        EditText trackEdit = dialog.findViewById(R.id.editTrack);
+        EditText genreEdit = dialog.findViewById(R.id.editGenre);
+        Button saveBtn = dialog.findViewById(R.id.btnSave);
+
+        // Pré-remplir les champs avec les données existantes
+        titleEdit.setText(musicDto.title);
+        artistEdit.setText(musicDto.nameArtist);
+        albumEdit.setText(musicDto.nameAlbum);
+        trackEdit.setText(String.valueOf(musicDto.track));
+        genreEdit.setText(musicDto.nameGenre);
+
+        saveBtn.setOnClickListener(v -> {
+            String newTitle = titleEdit.getText().toString().trim();
+            String newArtist = artistEdit.getText().toString().trim();
+            String newAlbum = albumEdit.getText().toString().trim();
+            String newTrack = trackEdit.getText().toString().trim();
+            String newGenre = genreEdit.getText().toString().trim();
+
+            executor.execute(() -> {
+                Music music = musicDao.getById(musicDto.id);
+                Album album = albumDao.getById(musicDto.idAlbum);
+                String artistAlbum = artistDao.getById(album.idArtist).name;
+
+                if (music != null) {
+                    if(musicDto.title != newTitle || musicDto.nameAlbum != newAlbum || musicDto.nameArtist != newArtist || musicDto.nameGenre != newGenre){
+                        artistService.addAllArtist(newArtist, statisticService, this);
+                        long idGenre = genreService.add(newGenre, statisticService, this);
+                        long idAlbum = albumService.add(newAlbum, album.coverPath, album.year, artistAlbum, artistService, statisticService, this);
+                        musicService.modify(music, newTitle, Integer.parseInt(newTrack), idAlbum, idGenre, newArtist, artistService, statisticService, this);
+                    }
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Musique mise à jour", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    });
+                }
+            });
+        });
+
+        dialog.show();
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
 
 
 }

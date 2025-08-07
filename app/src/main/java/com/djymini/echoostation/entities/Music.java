@@ -88,4 +88,17 @@ public class Music {
         this.idGenre = idGenre;
         this.idStatistic = idStatistic;
     }
+
+    @Ignore
+    public Music(Music music, @NonNull String title, int track, long idAlbum, long idGenre) {
+        this.id = music.id;
+        this.path = music.path;
+        this.title = title;
+        this.duration = music.duration;
+        this.track = track;
+        this.isFavorite = music.isFavorite;
+        this.idAlbum = idAlbum;
+        this.idGenre = idGenre;
+        this.idStatistic = music.idStatistic;
+    }
 }

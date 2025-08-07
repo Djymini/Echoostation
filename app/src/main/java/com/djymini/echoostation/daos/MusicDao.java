@@ -23,6 +23,9 @@ public interface MusicDao {
     @Delete
     void delete(Music music);
 
+    @Query("DELETE FROM artist_music WHERE id_music = :idMusic")
+    void deleteArtistMusicByMusicId(long idMusic);
+
     @Update
     void update(Music music);
 
@@ -69,6 +72,20 @@ public interface MusicDao {
 
     @Query("SELECT * FROM music WHERE id = :id")
     Music getById(long id);
+
+    @Query("SELECT m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, " +
+            "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath,  al.year AS year, " +
+            "GROUP_CONCAT(a.id, ', ') AS idArtist, GROUP_CONCAT(a.name, ', ') AS nameArtist, g.id AS idGenre, g.name AS nameGenre, " +
+            "s.id AS idStatistic, s.listening_number AS listeningNumber, s.month_listening_number AS monthListeningNumber, s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "JOIN artist_music ON m.id = artist_music.id_music JOIN artist a ON a.id = artist_music.id_artist " +
+            "WHERE m.id = :id " +
+            "GROUP BY m.id")
+    MusicDto getMusicDetailById(long id);
 
     @Query("SELECT * FROM music WHERE path = :path")
     Music getByPath(String path);

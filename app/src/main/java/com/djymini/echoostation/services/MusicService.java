@@ -41,6 +41,18 @@ public class MusicService {
         return newString[newString.length-1];
     }
 
+    public void modify(Music currentMusic, String newTitle, int newTrack, long newIdAlbum, long newIdGenre, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
+        Music musicModified = new Music(currentMusic, newTitle, newTrack, newIdAlbum, newIdGenre);
+        if(musicDao.existsById(currentMusic.id)){
+            musicDao.deleteArtistMusicByMusicId(musicModified.id);
+            List<Long> idArtists = artistService.addAllArtist(artistName, statisticService, context);
+            musicDao.update(musicModified);
+
+            for (long idArtist : idArtists)
+                musicDao.insertArtistMusic(idArtist, musicModified.id);
+        }
+    }
+
     /*
     public void incrementListeningNumberStatistic(Music music, StatisticService statisticService){
         long idMusic = music.id;

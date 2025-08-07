@@ -35,7 +35,7 @@ public interface GenreDao {
     List<Genre> getAll();
 
     @Query("SELECT * FROM genre WHERE id = :id")
-    Genre getById(int id);
+    Genre getById(long id);
 
     @Query("SELECT * FROM genre WHERE name = :name")
     Genre getByName(String name);
