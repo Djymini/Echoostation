@@ -43,7 +43,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -59,7 +58,6 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
@@ -190,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
                         Uri albumArtUri = ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
                         String coverAlbum = albumArtUri.toString();
 
-                        long idGenre = genreService.add(genre, statisticService, this);
-                        long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService, this);
-                        musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService, this);
+                        long idGenre = genreService.add(genre, statisticService);
+                        long idAlbum = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService);
+                        musicService.add(path, title, duration, track, artist, idAlbum, idGenre, artistService, statisticService);
                     }
                 } finally {
                     cursor.close();
@@ -258,11 +256,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupServices(){
-        albumService = new AlbumService(albumDao, statisticDao);
-        artistService = new ArtistService(artistDao, statisticDao);
-        genreService = new GenreService(genreDao, statisticDao);
-        musicService = new MusicService(musicDao, statisticDao);
         statisticService = new StatisticService(statisticDao);
+        albumService = new AlbumService(albumDao, statisticDao, statisticService);
+        artistService = new ArtistService(artistDao, statisticDao, statisticService, this);
+        genreService = new GenreService(genreDao, statisticDao, statisticService, this);
+        musicService = new MusicService(musicDao, statisticDao, statisticService);
     }
 
     private void setupViews(){
@@ -477,14 +475,14 @@ public class MainActivity extends AppCompatActivity {
             executor.execute(() -> {
                 Music music = musicDao.getById(musicDto.id);
                 Album album = albumDao.getById(musicDto.idAlbum);
-                String artistAlbum = artistDao.getById(album.idArtist).name;
+                String artistAlbum = artistDao.getById(album.artistId).name;
 
                 if (music != null) {
                     if(musicDto.title != newTitle || musicDto.nameAlbum != newAlbum || musicDto.nameArtist != newArtist || musicDto.nameGenre != newGenre){
-                        artistService.addAllArtist(newArtist, statisticService, this);
-                        long idGenre = genreService.add(newGenre, statisticService, this);
-                        long idAlbum = albumService.add(newAlbum, album.coverPath, album.year, artistAlbum, artistService, statisticService, this);
-                        musicService.modify(music, newTitle, Integer.parseInt(newTrack), idAlbum, idGenre, newArtist, artistService, statisticService, this);
+                        artistService.addAllArtist(newArtist, statisticService);
+                        long idGenre = genreService.add(newGenre, statisticService);
+                        long idAlbum = albumService.add(newAlbum, album.coverPath, album.year, artistAlbum, artistService, statisticService);
+                        musicService.modify(music, newTitle, Integer.parseInt(newTrack), idAlbum, idGenre, newArtist, artistService, statisticService);
                     }
                     runOnUiThread(() -> {
                         Toast.makeText(this, "Musique mise à jour", Toast.LENGTH_SHORT).show();

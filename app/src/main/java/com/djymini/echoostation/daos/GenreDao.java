@@ -42,4 +42,7 @@ public interface GenreDao {
 
     @Query("SELECT COUNT(*) FROM genre")
     long count();
+
+    @Query("SELECT * FROM genre WHERE name LIKE '%' || :query || '%'")
+    List<Genre> search(String query);
 }

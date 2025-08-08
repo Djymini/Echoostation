@@ -28,7 +28,7 @@ public class AlbumTest extends EchoostationTest{
 
         List<Album> result2 = albumDao.getAll();
         for(Album album : result2){
-            String string = String.format("id : %s, Artiste : %s", album.id, artistDao.getById(album.idArtist).name);
+            String string = String.format("id : %s, Artiste : %s", album.id, artistDao.getById(album.artistId).name);
             Log.d(album.name, string);
         }
 

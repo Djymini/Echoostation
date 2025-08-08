@@ -40,9 +40,10 @@ public class EchoostationFragment extends Fragment{
         moodDao = db.moodDao();
         playlistDao = db.playlistDao();
 
-        artistService = new ArtistService(artistDao, statisticDao);
-        albumService = new AlbumService(albumDao, statisticDao);
-        genreService = new GenreService(genreDao, statisticDao);
-        musicService = new MusicService(musicDao, statisticDao);
+        statisticService = new StatisticService(statisticDao);
+        albumService = new AlbumService(albumDao, statisticDao, statisticService);
+        artistService = new ArtistService(artistDao, statisticDao, statisticService, requireContext());
+        genreService = new GenreService(genreDao, statisticDao, statisticService, requireContext());
+        musicService = new MusicService(musicDao, statisticDao, statisticService);
     }
 }

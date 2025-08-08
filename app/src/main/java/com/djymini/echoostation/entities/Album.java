@@ -8,6 +8,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.djymini.echoostation.utilities.TimeUtilities;
+
 @Entity(
         tableName = "album",
         foreignKeys = {
@@ -42,31 +44,26 @@ public class Album {
     public int year;
 
     @ColumnInfo(name = "id_artist")
-    public long idArtist;
+    public long artistId;
 
     @ColumnInfo(name = "id_statistic")
-    public long idStatistic;
+    public long statisticId;
 
     @ColumnInfo(name = "created_at")
     public long createdAt;
 
-    public Album(@NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
+    public Album(@NonNull String name, String coverPath, int year, long artistId, long statisticId) {
         this.name = name;
         this.coverPath = coverPath;
         this.year = year;
-        this.idArtist = idArtist;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
+        this.artistId = artistId;
+        this.statisticId = statisticId;
+        this.createdAt = TimeUtilities.currentTimeMillis();
     }
 
     @Ignore
-    public Album(long id, @NonNull String name, String coverPath, int year, long idArtist, long idStatistic) {
+    public Album(long id, @NonNull String name, String coverPath, int year, long artistId, long statisticId) {
+        this(name, coverPath, year, artistId, statisticId);
         this.id = id;
-        this.name = name;
-        this.coverPath = coverPath;
-        this.year = year;
-        this.idArtist = idArtist;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
     }
 }

@@ -87,9 +87,10 @@
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             app:title="EchooStation"
-            app:titleTextColor="@android:color/white"
+            app:titleTextColor="@color/colorText"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            style="@style/ToolbarTitleAppearance"/>
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"

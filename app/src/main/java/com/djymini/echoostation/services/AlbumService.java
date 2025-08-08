@@ -1,136 +1,93 @@
 package com.djymini.echoostation.services;
 
-import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.helpers.StatisticHelper;
 import com.djymini.echoostation.utilities.Constants;
 
 public class AlbumService {
-    private AlbumDao albumDao;
-    private StatisticDao statisticDao;
+    private static final String TAG = "AlbumService";
+    private final AlbumDao albumDao;
+    private final StatisticHelper<Album> statisticHelper;
 
-    public AlbumService(AlbumDao albumDao, StatisticDao statisticDao) {
+    public AlbumService(AlbumDao albumDao, StatisticDao statisticDao, StatisticService statisticService) {
         this.albumDao = albumDao;
-        this.statisticDao = statisticDao;
+        this.statisticHelper = new StatisticHelper<>(
+                statisticDao,
+                statisticService,
+                albumDao::existsById,
+                album -> album.statisticId
+        );
     }
 
-    public long add(String albumName,String coverPath,int year, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
-        long idAlbum;
-        long idArtist = artistService.addAllArtist(artistName, statisticService, context).get(0);
+    public long add(String albumName,String coverPath,int year, String artistName, ArtistService artistService, StatisticService statisticService){
+        try {
+            long artistId = artistService.addAllArtist(artistName, statisticService).get(0);
 
-        if (albumName == "" || albumName == null)
-            albumName = Constants.UNKNOWN_ALBUM;
+            if (albumName == null || albumName.isEmpty()) {
+                albumName = Constants.UNKNOWN_ALBUM;
+            }
 
-        if(!albumDao.existsByNameAndArtist(albumName, idArtist)){
-            Album albumForAddInDb = new Album(albumName, coverPath, year, idArtist, statisticService.createStatistic());
-            idAlbum = albumDao.insert(albumForAddInDb);
-        }else {
-            idAlbum = albumDao.getByNameAndArtist(albumName, idArtist).id;
+            if (!albumDao.existsByNameAndArtist(albumName, artistId)) {
+                long statisticId = statisticService.createStatistic();
+                Album albumForAddInDb = new Album(albumName, coverPath, year, artistId, statisticId);
+                return albumDao.insert(albumForAddInDb);
+            } else {
+                return albumDao.getByNameAndArtist(albumName, artistId).id;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de l'ajout de l'album", e);
+            return -1;
         }
-
-        return idAlbum;
     }
 
-    public Uri getCover(long idAlbum){
-        return Uri.parse(albumDao.getById(idAlbum).coverPath);
+    public Uri getCover(long albumId){
+        try {
+            Album album = albumDao.getById(albumId);
+            if (album != null && album.coverPath != null && !album.coverPath.isEmpty()) {
+                return Uri.parse(album.coverPath);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de la récupération de la couverture", e);
+        }
+        return null;
     }
 
     public void modifyCover(Album album, String newCoverPath){
-        if(albumDao.existsById(album.id)){
-            Album albumForUpdate = new Album(album.id, album.name, newCoverPath, album.year, album.idArtist, album.idStatistic);
-            albumDao.update(albumForUpdate);
-        }
-    }
-
-    /*
-    public void modifyName(Album album, String newName){
-        if(!albumDao.existsById(album.id))
+        if (album == null) {
+            Log.e(TAG, "album est null");
             return;
-
-        if(albumDao.existsByNameAndArtist(newName, album.idArtist)){
-            //TODO: Change the idAlbum of music for exitent album
-            albumDao.delete(album);
         }
-        else{
-            Album albumForUpdate = new Album(album.id, newName, album.coverPath, album.year, album.idArtist, album.idStatistic);
-            albumDao.update(albumForUpdate);
-        }
-    }
 
-    public void modifyYear(Album album, int newYear){
-        if(albumDao.existsById(album.id)){
-            Album albumForUpdate = new Album(album.id, album.name, album.coverPath, newYear, album.idArtist, album.idStatistic);
-            albumDao.update(albumForUpdate);
+        try {
+            if (albumDao.existsById(album.id)) {
+                Album updatedAlbum = new Album(album.id, album.name, newCoverPath, album.year, album.artistId, album.statisticId);
+                albumDao.update(updatedAlbum);
+            } else {
+                Log.w(TAG, "L'album avec id " + album.id + " n'existe pas.");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de la modification de la couverture", e);
         }
     }
 
-    public void modifyArtist(Album album, String newArtistName, ArtistService artistService, StatisticService statisticService, Context context){
-        if(!albumDao.existsById(album.id))
-            return;
-
-        long idArtist = artistService.addAllArtist(newArtistName, statisticService, context).get(0);
-        Album albumForUpdate = new Album(album.id, album.name, album.coverPath, album.year, idArtist, album.idStatistic);
-        albumDao.update(albumForUpdate);
+    public void incrementListeningNumberStatistic(Album album){
+        statisticHelper.incrementListeningNumber(album, album.id);
     }
 
-    public void modify(Album album, String newName, String newCoverPath, int newYear, String newArtistName, ArtistService artistService, StatisticService statisticService, Context context){
-        if(!albumDao.existsById(album.id))
-            return;
-
-        long idArtist = artistService.addAllArtist(newArtistName, statisticService, context).get(0);
-
-        if(albumDao.existsByNameAndArtist(newName, idArtist)){
-            //TODO: Change the idAlbum of music for exitent album
-            albumDao.delete(album);
-        }
-        else{
-            Album albumForUpdate = new Album(album.id, newName, newCoverPath, newYear, idArtist, album.idStatistic);
-            albumDao.update(albumForUpdate);
-        }
-
+    public void incrementListeningTimeStatistic(Album album, long time){
+        statisticHelper.incrementListeningTime(album, album.id, time);
     }
 
-    public void incrementListeningNumberStatistic(Album album, StatisticService statisticService){
-        long idArtist = album.id;
-        long idStatistic = album.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(albumDao.existsById(idArtist)){
-            statisticService.incrementListeningNumber(statistic);
-        }
+    public void incrementAllListeningStatistic(Album album, long time){
+        statisticHelper.incrementAllListening(album, album.id, time);
     }
 
-    public void incrementListeningTimeStatistic(Album album, StatisticService statisticService, long time){
-        long idArtist = album.id;
-        long idStatistic = album.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(albumDao.existsById(idArtist)){
-            statisticService.incrementListeningTime(statistic, time);
-        }
+    public void reinitializeMonthValuesStatistic(Album album) {
+        statisticHelper.reinitializeMonthValues(album, album.id);
     }
-
-    public void incrementAllListeningStatistic(Album album, StatisticService statisticService, long time){
-        long idArtist = album.id;
-        long idStatistic = album.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(albumDao.existsById(idArtist)){
-            statisticService.incrementAllListening(statistic, time);
-        }
-    }
-
-    public void reinitializeMonthValuesStatistic(Album album, StatisticService statisticService){
-        long idArtist = album.id;
-        long idStatistic = album.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(albumDao.existsById(idArtist)){
-            statisticService.reinitializeMonthValues(statistic);
-        }
-    }*/
 }

@@ -43,7 +43,7 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.created_at AS createdAt, " +
             "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS idGenre, g.name AS nameGenre, " +
             "s.id AS idStatistic, s.listening_number AS listeningNumber, " +
@@ -69,7 +69,7 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.created_at AS createdAt, " +
             "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS idGenre, g.name AS nameGenre, " +
             "s.id AS idStatistic, s.listening_number AS listeningNumber, " +
@@ -95,7 +95,7 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.isFavorite AS isFavorite, m.created_at AS createdAt, " +
+            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.created_at AS createdAt, " +
             "al.id AS idAlbum, al.name AS nameAlbum, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS idGenre, g.name AS nameGenre, " +
             "s.id AS idStatistic, s.listening_number AS listeningNumber, " +

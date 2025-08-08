@@ -8,6 +8,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.djymini.echoostation.utilities.TimeUtilities;
+
 @Entity(
         tableName = "genre",
         foreignKeys = {
@@ -31,22 +33,20 @@ public class Genre {
     public String name;
 
     @ColumnInfo(name = "id_statistic")
-    public long idStatistic;
+    public long statisticId;
 
     @ColumnInfo(name = "created_at")
     public long createdAt;
 
-    public Genre(@NonNull String name, long idStatistic) {
+    public Genre(@NonNull String name, long statisticId) {
         this.name = name;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
+        this.statisticId = statisticId;
+        this.createdAt = TimeUtilities.currentTimeMillis();
     }
 
     @Ignore
-    public Genre(long id, @NonNull String name, long idStatistic) {
+    public Genre(long id, @NonNull String name, long statisticId) {
+        this(name, statisticId);
         this.id = id;
-        this.name = name;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
     }
 }

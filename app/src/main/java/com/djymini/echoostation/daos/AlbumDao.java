@@ -8,7 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Artist;
 
 import java.util.List;
 

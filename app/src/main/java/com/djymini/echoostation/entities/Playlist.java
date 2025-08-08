@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import com.djymini.echoostation.utilities.TimeUtilities;
 
 @Entity(
         tableName = "playlist",
@@ -30,8 +33,21 @@ public class Playlist {
     public String name;
 
     @ColumnInfo(name = "id_statistic")
-    public long idStatistic;
+    public long statisticId;
 
     @ColumnInfo(name = "created_at")
     public long createdAt;
+
+    public Playlist(@NonNull String name, long statisticId) {
+        this.name = name;
+        this.statisticId = statisticId;
+        this.createdAt = TimeUtilities.currentTimeMillis();
+    }
+
+    @Ignore
+
+    public Playlist(long id, @NonNull String name, long statisticId) {
+        this(name, statisticId);
+        this.id = id;
+    }
 }

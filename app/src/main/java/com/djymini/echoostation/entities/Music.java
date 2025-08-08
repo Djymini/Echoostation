@@ -8,6 +8,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import com.djymini.echoostation.utilities.TimeUtilities;
+
 @Entity(
         tableName = "music",
         foreignKeys = {
@@ -53,58 +55,50 @@ public class Music {
     @ColumnInfo(name = "track")
     public int track;
 
-    @ColumnInfo(name = "isFavorite")
+    @ColumnInfo(name = "is_favorite")
     public boolean isFavorite;
 
     @ColumnInfo(name = "id_album")
-    public long idAlbum;
+    public long albumId;
 
     @ColumnInfo(name = "id_genre")
-    public long idGenre;
+    public long genreId;
 
     @ColumnInfo(name = "id_statistic")
-    public long idStatistic;
+    public long statisticId;
 
     @ColumnInfo(name = "created_at")
     public long createdAt;
 
-    public Music(@NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long idAlbum, long idGenre, long idStatistic) {
+    public Music(@NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long albumId, long genreId, long statisticId) {
         this.path = path;
         this.title = title;
         this.duration = duration;
         this.track = track;
         this.isFavorite = isFavorite;
-        this.idAlbum = idAlbum;
-        this.idGenre = idGenre;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
+        this.albumId = albumId;
+        this.genreId = genreId;
+        this.statisticId = statisticId;
+        this.createdAt = TimeUtilities.currentTimeMillis();
     }
 
     @Ignore
-    public Music(long id, @NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long idAlbum, long idGenre, long idStatistic) {
+    public Music(long id, @NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long albumId, long genreId, long statisticId) {
+        this(path, title, duration, track, isFavorite, albumId, genreId, statisticId);
         this.id = id;
-        this.path = path;
-        this.title = title;
-        this.duration = duration;
-        this.track = track;
-        this.isFavorite = isFavorite;
-        this.idAlbum = idAlbum;
-        this.idGenre = idGenre;
-        this.idStatistic = idStatistic;
-        this.createdAt = System.currentTimeMillis();
     }
 
     @Ignore
-    public Music(Music music, @NonNull String title, int track, long idAlbum, long idGenre) {
+    public Music(Music music, @NonNull String title, int track, long albumId, long genreId) {
         this.id = music.id;
         this.path = music.path;
         this.title = title;
         this.duration = music.duration;
         this.track = track;
         this.isFavorite = music.isFavorite;
-        this.idAlbum = idAlbum;
-        this.idGenre = idGenre;
-        this.idStatistic = music.idStatistic;
+        this.albumId = albumId;
+        this.genreId = genreId;
+        this.statisticId = music.statisticId;
         this.createdAt = music.createdAt;
     }
 }

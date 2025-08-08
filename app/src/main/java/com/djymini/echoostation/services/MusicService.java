@@ -1,39 +1,51 @@
 package com.djymini.echoostation.services;
 
-import android.content.Context;
+import android.util.Log;
 
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Music;
-import com.djymini.echoostation.entities.Statistic;
+import com.djymini.echoostation.helpers.StatisticHelper;
 
 import java.util.List;
 
 public class MusicService {
-    private MusicDao musicDao;
-    private StatisticDao statisticDao;
+    private static final String TAG = "MusicService";
+    private final MusicDao musicDao;
+    private final StatisticHelper<Music> statisticHelper;
 
-    public MusicService(MusicDao musicDao, StatisticDao statisticDao) {
+    public MusicService(MusicDao musicDao, StatisticDao statisticDao, StatisticService statisticService) {
         this.musicDao = musicDao;
-        this.statisticDao = statisticDao;
+        this.statisticHelper = new StatisticHelper<>(
+                statisticDao,
+                statisticService,
+                musicDao::existsById,
+                music -> music.statisticId
+        );
     }
 
-    public long add(String musicPath, String musicTitle, long musicDuration, int musicTrack, String artistName, long idAlbum, long idGenre, ArtistService artistService, StatisticService statisticService, Context context){
-        long idMusic;
-        List<Long> idArtists = artistService.addAllArtist(artistName, statisticService, context);
-        if (musicTitle == "" || musicTitle == null)
-            musicTitle = getNameFile(musicPath);
+    public long add(String musicPath, String musicTitle, long musicDuration, int musicTrack, String artistName, long albumId, long genreId, ArtistService artistService, StatisticService statisticService){
+        try{
+            List<Long> artistIds = artistService.addAllArtist(artistName, statisticService);
 
-        if(!musicDao.existsByPath(musicPath)){
-            Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, false, idAlbum, idGenre, statisticService.createStatistic());
-            idMusic = musicDao.insert(musicForAddInDb);
-            for (long idArtist : idArtists)
-                musicDao.insertArtistMusic(idArtist, idMusic, idArtists.indexOf(idArtist));
-        }else {
-            idMusic = musicDao.getByPath(musicPath).id;
+            if (musicTitle == null || musicTitle.isEmpty()){
+                musicTitle = getNameFile(musicPath);
+            }
+
+            if(!musicDao.existsByPath(musicPath)){
+                long statisticId = statisticService.createStatistic();
+                Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, false, albumId, genreId, statisticId);
+                long musicId = musicDao.insert(musicForAddInDb);
+                linkArtistWithMusic(artistIds, musicId);
+
+                return musicId;
+            }else {
+                return musicDao.getByPath(musicPath).id;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de l'ajout de la musique", e);
+            return -1;
         }
-
-        return idMusic;
     }
 
     private String getNameFile(String musicPath){
@@ -41,57 +53,46 @@ public class MusicService {
         return newString[newString.length-1];
     }
 
-    public void modify(Music currentMusic, String newTitle, int newTrack, long newIdAlbum, long newIdGenre, String artistName, ArtistService artistService, StatisticService statisticService, Context context){
-        Music musicModified = new Music(currentMusic, newTitle, newTrack, newIdAlbum, newIdGenre);
-        if(musicDao.existsById(currentMusic.id)){
-            musicDao.deleteArtistMusicByMusicId(musicModified.id);
-            List<Long> idArtists = artistService.addAllArtist(artistName, statisticService, context);
-            musicDao.update(musicModified);
+    public void modify(Music currentMusic, String newTitle, int newTrack, long newAlbumId, long newGenreId, String artistName, ArtistService artistService, StatisticService statisticService){
+        if (currentMusic == null) {
+            Log.e(TAG, "musique est null");
+            return;
+        }
 
-            for (long idArtist : idArtists)
-                musicDao.insertArtistMusic(idArtist, musicModified.id, idArtists.indexOf(idArtist));
+        try{
+            Music musicModified = new Music(currentMusic, newTitle, newTrack, newAlbumId, newGenreId);
+
+            if(musicDao.existsById(currentMusic.id)){
+                musicDao.deleteArtistMusicByMusicId(musicModified.id);
+                List<Long> artistIds = artistService.addAllArtist(artistName, statisticService);
+                musicDao.update(musicModified);
+
+                linkArtistWithMusic(artistIds, musicModified.id);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Erreur lors de la récupération de la couverture", e);
         }
     }
 
-    /*
-    public void incrementListeningNumberStatistic(Music music, StatisticService statisticService){
-        long idMusic = music.id;
-        long idStatistic = music.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(musicDao.existsById(idMusic)){
-            statisticService.incrementListeningNumber(statistic);
+    private void linkArtistWithMusic(List<Long> artistIds, long musicId){
+        for (int i = 0; i < artistIds.size(); i++) {
+            musicDao.insertArtistMusic(artistIds.get(i), musicId, i);
         }
     }
 
-    public void incrementListeningTimeStatistic(Music music, StatisticService statisticService, long time){
-        long idMusic = music.id;
-        long idStatistic = music.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(musicDao.existsById(idMusic)){
-            statisticService.incrementListeningTime(statistic, time);
-        }
+    public void incrementListeningNumberStatistic(Music music){
+        statisticHelper.incrementListeningNumber(music, music.id);
     }
 
-    public void incrementAllListeningStatistic(Music music, StatisticService statisticService, long time){
-        long idMusic = music.id;
-        long idStatistic = music.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(musicDao.existsById(idMusic)){
-            statisticService.incrementAllListening(statistic, time);
-        }
+    public void incrementListeningTimeStatistic(Music music, long time){
+        statisticHelper.incrementListeningTime(music, music.id, time);
     }
 
-    public void reinitializeMonthValuesStatistic(Music music, StatisticService statisticService){
-        long idMusic = music.id;
-        long idStatistic = music.idStatistic;
-        Statistic statistic = statisticDao.getById(idStatistic);
-
-        if(musicDao.existsById(idMusic)){
-            statisticService.reinitializeMonthValues(statistic);
-        }
+    public void incrementAllListeningStatistic(Music music, long time){
+        statisticHelper.incrementAllListening(music, music.id, time);
     }
-    */
+
+    public void reinitializeMonthValuesStatistic(Music music) {
+        statisticHelper.reinitializeMonthValues(music, music.id);
+    }
 }

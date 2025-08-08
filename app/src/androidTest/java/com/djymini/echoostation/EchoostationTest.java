@@ -59,10 +59,10 @@ public class EchoostationTest {
         playlistDao = db.playlistDao();
 
         statisticService = new StatisticService(statisticDao);
-        musicService = new MusicService(musicDao, statisticDao);
-        albumService = new AlbumService(albumDao, statisticDao);
-        genreService = new GenreService(genreDao, statisticDao);
-        artistService = new ArtistService(artistDao, statisticDao);
+        musicService = new MusicService(musicDao, statisticDao, statisticService);
+        albumService = new AlbumService(albumDao, statisticDao, statisticService);
+        genreService = new GenreService(genreDao, statisticDao, statisticService, ApplicationProvider.getApplicationContext());
+        artistService = new ArtistService(artistDao, statisticDao, statisticService, ApplicationProvider.getApplicationContext());
     }
 
     @After

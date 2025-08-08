@@ -4,7 +4,7 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Statistic;
 
 public class StatisticService {
-    private StatisticDao statisticDao;
+    private final StatisticDao statisticDao;
 
     public StatisticService(StatisticDao statisticDao) {
         this.statisticDao = statisticDao;

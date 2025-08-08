@@ -6,7 +6,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.djymini.echoostation.entities.Playlist;
 import com.djymini.echoostation.entities.Statistic;
 
 import java.util.List;

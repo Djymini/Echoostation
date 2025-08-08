@@ -1,7 +1,6 @@
 package com.djymini.echoostation;
 import android.util.Log;
 
-import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.testUtilities.BaseTestUtil;
@@ -84,7 +83,7 @@ public class MusicTest extends EchoostationTest{
         BaseTestUtil.addContentInDb(genreService, albumService, artistService, musicService, statisticService, ApplicationProvider.getApplicationContext());
 
         Music musicTest = musicDao.getById(15);
-        musicService.modify(musicTest, "Nouveau titre", 100, 1, 1, "Kevin, Utada", artistService, statisticService, ApplicationProvider.getApplicationContext());
+        musicService.modify(musicTest, "Nouveau titre", 100, 1, 1, "Kevin, Utada", artistService, statisticService);
         MusicDto musicResult = musicDao.getMusicDetailById(15);
 
         assertEquals(15, musicTest.id);
@@ -94,8 +93,8 @@ public class MusicTest extends EchoostationTest{
 
         assertNotEquals(musicTest.title, musicResult.title);
         assertNotEquals(musicTest.track, musicResult.track);
-        assertNotEquals(musicTest.idAlbum, musicResult.idAlbum);
-        assertNotEquals(musicTest.idGenre, musicResult.idGenre);
+        assertNotEquals(musicTest.albumId, musicResult.idAlbum);
+        assertNotEquals(musicTest.genreId, musicResult.idGenre);
 
         assertEquals("Nouveau titre", musicResult.title);
         assertEquals(100, musicResult.track);
