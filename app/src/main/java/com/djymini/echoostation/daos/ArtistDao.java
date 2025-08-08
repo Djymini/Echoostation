@@ -43,8 +43,8 @@ public interface ArtistDao {
     @Query("SELECT * FROM artist WHERE name LIKE '%' || :query || '%'")
     List<Artist> search(String query);
 
-    @Query("SELECT artist.* FROM artist JOIN artist_music ON artist.id = artist_music.id_artist JOIN music ON music.id = artist_music.id_music WHERE music.id = :idMusic")
-    List<Artist> getAllByMusic(long idMusic);
+    @Query("SELECT artist.* FROM artist JOIN artist_music ON artist.id = artist_music.id_artist JOIN music ON music.id = artist_music.id_music WHERE music.id = :musicId")
+    List<Artist> getAllByMusic(long musicId);
 
     @Query("SELECT COUNT(*) FROM artist")
     long count();

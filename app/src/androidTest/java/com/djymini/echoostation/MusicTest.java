@@ -63,7 +63,7 @@ public class MusicTest extends EchoostationTest{
 
         List<MusicDto> result2 = musicDao.getAllMusicDetail();
         for(MusicDto music : result2){
-            String string = String.format("id : %s, path : %s, title : %s, album : %s, artist : %s", music.id, music.path, music.title, music.nameAlbum, music.nameArtist);
+            String string = String.format("id : %s, path : %s, title : %s, album : %s, artist : %s", music.id, music.path, music.title, music.albumName, music.artistName);
             Log.d(music.title, string);
         }
 
@@ -71,10 +71,10 @@ public class MusicTest extends EchoostationTest{
         assertEquals(1, result2.get(0).id);
         assertEquals("Morning Light", result2.get(0).title);
         assertEquals("track15.mp3", result2.get(14).title);
-        assertEquals("City Nights", result2.get(0).nameAlbum);
-        assertEquals("1, 2", result2.get(0).idArtist);
-        assertEquals("Yoko Shimomura, Yoshitaka Suzuki", result2.get(0).nameArtist);
-        assertEquals("Afrobeat", result2.get(0).nameGenre);
+        assertEquals("City Nights", result2.get(0).albumName);
+        assertEquals("1, 2", result2.get(0).artistId);
+        assertEquals("Yoko Shimomura, Yoshitaka Suzuki", result2.get(0).artistName);
+        assertEquals("Afrobeat", result2.get(0).genreName);
         assertEquals(0, result2.get(14).listeningNumber);
     }
 
@@ -93,14 +93,14 @@ public class MusicTest extends EchoostationTest{
 
         assertNotEquals(musicTest.title, musicResult.title);
         assertNotEquals(musicTest.track, musicResult.track);
-        assertNotEquals(musicTest.albumId, musicResult.idAlbum);
-        assertNotEquals(musicTest.genreId, musicResult.idGenre);
+        assertNotEquals(musicTest.albumId, musicResult.albumId);
+        assertNotEquals(musicTest.genreId, musicResult.genreId);
 
         assertEquals("Nouveau titre", musicResult.title);
         assertEquals(100, musicResult.track);
-        assertEquals("City Nights", musicResult.nameAlbum);
-        assertEquals("Afrobeat", musicResult.nameGenre);
-        assertEquals("Kevin, Utada Hikaru", musicResult.nameArtist);
+        assertEquals("City Nights", musicResult.albumName);
+        assertEquals("Afrobeat", musicResult.genreName);
+        assertEquals("Kevin, Utada Hikaru", musicResult.artistName);
     }
 }
 

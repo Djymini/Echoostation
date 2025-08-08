@@ -196,9 +196,9 @@ public class BaseTestUtil {
 
     public static void addContentInDb(GenreService genreService, AlbumService albumService, ArtistService artistService, MusicService musicService, StatisticService statisticService, Context context){
         for (Map<String, Object> fakeMedia : createFakeData()){
-            long idGenre = genreService.add(fakeMedia.get(MediaStore.Audio.Media.GENRE).toString(), statisticService);
-            long idAlbum = albumService.add(fakeMedia.get(MediaStore.Audio.Media.ALBUM).toString(), "album_cover_path", (int)fakeMedia.get(MediaStore.Audio.Media.YEAR), fakeMedia.get(MediaStore.Audio.Media.ALBUM_ARTIST).toString(), artistService, statisticService);
-            musicService.add(fakeMedia.get(MediaStore.Audio.Media.DATA).toString(), fakeMedia.get(MediaStore.Audio.Media.TITLE).toString(), Long.parseLong(fakeMedia.get(MediaStore.Audio.Media.DURATION).toString()), Integer.parseInt(fakeMedia.get(MediaStore.Audio.Media.TRACK).toString()), fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), idAlbum, idGenre, artistService, statisticService);
+            long genreId = genreService.add(fakeMedia.get(MediaStore.Audio.Media.GENRE).toString(), statisticService);
+            long albumId = albumService.add(fakeMedia.get(MediaStore.Audio.Media.ALBUM).toString(), "album_cover_path", (int)fakeMedia.get(MediaStore.Audio.Media.YEAR), fakeMedia.get(MediaStore.Audio.Media.ALBUM_ARTIST).toString(), artistService, statisticService);
+            musicService.add(fakeMedia.get(MediaStore.Audio.Media.DATA).toString(), fakeMedia.get(MediaStore.Audio.Media.TITLE).toString(), Long.parseLong(fakeMedia.get(MediaStore.Audio.Media.DURATION).toString()), Integer.parseInt(fakeMedia.get(MediaStore.Audio.Media.TRACK).toString()), fakeMedia.get(MediaStore.Audio.Media.ARTIST).toString(), albumId, genreId, artistService, statisticService);
         }
     }
 }

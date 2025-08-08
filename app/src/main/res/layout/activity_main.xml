@@ -47,7 +47,7 @@
             android:maxWidth="160dp"
             android:maxHeight="160dp"
             android:scaleType="fitCenter"
-            android:layout_marginLeft="3dp"
+            android:layout_marginStart="3dp"
             android:src="@drawable/echoostation_icone_foreground_3x"
             android:contentDescription="@string/logo_desciption"/>
 

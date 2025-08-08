@@ -40,4 +40,9 @@
         <item>Date d\'ajout (récent -> ancien)</item>
         <item>Date d\'ajout (ancien -> récent)</item>
     </string-array>
+
+    <string name="permission_required_title">Accès requis</string>
+    <string name="permission_required_message">L\'application a besoin d\'accéder à vos musiques pour fonctionner correctement.</string>
+    <string name="permission_allow">Autoriser</string>
+    <string name="permission_deny">Annuler</string>
 </resources>

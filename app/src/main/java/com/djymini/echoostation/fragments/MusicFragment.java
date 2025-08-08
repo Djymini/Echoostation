@@ -98,7 +98,7 @@ public class MusicFragment extends EchoostationFragment {
         adapter.setOnMusicMenuClickListener((music, anchorView) -> {
             Activity activity = getActivity();
             if (activity instanceof MainActivity) {
-                ((MainActivity) activity).showBottomDialog(music);
+                ((MainActivity) activity).showMusicOptionsDialog(music);
             }
         });
 
@@ -139,16 +139,16 @@ public class MusicFragment extends EchoostationFragment {
                 sortedList.sort((m1, m2) -> Long.compare(m2.duration, m1.duration));
                 break;
             case 4: // Album A -> Z
-                sortedList.sort((m1, m2) -> m1.nameAlbum.compareToIgnoreCase(m2.nameAlbum));
+                sortedList.sort((m1, m2) -> m1.albumName.compareToIgnoreCase(m2.albumName));
                 break;
             case 5: // Album Z -> A
-                sortedList.sort((m1, m2) -> m2.nameAlbum.compareToIgnoreCase(m1.nameAlbum));
+                sortedList.sort((m1, m2) -> m2.albumName.compareToIgnoreCase(m1.albumName));
                 break;
             case 6: // Artiste A -> Z
-                sortedList.sort((m1, m2) -> m1.nameArtist.compareToIgnoreCase(m2.nameArtist));
+                sortedList.sort((m1, m2) -> m1.artistName.compareToIgnoreCase(m2.artistName));
                 break;
             case 7: // Artiste Z -> A
-                sortedList.sort((m1, m2) -> m2.nameArtist.compareToIgnoreCase(m1.nameArtist));
+                sortedList.sort((m1, m2) -> m2.artistName.compareToIgnoreCase(m1.artistName));
                 break;
             case 8: // Écoutes + -> -
                 sortedList.sort((m1, m2) -> Integer.compare(m2.listeningNumber, m1.listeningNumber));
@@ -172,8 +172,8 @@ public class MusicFragment extends EchoostationFragment {
 
         return musicDtoList.stream()
                 .filter(musicDto -> musicDto.title != null && musicDto.title.toLowerCase().contains(keyword.toLowerCase())
-                || musicDto.nameAlbum != null && musicDto.nameAlbum.toLowerCase().contains(keyword.toLowerCase())
-                || musicDto.nameArtist != null && musicDto.nameArtist.toLowerCase().contains(keyword.toLowerCase()))
+                || musicDto.albumName != null && musicDto.albumName.toLowerCase().contains(keyword.toLowerCase())
+                || musicDto.artistName != null && musicDto.artistName.toLowerCase().contains(keyword.toLowerCase()))
                 .collect(Collectors.toList());
     }
 }

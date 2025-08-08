@@ -28,8 +28,8 @@ public interface AlbumDao {
     @Query("SELECT EXISTS(SELECT 1 FROM album WHERE name = :name)")
     boolean existsByName(String name);
 
-    @Query("SELECT EXISTS(SELECT 1 FROM album WHERE name = :name AND id_artist = :idArtist)")
-    boolean existsByNameAndArtist(String name, long idArtist);
+    @Query("SELECT EXISTS(SELECT 1 FROM album WHERE name = :name AND id_artist = :artistId)")
+    boolean existsByNameAndArtist(String name, long artistId);
 
     @Query("SELECT * FROM album")
     LiveData<List<Album>> getAllLive();
@@ -40,8 +40,8 @@ public interface AlbumDao {
     @Query("SELECT * FROM album WHERE id = :id")
     Album getById(long id);
 
-    @Query("SELECT * FROM album WHERE name = :name AND id_artist = :idArtist")
-    Album getByNameAndArtist(String name, long idArtist);
+    @Query("SELECT * FROM album WHERE name = :name AND id_artist = :artistId")
+    Album getByNameAndArtist(String name, long artistId);
 
     @Query("SELECT COUNT(*) FROM album")
     long count();
@@ -49,6 +49,6 @@ public interface AlbumDao {
     @Query("SELECT * FROM album WHERE name LIKE '%' || :query || '%'")
     List<Album> search(String query);
 
-    @Query("SELECT * FROM album WHERE id_artist = :idArtist")
-    List<Album> getAllByArtist(long idArtist);
+    @Query("SELECT * FROM album WHERE id_artist = :artistId")
+    List<Album> getAllByArtist(long artistId);
 }

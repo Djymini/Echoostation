@@ -45,7 +45,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
         MusicDto music = musics.get(position);
         holder.title.setText(music.title);
-        holder.artist.setText(music.nameArtist);
+        holder.artist.setText(music.artistName);
 
         String durationStr = formatDuration(music.duration);
         holder.duration.setText(durationStr);
