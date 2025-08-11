@@ -98,7 +98,8 @@ public class MusicFragment extends EchoostationFragment {
         adapter.setOnMusicMenuClickListener((music, anchorView) -> {
             Activity activity = getActivity();
             if (activity instanceof MainActivity) {
-                ((MainActivity) activity).showMusicOptionsDialog(music);
+                //((MainActivity) activity).showMusicOptionsDialog(music);
+                ((MainActivity) activity).musicDialogManager.showBottomDialog(music);
             }
         });
 
