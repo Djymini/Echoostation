@@ -10,22 +10,37 @@ import android.widget.TextView;
 
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.interfaces.OnItemClickListener;
+import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
     private List<MusicDto> musics = new ArrayList<>();
+    private final Set<MusicDto> selectedItems = new HashSet<>();
     private OnMusicMenuClickListener menuClickListener;
+    private OnItemLongClickListener longClickListener;
+    private OnItemClickListener clickListener;
 
     public MusicAdapter() {
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.longClickListener = listener;
+    }
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.clickListener = listener;
     }
 
     public void submitList(List<MusicDto> newMusics) {
@@ -62,12 +77,31 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
                 menuClickListener.onMenuClick(music, holder.menuButton);
             }
         });
+
+        holder.itemView.setBackgroundColor(
+                selectedItems.contains(music) ?
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.selectedColor) :
+                        ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent)
+        );
+
+        holder.itemView.setOnClickListener(v -> {
+            if (clickListener != null) clickListener.onItemClick(position);
+        });
+
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) longClickListener.onItemLongClick(position);
+            return true;
+        });
     }
 
 
     @Override
     public int getItemCount() {
         return musics.size();
+    }
+
+    public List<MusicDto> getCurrentList(){
+        return musics;
     }
 
     static class MusicViewHolder extends RecyclerView.ViewHolder {
@@ -93,5 +127,23 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     public void setOnMusicMenuClickListener(OnMusicMenuClickListener listener) {
         this.menuClickListener = listener;
+    }
+
+    public void toggleSelection(MusicDto item) {
+        if (selectedItems.contains(item)) {
+            selectedItems.remove(item);
+        } else {
+            selectedItems.add(item);
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clearSelection() {
+        selectedItems.clear();
+        notifyDataSetChanged();
+    }
+
+    public Set<MusicDto> getSelectedItems() {
+        return selectedItems;
     }
 }

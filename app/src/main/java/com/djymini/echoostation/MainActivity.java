@@ -16,18 +16,22 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -95,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
     private long lastMusicDeletedId = -1;
     private static final int REQUEST_CODE_DELETE = 1001;
+    private static final int REQUEST_CODE_DELETE_MULTIPLE = 1002;
+
+    public List<MusicDto> musicsPendingDeletion;
 
     private final Executor executor = Executors.newSingleThreadExecutor();
 
@@ -128,23 +135,55 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(new HomeFragment());
             bottomNavMenu.setSelectedItemId(R.id.home);
         }
+
+        //Scanner affichage
+        ProgressBar scanProgressBar = findViewById(R.id.scan_progress_bar);
+        TextView scanProgressText = findViewById(R.id.scan_progress_text);
+        View scanProgressContainer = findViewById(R.id.scan_progress_container);
+
+        musicScanner.setScanListener(new MusicScanner.ScanListener() {
+            @Override
+            public void onScanStarted(int totalFiles) {
+                runOnUiThread(() -> {
+                    scanProgressContainer.setVisibility(View.VISIBLE);
+                    scanProgressText.setText("Scan en cours... 0 / " + totalFiles);
+                });
+            }
+
+            @Override
+            public void onScanProgress(int scannedCount, int totalFiles) {
+                runOnUiThread(() -> {
+                    scanProgressText.setText("Scan en cours... " + scannedCount + " / " + totalFiles);
+                });
+            }
+
+            @Override
+            public void onScanFinished(int totalFiles) {
+                runOnUiThread(() -> {
+                    scanProgressText.setText("Scan terminé (" + totalFiles + " fichiers)");
+                    scanProgressBar.setIndeterminate(false);
+                    scanProgressBar.setProgress(totalFiles);
+                    scanProgressContainer.setVisibility(View.GONE); // cacher après quelques secondes si tu veux
+                });
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != REQUEST_CODE_DELETE)
-            return;
 
-        if (resultCode == Activity.RESULT_OK) {
-            Log.d(Constants.TAG_FILE_DELETE, Constants.MSG_DELETE_WITH_AUTHORIZATION);
-
-            executor.execute(() -> {
-                Music musicForDelete = musicDao.getById(lastMusicDeletedId);
-                musicDao.delete(musicForDelete);
-            });
-        } else {
-            Log.d(Constants.TAG_FILE_DELETE, Constants.MSG_DELETE_CANCELED);
+        if (requestCode == REQUEST_CODE_DELETE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // L'utilisateur a confirmé → suppression dans ta DB
+                executor.execute(() -> {
+                    lastMusicDeletedId = musicDialogManager.getLastMusicDeletedId();
+                    musicDao.deleteById(lastMusicDeletedId);
+                });
+            } else {
+                // L'utilisateur a refusé → rien à faire
+                lastMusicDeletedId = -1;
+            }
         }
     }
 

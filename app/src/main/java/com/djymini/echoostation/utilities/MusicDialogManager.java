@@ -104,7 +104,7 @@ public class MusicDialogManager {
         dialog.getWindow().setGravity(Gravity.BOTTOM);
     }
 
-    private void handleDeleteMusic(MusicDto musicDto) {
+    public void handleDeleteMusic(MusicDto musicDto) {
         long mediaStoreId = getMediaStoreIdFromPath(activity, musicDto.path);
         if (mediaStoreId == -1) return;
 
@@ -113,13 +113,20 @@ public class MusicDialogManager {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             List<Uri> uris = Collections.singletonList(uri);
             try {
-                IntentSender deleteRequest = MediaStore.createDeleteRequest(activity.getContentResolver(), uris).getIntentSender();
-                activity.startIntentSenderForResult(deleteRequest, REQUEST_CODE_DELETE, null, 0, 0, 0);
+                IntentSender deleteRequest = MediaStore.createDeleteRequest(
+                        activity.getContentResolver(), uris
+                ).getIntentSender();
+
+                // On stocke juste l'ID pour suppression future si OK
                 lastMusicDeletedId = musicDto.id;
+
+                activity.startIntentSenderForResult(deleteRequest, REQUEST_CODE_DELETE, null, 0, 0, 0);
+
             } catch (IntentSender.SendIntentException e) {
                 e.printStackTrace();
             }
         } else {
+            // API < 30 : suppression directe (pas de boîte système)
             int deleted = activity.getContentResolver().delete(uri, null, null);
             if (deleted > 0) {
                 executor.execute(() -> {
@@ -132,7 +139,7 @@ public class MusicDialogManager {
         }
     }
 
-    private long getMediaStoreIdFromPath(Context context, String path) {
+    public static long getMediaStoreIdFromPath(Context context, String path) {
         long id = -1;
         String[] projection = {MediaStore.Audio.Media._ID};
         String selection = MediaStore.Audio.Media.DATA + "=?";

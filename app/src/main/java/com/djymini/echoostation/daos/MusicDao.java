@@ -23,6 +23,12 @@ public interface MusicDao {
     @Delete
     void delete(Music music);
 
+    @Query("DELETE FROM music WHERE id = :id")
+    void deleteById(long id);
+
+    @Query("DELETE FROM music WHERE path = :path")
+    void deleteByPath(String path);
+
     @Query("DELETE FROM artist_music WHERE id_music = :musicId")
     void deleteArtistMusicByMusicId(long musicId);
 
@@ -132,5 +138,8 @@ public interface MusicDao {
 
     @Query("SELECT music.* FROM music JOIN artist_music ON music.id = artist_music.id_music JOIN artist ON artist.id = artist_music.id_artist WHERE artist.id = :artistId;")
     List<Music> getAllByArtist(long artistId);
+
+    @Query("SELECT path FROM music")
+    List<String> getAllPath();
 
 }

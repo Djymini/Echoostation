@@ -1,13 +1,28 @@
 package com.djymini.echoostation.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ContentUris;
+import android.content.IntentSender;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.IntentSenderRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import androidx.appcompat.view.ActionMode;
+
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,13 +36,17 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.utilities.MusicDialogManager;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
-
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MusicFragment extends EchoostationFragment {
     private RecyclerView recyclerView;
@@ -50,6 +69,41 @@ public class MusicFragment extends EchoostationFragment {
             "Date d'ajout (ancien -> récent)"
     };
     private String search;
+    private ActionMode actionMode;
+    private int REQUEST_CODE_DELETE_MULTIPLE = 1002;
+    private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
+    private List<MusicDto> musicsPendingDeletion;
+    private Executor executor = Executors.newSingleThreadExecutor();
+
+    private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate(R.menu.selection_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            if (item.getItemId() == R.id.action_delete) {
+                Set<MusicDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
+                confirmAndDeleteSelectedMusics(selectedCopy);
+                mode.finish();
+                return true;
+            }
+            return false;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            adapter.clearSelection();
+            MusicFragment.this.actionMode = null;
+        }
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,7 +152,6 @@ public class MusicFragment extends EchoostationFragment {
         adapter.setOnMusicMenuClickListener((music, anchorView) -> {
             Activity activity = getActivity();
             if (activity instanceof MainActivity) {
-                //((MainActivity) activity).showMusicOptionsDialog(music);
                 ((MainActivity) activity).musicDialogManager.showBottomDialog(music);
             }
         });
@@ -109,6 +162,44 @@ public class MusicFragment extends EchoostationFragment {
         }
 
         loadMusics();
+
+        adapter.setOnItemLongClickListener(position -> {
+            if (actionMode == null) {
+                actionMode = ((AppCompatActivity) requireActivity())
+                        .startSupportActionMode(actionModeCallback);
+            }
+            MusicDto music = adapter.getCurrentList().get(position);
+            adapter.toggleSelection(music);
+            updateActionModeTitle();
+        });
+
+        adapter.setOnItemClickListener(position -> {
+            if (actionMode != null) {
+                MusicDto music = adapter.getCurrentList().get(position);
+                adapter.toggleSelection(music);
+                updateActionModeTitle();
+            } else {
+                // comportement normal si pas en mode sélection
+            }
+        });
+
+        deleteMultipleLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartIntentSenderForResult(),
+                result -> {
+                    Log.d("MultipleSelection deleteLauncher size", String.valueOf(musicsPendingDeletion.size()));
+                    Log.d("MultipleSelection deleteLauncher result", String.valueOf(result.getResultCode()));
+                    if (result.getResultCode() == Activity.RESULT_OK && musicsPendingDeletion != null) {
+                        List<MusicDto> toDelete = new ArrayList<>(musicsPendingDeletion);
+                        executor.execute(() -> {
+                            for (MusicDto music : toDelete) {
+                                musicDao.deleteById(music.id);
+                            }
+                        });
+                    }
+                    musicsPendingDeletion = null;
+                }
+        );
+
 
         return view;
     }
@@ -177,4 +268,66 @@ public class MusicFragment extends EchoostationFragment {
                 || musicDto.artistName != null && musicDto.artistName.toLowerCase().contains(keyword.toLowerCase()))
                 .collect(Collectors.toList());
     }
+
+    private void updateActionModeTitle() {
+        int count = adapter.getSelectedItems().size();
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(count + " sélectionné(s)");
+        }
+    }
+
+    private void deleteSelectedMusics(Set<MusicDto> selected) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            Log.d("MultipleSelection", "check Build 1");
+            List<Uri> uris = new ArrayList<>();
+            Log.d("MultipleSelection selected", String.valueOf(selected.size()));
+            for (MusicDto music : selected) {
+                long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
+                if (mediaStoreId != -1) {
+                    uris.add(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId));
+                }
+            }
+
+            if (!uris.isEmpty()) {
+                Log.d("MultipleSelection uris", String.valueOf(uris.size()));
+                musicsPendingDeletion = new ArrayList<>(selected);
+                IntentSender sender = MediaStore.createDeleteRequest(
+                        requireActivity().getContentResolver(), uris
+                ).getIntentSender();
+                deleteMultipleLauncher.launch(new IntentSenderRequest.Builder(sender).build());
+            }
+        } else {
+            Log.d("MultipleSelection", "check Build 2");
+            executor.execute(() -> {
+                for (MusicDto music : selected) {
+                    long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
+                    if (mediaStoreId != -1) {
+                        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId);
+                        int deleted = requireActivity().getContentResolver().delete(uri, null, null);
+                        if (deleted > 0) {
+                            musicDao.deleteById(music.id);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void confirmAndDeleteSelectedMusics(Set<MusicDto> selected) {
+        Log.d("MultipleSelection selected check", String.valueOf(selected.size()));
+        if (selected.isEmpty()) return;
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Supprimer la musique")
+                .setMessage("Voulez-vous vraiment supprimer " + selected.size() + " élément(s) ?")
+                .setPositiveButton("Oui", (dialog, which) -> {
+                    deleteSelectedMusics(selected);
+                })
+                .setNegativeButton("Non", null)
+                .show();
+    }
+
 }

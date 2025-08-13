@@ -13,6 +13,10 @@ import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 public class MusicScanner {
@@ -25,6 +29,18 @@ public class MusicScanner {
     private final MusicService musicService;
     private final StatisticService statisticService;
     private final Executor executor;
+
+    public interface ScanListener {
+        void onScanStarted(int totalFiles);
+        void onScanProgress(int scannedCount, int totalFiles);
+        void onScanFinished(int totalFiles);
+    }
+
+    private ScanListener listener;
+
+    public void setScanListener(ScanListener listener) {
+        this.listener = listener;
+    }
 
     public MusicScanner(Context context, MusicDao musicDao, AlbumService albumService, ArtistService artistService,
                         GenreService genreService, MusicService musicService, StatisticService statisticService, Executor executor) {
@@ -40,6 +56,9 @@ public class MusicScanner {
 
     public void scanDeviceMusic() {
         executor.execute(() -> {
+            Set<String> dbPath = new HashSet<>(musicDao.getAllPath());
+            Set<String> devicePath = new HashSet<>();
+
             String[] projection = {
                     MediaStore.Audio.Media._ID,
                     MediaStore.Audio.Media.DATA,
@@ -65,32 +84,61 @@ public class MusicScanner {
                     sortOrder
             )) {
                 if (cursor != null) {
+                    int total = cursor.getCount();
+                    if (listener != null) listener.onScanStarted(total);
+
+                    int idxPath = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+                    int idxTitle = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
+                    int idxAlbum = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
+                    int idxArtist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
+                    int idxDuration = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
+                    int idxTrack = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK);
+                    int idxYear = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR);
+                    int idxAlbumArtist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST);
+                    int idxAlbumId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID);
+                    int idxId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
+
+                    int count = 0;
                     while (cursor.moveToNext()) {
-                        processMusicCursor(cursor);
+                        String path = cursor.getString(idxPath);
+                        devicePath.add(path);
+
+                        // Ajouter seulement si pas déjà en base
+                        if (!dbPath.contains(path)) {
+                            String title = cursor.getString(idxTitle);
+                            String album = cursor.getString(idxAlbum);
+                            String artist = cursor.getString(idxArtist);
+                            long duration = cursor.getLong(idxDuration);
+                            int track = cursor.getInt(idxTrack);
+                            int year = cursor.getInt(idxYear);
+                            String albumArtist = cursor.getString(idxAlbumArtist);
+                            long albumIdMediaStore = cursor.getLong(idxAlbumId);
+                            long audioId = cursor.getLong(idxId);
+
+                            String genre = getGenreFromAudioId(audioId);
+                            Uri albumArtUri = ContentUris.withAppendedId(Constants.ALBUM_ART_URI, albumIdMediaStore);
+                            String coverAlbum = albumArtUri.toString();
+
+                            long genreId = genreService.add(genre, statisticService);
+                            long albumId = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService);
+                            musicService.add(path, title, duration, track, artist, albumId, genreId, artistService, statisticService);
+                        }
+
+                        count++;
+                        if (listener != null) listener.onScanProgress(count, total);
                     }
+
+                    // Nettoyer la DB des fichiers supprimés
+                    for (String path : dbPath) {
+                        if (!devicePath.contains(path)) {
+                            musicDao.deleteByPath(path);
+                        }
+                    }
+
+                    if (listener != null) listener.onScanFinished(total);
                 }
             }
         });
-    }
-
-    private void processMusicCursor(Cursor cursor) {
-        String path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
-        String title = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
-        String album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM));
-        String artist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST));
-        long duration = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
-        long audioId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
-        String genre = getGenreFromAudioId(audioId);
-        int track = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK));
-        int year = cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.YEAR));
-        String albumArtist = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST));
-        long albumIdMediaStore = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-        Uri albumArtUri = ContentUris.withAppendedId(Constants.ALBUM_ART_URI, albumIdMediaStore);
-        String coverAlbum = albumArtUri.toString();
-
-        long genreId = genreService.add(genre, statisticService);
-        long albumId = albumService.add(album, coverAlbum, year, albumArtist, artistService, statisticService);
-        musicService.add(path, title, duration, track, artist, albumId, genreId, artistService, statisticService);
     }
 
     private String getGenreFromAudioId(long audioId) {
