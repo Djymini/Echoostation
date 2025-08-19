@@ -1,4 +1,4 @@
-package com.djymini.echoostation.utilities;
+package com.djymini.echoostation.ui;
 
 import android.app.Activity;
 import android.app.Dialog;

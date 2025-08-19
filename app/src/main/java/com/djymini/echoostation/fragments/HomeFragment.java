@@ -20,6 +20,7 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.views.ViewHomeData;
 
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -51,18 +52,22 @@ public class HomeFragment extends EchoostationFragment {
         genreData.setOnClickListener(v -> openLibraryTab(3));
         playlistData.setOnClickListener(v -> openLibraryTab(4));
 
-        Executor executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            musicData.setData(String.valueOf(musicDao.count()));
-            albumData.setData(String.valueOf(albumDao.count()));
-            artisteData.setData(String.valueOf(artistDao.count()));
-            genreData.setData(String.valueOf(genreDao.count()));
-            playlistData.setData(String.valueOf(playlistDao.count()));
-        });
-
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity) activity).modifyTitle("Accueil");
+            ((MainActivity) getActivity()).currentMusicList.observe(getViewLifecycleOwner(), musics -> {
+                musicData.setData(String.valueOf(musics.size()));
+            });
+            ((MainActivity) getActivity()).currentArtistList.observe(getViewLifecycleOwner(), artists -> {
+                artisteData.setData(String.valueOf(artists.size()));
+            });
+            ((MainActivity) getActivity()).currentAlbumList.observe(getViewLifecycleOwner(), albums -> {
+                albumData.setData(String.valueOf(albums.size()));
+            });
+            ((MainActivity) getActivity()).currentGenreList.observe(getViewLifecycleOwner(), genres -> {
+                genreData.setData(String.valueOf(genres.size()));
+            });
+            playlistData.setData(String.valueOf(0));
         }
 
         return view;

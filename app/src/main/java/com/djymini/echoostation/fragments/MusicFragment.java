@@ -34,9 +34,10 @@ import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
+import com.djymini.echoostation.adapters.SpinnerAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.utilities.MusicDialogManager;
+import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 
 import java.util.ArrayList;
@@ -135,7 +136,7 @@ public class MusicFragment extends EchoostationFragment {
             sortAndDisplayMusics(spinner.getSelectedItemPosition());
         });
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter<>(requireContext(), androidx.appcompat.R.layout.support_simple_spinner_dropdown_item , sortCategories);
+        SpinnerAdapter arrayAdapter = new SpinnerAdapter(requireContext(), sortCategories);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -155,11 +156,6 @@ public class MusicFragment extends EchoostationFragment {
                 ((MainActivity) activity).musicDialogManager.showBottomDialog(music);
             }
         });
-
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Titres");
-        }
 
         loadMusics();
 
@@ -205,11 +201,14 @@ public class MusicFragment extends EchoostationFragment {
     }
 
     private void loadMusics() {
-        musicDao.getAllMusicDetailLive().observe(getViewLifecycleOwner(), musics -> {
-            currentMusicList = new ArrayList<>(musics);
-            sortAndDisplayMusics(spinner.getSelectedItemPosition());
-            counterMusic.setText(musics.size() + " Titres");
-        });
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).modifyTitle("Paramêtres");
+            ((MainActivity) getActivity()).currentMusicList.observe(getViewLifecycleOwner(), musics -> {
+                currentMusicList = new ArrayList<>(musics);
+                sortAndDisplayMusics(spinner.getSelectedItemPosition());
+                counterMusic.setText(musics.size() + " Titres");
+            });
+        }
     }
 
     private void sortAndDisplayMusics(int position) {

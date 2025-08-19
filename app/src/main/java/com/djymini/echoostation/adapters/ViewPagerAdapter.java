@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.fragments.AlbumFragment;
 import com.djymini.echoostation.fragments.ArtistFragment;
 import com.djymini.echoostation.fragments.GenreFragment;

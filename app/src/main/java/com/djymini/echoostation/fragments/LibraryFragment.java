@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ViewPagerAdapter;
+import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -61,26 +63,47 @@ public class LibraryFragment extends Fragment {
 
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("MUSIQUES"); break;
-                case 1: tab.setText("ALBUMS"); break;
-                case 2: tab.setText("ARTISTES"); break;
-                case 3: tab.setText("GENRES"); break;
-                case 4: tab.setText("PLAYLISTS"); break;
+                case 0: tab.setText(Constants.MUSIC_TITLE.toUpperCase()); break;
+                case 1: tab.setText(Constants.ALBUM_TITLE.toUpperCase()); break;
+                case 2: tab.setText(Constants.ARTIST_TITLE.toUpperCase()); break;
+                case 3: tab.setText(Constants.GENRE_TITLE.toUpperCase()); break;
+                case 4: tab.setText(Constants.PLAYLIST_TITLE.toUpperCase()); break;
             }
         }).attach();
 
-        String[] tabTitles = {"MUSIQUE", "ALBUM", "ARTISTE", "GENRE", "PLAYLIST"};
+        String[] tabTitles = {
+                Constants.MUSIC_TITLE,
+                Constants.ALBUM_TITLE,
+                Constants.ARTIST_TITLE,
+                Constants.GENRE_TITLE,
+                Constants.PLAYLIST_TITLE
+        };
+
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
                 TextView customTab = (TextView) LayoutInflater.from(requireContext())
                         .inflate(R.layout.custom_tab, tabLayout, false);
-                customTab.setText(tabTitles[i]);
+                customTab.setText(tabTitles[i].toUpperCase());
                 tab.setCustomView(customTab);
             }
         }
 
         viewPager2.setCurrentItem(selectedTabIndex, false);
+
+        viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0: changeTitle(Constants.MUSIC_TITLE); break;
+                    case 1: changeTitle(Constants.ALBUM_TITLE); break;
+                    case 2: changeTitle(Constants.ARTIST_TITLE); break;
+                    case 3: changeTitle(Constants.GENRE_TITLE); break;
+                    case 4: changeTitle(Constants.PLAYLIST_TITLE); break;
+                }
+            }
+        });
 
         return view;
     }
@@ -106,5 +129,11 @@ public class LibraryFragment extends Fragment {
         });
 
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    private void changeTitle(String newTitle){
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).modifyTitle(newTitle);
+        };
     }
 }

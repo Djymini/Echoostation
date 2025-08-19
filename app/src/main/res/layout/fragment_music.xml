@@ -9,23 +9,16 @@
        android:id="@+id/button_container"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
+       android:gravity="center_vertical"
        android:paddingHorizontal="8dp">
-      <ImageView
-          android:id="@+id/icon_sort"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          app:tint="@color/colorText"
-          android:src="@drawable/ic_sort"
-          android:layout_alignParentStart="true"
-          android:contentDescription="@string/ic_sort"/>
 
       <Spinner
           android:id="@+id/spinner"
-          android:layout_width="150dp"
+          android:layout_width="175dp"
           android:layout_height="wrap_content"
-          android:layout_toEndOf="@id/icon_sort"
-          android:entries="@array/sort_categories"
-          style="@style/SpinnerAppearance"/>
+          android:gravity="center_vertical"
+          android:layout_alignParentLeft="true"
+          android:entries="@array/sort_categories"/>
 
       <ImageButton
           android:id="@+id/button_shuffle"

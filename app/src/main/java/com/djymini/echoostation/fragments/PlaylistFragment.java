@@ -17,10 +17,6 @@ public class PlaylistFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //TODO: Make the playlist fragment for display playlist (features/recupGenre)
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Playlist");
-        }
         return inflater.inflate(R.layout.fragment_playlist, container, false);
     }
 }

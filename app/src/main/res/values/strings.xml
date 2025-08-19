@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EchooStation</string>
+    <string name="app_name">Echoo Station</string>
     <string name="quit_app">QUITTER</string>
 
     <string name="intro_text_1">Bienvenue sur Echoo Station, pour commencer nous avons besoin de votre autorisation</string>

@@ -7,6 +7,7 @@
         <item name="android:textColorPrimary">@color/colorText</item>
         <item name="colorAccent">@color/accentColor</item>
         <item name="colorSurface">@color/transparenceColor</item>
+        <item name="toolbarStyle">@style/MyToolbarStyle</item>
     </style>
 
     <style name="ThemeOverlay.BottomNavigation" parent="">
@@ -16,6 +17,12 @@
     <style name="CustomBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
         <item name="itemTextAppearanceActive">@style/BottomNavTextAppearance</item>
         <item name="itemTextAppearanceInactive">@style/BottomNavTextAppearance</item>
+        <item name="android:background">@color/colorSecondary</item>
+    </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
     </style>
 
 </resources>

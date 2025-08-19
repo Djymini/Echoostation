@@ -1,46 +1,26 @@
 package com.djymini.echoostation;
 
+import static com.djymini.echoostation.utilities.Constants.REQUEST_CODE_DELETE;
+
 import android.app.Activity;
-import android.app.Dialog;
-import android.app.PendingIntent;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -55,7 +35,8 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
-import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.entities.Artist;
+import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
 import com.djymini.echoostation.fragments.LibraryFragment;
@@ -65,16 +46,19 @@ import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
-import com.djymini.echoostation.utilities.Constants;
-import com.djymini.echoostation.utilities.MusicDialogManager;
-import com.djymini.echoostation.utilities.MusicScanner;
-import com.djymini.echoostation.utilities.PermissionManager;
+import com.djymini.echoostation.ui.MusicDialogManager;
+import com.djymini.echoostation.helpers.MusicScanner;
+import com.djymini.echoostation.helpers.PermissionManager;
+import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMediaViewModel;
+import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMusicViewModelFactory;
+import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModelFactory;
+import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewModelFactory;
+import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModel;
+import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> requestPermissionLauncher;
-    private RelativeLayout authorizationLayout;
-    private ConstraintLayout appLayout;
     private Button confirmButton, quitButton;
     private BottomNavigationView bottomNavMenu;
     private Toolbar toolbar;
@@ -93,15 +77,21 @@ public class MainActivity extends AppCompatActivity {
     private MusicService musicService;
     private StatisticService statisticService;
 
-    private PermissionManager permissionManager;
     private MusicScanner musicScanner;
+    private PermissionManager permissionManager;
+    private MusicScannerViewModel musicScannerViewModel;
     public MusicDialogManager musicDialogManager;
 
-    private long lastMusicDeletedId = -1;
-    private static final int REQUEST_CODE_DELETE = 1001;
-    private static final int REQUEST_CODE_DELETE_MULTIPLE = 1002;
+    private PermissionViewModel permissionViewModel;
+    private LoaderMediaViewModel loaderMediaViewModel;
 
-    public List<MusicDto> musicsPendingDeletion;
+    public LiveData<List<MusicDto>> currentMusicList;
+    public LiveData<List<Artist>> currentArtistList;
+    public LiveData<List<Album>> currentAlbumList;
+    public LiveData<List<Genre>> currentGenreList;
+
+
+    private long lastMusicDeletedId = -1;
 
     private final Executor executor = Executors.newSingleThreadExecutor();
 
@@ -110,63 +100,24 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
 
         setupDbAndDao();
         setupServices();
         setupViews();
-
-        musicScanner = new MusicScanner(this, musicDao, albumService, artistService, genreService, musicService, statisticService, executor);
-        permissionManager = new PermissionManager(this, requestPermissionLauncher, this::scanDeviceMusic, null);
-        musicDialogManager = new MusicDialogManager(this, musicDao, albumDao, artistDao, musicService, albumService, artistService, genreService, statisticService, executor);
+        setupHelpers();
 
         setAuthorizationButtons();
         setToolbar();
         setupBottomNavMenu();
-
-        permissionManager.registerPermissionLauncher(authorizationLayout, appLayout);
-        permissionManager.checkPermission(authorizationLayout, appLayout, this);
 
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
             bottomNavMenu.setSelectedItemId(R.id.home);
         }
 
-        //Scanner affichage
-        ProgressBar scanProgressBar = findViewById(R.id.scan_progress_bar);
-        TextView scanProgressText = findViewById(R.id.scan_progress_text);
-        View scanProgressContainer = findViewById(R.id.scan_progress_container);
-
-        musicScanner.setScanListener(new MusicScanner.ScanListener() {
-            @Override
-            public void onScanStarted(int totalFiles) {
-                runOnUiThread(() -> {
-                    scanProgressContainer.setVisibility(View.VISIBLE);
-                    scanProgressText.setText("Scan en cours... 0 / " + totalFiles);
-                });
-            }
-
-            @Override
-            public void onScanProgress(int scannedCount, int totalFiles) {
-                runOnUiThread(() -> {
-                    scanProgressText.setText("Scan en cours... " + scannedCount + " / " + totalFiles);
-                });
-            }
-
-            @Override
-            public void onScanFinished(int totalFiles) {
-                runOnUiThread(() -> {
-                    scanProgressText.setText("Scan terminé (" + totalFiles + " fichiers)");
-                    scanProgressBar.setIndeterminate(false);
-                    scanProgressBar.setProgress(totalFiles);
-                    scanProgressContainer.setVisibility(View.GONE); // cacher après quelques secondes si tu veux
-                });
-            }
-        });
+        setPermissionViewModel();
+        setMusicScanViewModel();
+        setLoaderMediaViewModel();
     }
 
     @Override
@@ -175,20 +126,18 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == REQUEST_CODE_DELETE) {
             if (resultCode == Activity.RESULT_OK) {
-                // L'utilisateur a confirmé → suppression dans ta DB
                 executor.execute(() -> {
                     lastMusicDeletedId = musicDialogManager.getLastMusicDeletedId();
                     musicDao.deleteById(lastMusicDeletedId);
                 });
             } else {
-                // L'utilisateur a refusé → rien à faire
                 lastMusicDeletedId = -1;
             }
         }
     }
 
     private void scanDeviceMusic(){
-        musicScanner.scanDeviceMusic();
+        musicScannerViewModel.startScan();
     }
 
     private void loadFragment(Fragment fragment) {
@@ -218,15 +167,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViews(){
-        authorizationLayout = findViewById(R.id.authorization_layout);
-        appLayout = findViewById(R.id.app_layout);
         confirmButton = findViewById(R.id.confirm_button);
         quitButton = findViewById(R.id.quit_button);
         bottomNavMenu = findViewById(R.id.bottom_nav_menu);
     }
 
+    private void setupHelpers(){
+        musicScanner = new MusicScanner(this, musicDao, albumService, artistService, genreService, musicService, statisticService, executor);
+        permissionManager = new PermissionManager(this, requestPermissionLauncher, this::scanDeviceMusic, null);
+        musicDialogManager = new MusicDialogManager(this, musicDao, albumDao, artistDao, musicService, albumService, artistService, genreService, statisticService, executor);
+
+        permissionManager.registerPermissionLauncher();
+    }
+
     private void setAuthorizationButtons(){
-        confirmButton.setOnClickListener(v -> permissionManager.checkAndRequestPermission());
+        confirmButton.setOnClickListener(v -> permissionViewModel.checkAndRequestPermission());
 
         quitButton.setOnClickListener(v -> {
             finish();
@@ -267,5 +222,56 @@ public class MainActivity extends AppCompatActivity {
 
     public void modifyTitle(String newText){
         toolbar.setTitle(newText);
+    }
+
+    public void setPermissionViewModel(){
+        PermissionViewModelFactory factory = new PermissionViewModelFactory(permissionManager);
+        permissionViewModel = new ViewModelProvider(this, factory).get(PermissionViewModel.class);
+        permissionViewModel.getIsPermissionGranted().observe(this, granted -> {
+            View appLayout = findViewById(R.id.app_layout);
+            View permissionLayout = findViewById(R.id.authorization_layout);
+
+            if (granted) {
+                permissionLayout.setVisibility(View.GONE);
+                appLayout.setVisibility(View.VISIBLE);
+            } else {
+                permissionLayout.setVisibility(View.VISIBLE);
+                appLayout.setVisibility(View.GONE);
+            }
+            updateViewCompat(granted);
+        });
+        permissionViewModel.checkPermission(this);
+    }
+
+    public void setMusicScanViewModel(){
+        MusicScannerViewModelFactory musicScannerFactory = new MusicScannerViewModelFactory(musicScanner);
+        musicScannerViewModel = new ViewModelProvider(this, musicScannerFactory).get(MusicScannerViewModel.class);
+        musicScannerViewModel.getIsScanning().observe(this, scanning -> {
+            findViewById(R.id.scan_progress_container).setVisibility(scanning ? View.VISIBLE : View.GONE);
+        });
+        musicScannerViewModel.getScanProgress().observe(this, progress -> {
+            TextView progressText = findViewById(R.id.scan_progress_text);
+            progressText.setText("Scan en cours... " + progress + "/" + musicScannerViewModel.getTotalFiles().getValue());
+        });
+    }
+
+    public void setLoaderMediaViewModel(){
+        LoaderMusicViewModelFactory loaderMediaViewModelFactory = new LoaderMusicViewModelFactory(musicDao, artistDao, albumDao, genreDao);
+        loaderMediaViewModel = new ViewModelProvider(this, loaderMediaViewModelFactory).get(LoaderMediaViewModel.class);
+        currentMusicList = loaderMediaViewModel.loadMusics();
+        currentArtistList = loaderMediaViewModel.loadArtists();
+        currentAlbumList = loaderMediaViewModel.loadAlbums();
+        currentGenreList = loaderMediaViewModel.loadGenres();
+    }
+
+    private void updateViewCompat(boolean granted){
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            if (granted)
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            else
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
     }
 }

@@ -17,11 +17,6 @@ public class AlbumFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //TODO: Make the album fragment for display album (features/recupAlbum)
-
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Album");
-        }
         return inflater.inflate(R.layout.fragment_album, container, false);
     }
 }

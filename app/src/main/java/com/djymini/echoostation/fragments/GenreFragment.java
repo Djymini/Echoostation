@@ -17,10 +17,6 @@ public class GenreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         //TODO: Make the genre fragment for display genre (features/recupGenre)
-        Activity activity = getActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Genres");
-        }
         return inflater.inflate(R.layout.fragment_genre, container, false);
     }
 }

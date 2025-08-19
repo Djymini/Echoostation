@@ -30,4 +30,11 @@ public class Constants {
 
     // Bundle Keys
     public static final String EXTRA_MUSIC_ID = "extra_music_id";
+
+    //Titles
+    public static final String MUSIC_TITLE = "Titres";
+    public static final String ALBUM_TITLE = "Albums";
+    public static final String ARTIST_TITLE = "Artistes";
+    public static final String GENRE_TITLE = "Genres";
+    public static final String PLAYLIST_TITLE = "Playlists";
 }

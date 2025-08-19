@@ -1,6 +1,5 @@
-package com.djymini.echoostation.utilities;
+package com.djymini.echoostation.helpers;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -14,9 +13,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.utilities.Constants;
+import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewModel;
 
 public class PermissionManager {
     private final Activity activity;
@@ -55,7 +57,7 @@ public class PermissionManager {
         return isPermissionGranted(getRequiredPermission());
     }
 
-    private boolean isPermissionGranted(String permission) {
+    public boolean isPermissionGranted(String permission) {
         return ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -68,19 +70,26 @@ public class PermissionManager {
                 .show();
     }
 
-    private void requestPermission(String permission) {
+    public void requestPermission(String permission) {
         permissionLauncher.launch(permission);
     }
 
-    public void registerPermissionLauncher(RelativeLayout authorizationLayout, ConstraintLayout appLayout){
+    public void registerPermissionLauncher(){
         permissionLauncher = ((MainActivity) activity).registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
             if (isGranted) {
-                authorizationLayout.setVisibility(View.GONE);
-                appLayout.setVisibility(View.VISIBLE);
                 onPermissionGranted.run();
+
+                if (activity instanceof MainActivity) {
+                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
+                            .get(PermissionViewModel.class);
+                    vm.setPermissionGranted(true);
+                }
             } else {
-                authorizationLayout.setVisibility(View.VISIBLE);
-                appLayout.setVisibility(View.GONE);
+                if (activity instanceof MainActivity) {
+                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
+                            .get(PermissionViewModel.class);
+                    vm.setPermissionGranted(false);
+                }
             }
         });
     }

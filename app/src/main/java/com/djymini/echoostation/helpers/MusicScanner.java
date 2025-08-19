@@ -1,4 +1,4 @@
-package com.djymini.echoostation.utilities;
+package com.djymini.echoostation.helpers;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -12,10 +12,9 @@ import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
+import com.djymini.echoostation.utilities.Constants;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 
