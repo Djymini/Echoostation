@@ -163,7 +163,15 @@ public class MusicFragment extends EchoostationFragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                // TODO: Ajouter le lancement d'une musique et l'ajout à une liste de lecture
+                ArrayList<MusicDto> allMusics = new ArrayList<>(adapter.getCurrentList());
+
+                MusicPlayerFragment fragment = MusicPlayerFragment.newInstance(allMusics, position);
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, fragment)
+                        .addToBackStack(null) // permet retour arrière
+                        .commit();
             }
         });
 

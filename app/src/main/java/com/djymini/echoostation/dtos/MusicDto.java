@@ -1,8 +1,12 @@
 package com.djymini.echoostation.dtos;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class MusicDto {
+import androidx.annotation.NonNull;
+
+public class MusicDto implements Parcelable {
     public long id;
     public String path;
     public String title;
@@ -46,6 +50,70 @@ public class MusicDto {
         this.monthListeningTime = monthListeningTime;
         this.createdAt = createdAt;
     }
+
+    protected MusicDto(Parcel in) {
+        id = in.readLong();
+        path = in.readString();
+        title = in.readString();
+        duration = in.readLong();
+        track = in.readInt();
+        isFavorite = in.readByte() != 0;
+        albumId = in.readLong();
+        albumName = in.readString();
+        coverPath = in.readString();
+        year = in.readInt();
+        artistId = in.readString();
+        artistName = in.readString();
+        genreId = in.readLong();
+        genreName = in.readString();
+        statisticId = in.readLong();
+        listeningNumber = in.readInt();
+        monthListeningNumber = in.readInt();
+        listeningTime = in.readLong();
+        monthListeningTime = in.readLong();
+        createdAt = in.readLong();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(path);
+        dest.writeString(title);
+        dest.writeLong(duration);
+        dest.writeInt(track);
+        dest.writeByte((byte) (isFavorite ? 1 : 0));
+        dest.writeLong(albumId);
+        dest.writeString(albumName);
+        dest.writeString(coverPath);
+        dest.writeInt(year);
+        dest.writeString(artistId);
+        dest.writeString(artistName);
+        dest.writeLong(genreId);
+        dest.writeString(genreName);
+        dest.writeLong(statisticId);
+        dest.writeInt(listeningNumber);
+        dest.writeInt(monthListeningNumber);
+        dest.writeLong(listeningTime);
+        dest.writeLong(monthListeningTime);
+        dest.writeLong(createdAt);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MusicDto> CREATOR = new Creator<MusicDto>() {
+        @Override
+        public MusicDto createFromParcel(Parcel in) {
+            return new MusicDto(in);
+        }
+
+        @Override
+        public MusicDto[] newArray(int size) {
+            return new MusicDto[size];
+        }
+    };
 
     public Uri getCover(){
         return Uri.parse(coverPath);

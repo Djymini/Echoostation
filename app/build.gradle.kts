@@ -64,4 +64,10 @@ dependencies {
     implementation(libs.room.guava)
     testImplementation(libs.room.testing)
     implementation(libs.room.paging)
+
+    //Exoplayer
+    implementation("androidx.media3:media3-exoplayer:1.8.0")
+    implementation("androidx.media3:media3-exoplayer-dash:1.8.0")
+    implementation("androidx.media3:media3-ui:1.8.0")
+    implementation("androidx.media3:media3-ui-compose:1.8.0")
 }
