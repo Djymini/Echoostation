@@ -15,34 +15,30 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             app:tabIndicatorColor="@color/accentColor"
-            app:tabSelectedTextColor="@color/accentColor">
+            app:tabSelectedTextColor="@color/accentColor"
+            android:background="@color/colorSecondary">
             <com.google.android.material.tabs.TabItem
                 android:text="MUSIQUE"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:text="ALBUM"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:text="ARTISTE"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:text="GENRE"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
             <com.google.android.material.tabs.TabItem
                 android:text="PLAYLIST"
-                android:textAlignment="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.tabs.TabLayout>

@@ -87,7 +87,8 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/app_name"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            tools:ignore="MissingConstraints"/>
+            tools:ignore="MissingConstraints"
+            android:background="@color/colorSecondary"/>
 
         <LinearLayout
             android:id="@+id/scan_progress_container"
