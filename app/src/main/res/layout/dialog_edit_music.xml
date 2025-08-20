@@ -3,42 +3,53 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="24dp"
+    android:background="@color/colorSecondary"
+    android:outlineSpotShadowColor="@color/colorPrimary">
 
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:hint="Titre" />
 
     <EditText
         android:id="@+id/editArtist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:hint="Artiste" />
 
     <EditText
         android:id="@+id/editAlbum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:hint="Album" />
 
     <EditText
         android:id="@+id/editTrack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:hint="Numero de piste" />
 
     <EditText
         android:id="@+id/editGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorText"
         android:hint="Genre" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Enregistrer" />
+        android:fontFamily="@font/m_plus_rounded_1c_extrabold"
+        android:text="Enregistrer"
+        android:textSize="15sp"
+        android:backgroundTint="@color/accentColor"
+        android:textColor="@color/tab_text_color"/>
 
 </LinearLayout>

@@ -1,24 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/text_spinner"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/image_spinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        app:tint="@color/colorText"
-        android:src="@drawable/ic_sort"/>
-    <TextView
-        android:id="@+id/text_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@id/image_spinner"
-        android:padding="8dp"
-        android:textColor="@color/colorText"
-        android:textSize="16sp"
-        android:fontFamily="@font/m_plus_rounded_1c_medium"
-        android:singleLine="true"
-        android:ellipsize="end"/>
-</RelativeLayout>
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:layout_alignParentStart="true"
+    android:padding="10dp"
+    android:textColor="@color/colorText"
+    android:textSize="16sp"
+    android:fontFamily="@font/m_plus_rounded_1c_medium"
+    android:singleLine="true"
+    android:ellipsize="end"
+    android:background="@color/colorSecondary">
+</TextView>

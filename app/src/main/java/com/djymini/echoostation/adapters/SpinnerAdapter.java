@@ -38,11 +38,8 @@ public class SpinnerAdapter extends ArrayAdapter<String> {
     public View getCustomView(int position, View convertView, ViewGroup parent){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View row = inflater.inflate(R.layout.spinner_dropdown_item, parent, false);
-
         TextView textView = row.findViewById(R.id.text_spinner);
-
         textView.setText(sortCategories[position]);
-
         return row;
     }
 }

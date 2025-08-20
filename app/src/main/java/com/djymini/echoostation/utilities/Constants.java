@@ -9,14 +9,6 @@ public class Constants {
     public static final String UNKNOWN_GENRE = "Genre inconnu";
     public static final String EMPTY_STRING = "";
 
-    // Logs
-    public static final String TAG_FILE_DELETE = "FileDelete";
-    public static final String MSG_DELETE_WITH_AUTHORIZATION = "Delete with user authorization";
-    public static final String MSG_DELETE_CANCELED = "Delete canceled by user";
-    public static final String MSG_DELETE_ERROR = "Error during delete request";
-    public static final String MSG_DELETE_SUCCESS = "File deleted successfully";
-    public static final String MSG_DELETE_FAILED = "Failed to delete file";
-
     // Permissions
     public static final String PERMISSION_READ_MEDIA_AUDIO = Manifest.permission.READ_MEDIA_AUDIO;
     public static final String PERMISSION_READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
@@ -37,4 +29,20 @@ public class Constants {
     public static final String ARTIST_TITLE = "Artistes";
     public static final String GENRE_TITLE = "Genres";
     public static final String PLAYLIST_TITLE = "Playlists";
+
+    //
+    public static final String[] SORT_CATEGORIES = new String[] {
+            "Trie par titre : A -> Z",
+            "Trie par titre : Z -> A",
+            "Trie par durée : courte -> longue",
+            "Trie par durée : longue -> courte",
+            "Trie par album : A -> Z",
+            "Trie par album : Z - >A",
+            "Trie par artiste : A -> Z",
+            "Trie par artiste : Z -> A",
+            "Trie par nombre d'écoutes : plus -> moins",
+            "Trie par nombre d'écoutes : moins -> plus",
+            "Trie par date d'ajout : récent -> ancien",
+            "Trie par date d'ajout : ancien -> récent"
+    };
 }

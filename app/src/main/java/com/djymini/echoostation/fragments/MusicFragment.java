@@ -38,6 +38,7 @@ import com.djymini.echoostation.adapters.SpinnerAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.ui.MusicDialogManager;
+import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 
 import java.util.ArrayList;
@@ -55,20 +56,7 @@ public class MusicFragment extends EchoostationFragment {
     private MusicAdapter adapter;
     private TextView counterMusic;
     private Spinner spinner;
-    private final String[] sortCategories = new String[] {
-            "Nom (A -> Z)",
-            "Nom (Z -> A)",
-            "Durée (Courte -> Longue)",
-            "Durée (Longue -> Courte)",
-            "Album (A -> Z)",
-            "Album (Z -> A)",
-            "Artiste (A -> Z)",
-            "Artiste (Z -> A)",
-            "Nombre d'écoutes (plus -> moins)",
-            "Nombre d'écoutes (moins -> plus)",
-            "Date d'ajout (récent -> ancien)",
-            "Date d'ajout (ancien -> récent)"
-    };
+    private final String[] sortCategories = Constants.SORT_CATEGORIES;
     private String search;
     private ActionMode actionMode;
     private int REQUEST_CODE_DELETE_MULTIPLE = 1002;
@@ -175,15 +163,13 @@ public class MusicFragment extends EchoostationFragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                // comportement normal si pas en mode sélection
+                // TODO: Ajouter le lancement d'une musique et l'ajout à une liste de lecture
             }
         });
 
         deleteMultipleLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartIntentSenderForResult(),
                 result -> {
-                    Log.d("MultipleSelection deleteLauncher size", String.valueOf(musicsPendingDeletion.size()));
-                    Log.d("MultipleSelection deleteLauncher result", String.valueOf(result.getResultCode()));
                     if (result.getResultCode() == Activity.RESULT_OK && musicsPendingDeletion != null) {
                         List<MusicDto> toDelete = new ArrayList<>(musicsPendingDeletion);
                         executor.execute(() -> {
@@ -202,7 +188,7 @@ public class MusicFragment extends EchoostationFragment {
 
     private void loadMusics() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).modifyTitle("Paramêtres");
+            ((MainActivity) getActivity()).modifyTitle("Paramètres");
             ((MainActivity) getActivity()).currentMusicList.observe(getViewLifecycleOwner(), musics -> {
                 currentMusicList = new ArrayList<>(musics);
                 sortAndDisplayMusics(spinner.getSelectedItemPosition());
@@ -214,48 +200,49 @@ public class MusicFragment extends EchoostationFragment {
     private void sortAndDisplayMusics(int position) {
         if (currentMusicList == null) return;
 
-        List<MusicDto> sortedList = new ArrayList<>(fullTextSearchByLogicalOr(currentMusicList, search));
+        executor.execute(() -> {
+            List<MusicDto> sortedList = new ArrayList<>(fullTextSearchByLogicalOr(currentMusicList, search));
 
-        switch (position) {
-            case 0:
-                sortedList.sort((m1, m2) -> m1.title.compareToIgnoreCase(m2.title));
-                break;
-            case 1:
-                sortedList.sort((m1, m2) -> m2.title.compareToIgnoreCase(m1.title));
-                break;
-            case 2:
-                sortedList.sort(Comparator.comparingLong(m -> m.duration));
-                break;
-            case 3:
-                sortedList.sort((m1, m2) -> Long.compare(m2.duration, m1.duration));
-                break;
-            case 4: // Album A -> Z
-                sortedList.sort((m1, m2) -> m1.albumName.compareToIgnoreCase(m2.albumName));
-                break;
-            case 5: // Album Z -> A
-                sortedList.sort((m1, m2) -> m2.albumName.compareToIgnoreCase(m1.albumName));
-                break;
-            case 6: // Artiste A -> Z
-                sortedList.sort((m1, m2) -> m1.artistName.compareToIgnoreCase(m2.artistName));
-                break;
-            case 7: // Artiste Z -> A
-                sortedList.sort((m1, m2) -> m2.artistName.compareToIgnoreCase(m1.artistName));
-                break;
-            case 8: // Écoutes + -> -
-                sortedList.sort((m1, m2) -> Integer.compare(m2.listeningNumber, m1.listeningNumber));
-                break;
-            case 9: // Écoutes - -> +
-                sortedList.sort(Comparator.comparingInt(m -> m.listeningNumber));
-                break;
-            case 10: // Date ajout récent -> ancien
-                sortedList.sort((m1, m2) -> Long.compare(m2.createdAt, m1.createdAt));
-                break;
-            case 11: // Date ajout ancien -> récent
-                sortedList.sort(Comparator.comparingLong(m -> m.createdAt));
-                break;
-        }
-
-        adapter.submitList(sortedList);
+            switch (position) {
+                case 0:
+                    sortedList.sort((m1, m2) -> m1.title.compareToIgnoreCase(m2.title));
+                    break;
+                case 1:
+                    sortedList.sort((m1, m2) -> m2.title.compareToIgnoreCase(m1.title));
+                    break;
+                case 2:
+                    sortedList.sort(Comparator.comparingLong(m -> m.duration));
+                    break;
+                case 3:
+                    sortedList.sort((m1, m2) -> Long.compare(m2.duration, m1.duration));
+                    break;
+                case 4:
+                    sortedList.sort((m1, m2) -> m1.albumName.compareToIgnoreCase(m2.albumName));
+                    break;
+                case 5:
+                    sortedList.sort((m1, m2) -> m2.albumName.compareToIgnoreCase(m1.albumName));
+                    break;
+                case 6:
+                    sortedList.sort((m1, m2) -> m1.artistName.compareToIgnoreCase(m2.artistName));
+                    break;
+                case 7:
+                    sortedList.sort((m1, m2) -> m2.artistName.compareToIgnoreCase(m1.artistName));
+                    break;
+                case 8:
+                    sortedList.sort((m1, m2) -> Integer.compare(m2.listeningNumber, m1.listeningNumber));
+                    break;
+                case 9:
+                    sortedList.sort(Comparator.comparingInt(m -> m.listeningNumber));
+                    break;
+                case 10:
+                    sortedList.sort((m1, m2) -> Long.compare(m2.createdAt, m1.createdAt));
+                    break;
+                case 11:
+                    sortedList.sort(Comparator.comparingLong(m -> m.createdAt));
+                    break;
+            }
+            requireActivity().runOnUiThread(() -> adapter.submitList(sortedList));
+        });
     }
 
     private List<MusicDto> fullTextSearchByLogicalOr(List<MusicDto> musicDtoList, String keyword) {
@@ -279,9 +266,7 @@ public class MusicFragment extends EchoostationFragment {
 
     private void deleteSelectedMusics(Set<MusicDto> selected) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            Log.d("MultipleSelection", "check Build 1");
             List<Uri> uris = new ArrayList<>();
-            Log.d("MultipleSelection selected", String.valueOf(selected.size()));
             for (MusicDto music : selected) {
                 long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
                 if (mediaStoreId != -1) {
@@ -290,7 +275,6 @@ public class MusicFragment extends EchoostationFragment {
             }
 
             if (!uris.isEmpty()) {
-                Log.d("MultipleSelection uris", String.valueOf(uris.size()));
                 musicsPendingDeletion = new ArrayList<>(selected);
                 IntentSender sender = MediaStore.createDeleteRequest(
                         requireActivity().getContentResolver(), uris
@@ -298,7 +282,6 @@ public class MusicFragment extends EchoostationFragment {
                 deleteMultipleLauncher.launch(new IntentSenderRequest.Builder(sender).build());
             }
         } else {
-            Log.d("MultipleSelection", "check Build 2");
             executor.execute(() -> {
                 for (MusicDto music : selected) {
                     long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
@@ -316,7 +299,6 @@ public class MusicFragment extends EchoostationFragment {
 
 
     private void confirmAndDeleteSelectedMusics(Set<MusicDto> selected) {
-        Log.d("MultipleSelection selected check", String.valueOf(selected.size()));
         if (selected.isEmpty()) return;
 
         new AlertDialog.Builder(requireContext())
@@ -328,5 +310,4 @@ public class MusicFragment extends EchoostationFragment {
                 .setNegativeButton("Non", null)
                 .show();
     }
-
 }
