@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="BottomNavTextAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="fontFamily">@font/m_plus_rounded_1c_bold</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="SpinnerAppearance" parent="TextAppearance.AppCompat.Caption">
+        <item name="fontFamily">@font/m_plus_rounded_1c_medium</item>
+        <item name="android:textColor">@color/accentColor</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ToolbarTitleAppearance" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="fontFamily">@font/m_plus_rounded_1c_bold</item>
+        <item name="android:textColor">@color/colorText</item>
+    </style>
+
+    <style name="MyToolbarStyle" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/ToolbarTitleAppearance</item>
+        <item name="android:background">@color/colorSecondary</item>
+    </style>
+</resources>

@@ -5,15 +5,133 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     tools:context=".MainActivity">
+    <RelativeLayout
+        android:id="@+id/authorization_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/intro_text_1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginVertical="16dp"
+            android:fontFamily="@font/m_plus_rounded_1c_bold"
+            android:text="@string/intro_text_1"
+            android:textSize="20sp"
+            android:textColor="@color/colorText"
+            android:textAlignment="center"
+            android:lineSpacingExtra="-10sp"/>
+        <TextView
+            android:id="@+id/intro_text_2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/intro_text_1"
+            android:fontFamily="@font/m_plus_rounded_1c"
+            android:text="@string/intro_text_2"
+            android:textSize="16sp"
+            android:textColor="@color/colorText"
+            android:textAlignment="center"
+            android:lineSpacingExtra="-5sp"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/app_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_above="@id/intro_text_1"
+            android:adjustViewBounds="true"
+            android:maxWidth="160dp"
+            android:maxHeight="160dp"
+            android:scaleType="fitCenter"
+            android:layout_marginStart="3dp"
+            android:src="@drawable/echoostation_icone_foreground_3x"
+            android:contentDescription="@string/logo_desciption"/>
 
+        <RelativeLayout
+            android:id="@+id/button_container"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="8dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true">
+            <Button
+                android:id="@+id/confirm_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="@string/confirm_authorization"
+                android:backgroundTint="@color/accentColor"/>
+            <Button
+                android:id="@+id/quit_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/confirm_button"
+                android:text="@string/quit_app"
+                android:textColor="@color/accentColor"
+                android:backgroundTint="@color/transparenceColor"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/app_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="@string/app_name"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            tools:ignore="MissingConstraints"/>
+
+        <LinearLayout
+            android:id="@+id/scan_progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:background="@color/colorSecondary"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
+
+            <ProgressBar
+                android:id="@+id/scan_progress_bar"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                style="?android:attr/progressBarStyleSmall"
+                android:indeterminate="true"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/scan_progress_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/m_plus_rounded_1c_medium"
+                android:text="Scan en cours..."
+                android:textColor="@color/colorText"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/frame_layout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintBottom_toTopOf="@id/bottom_nav_menu"/>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            style="@style/CustomBottomNavigation"
+            android:id="@+id/bottom_nav_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:menu="@menu/main_menu"
+            app:itemIconTint="@color/nav_item_color"
+            app:itemTextColor="@color/nav_item_color"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
