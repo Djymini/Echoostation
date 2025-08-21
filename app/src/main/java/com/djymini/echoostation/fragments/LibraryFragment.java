@@ -105,6 +105,10 @@ public class LibraryFragment extends Fragment {
             }
         });
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
+        }
+
         return view;
     }
 

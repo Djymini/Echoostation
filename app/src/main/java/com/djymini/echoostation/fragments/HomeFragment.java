@@ -68,6 +68,8 @@ public class HomeFragment extends EchoostationFragment {
                 genreData.setData(String.valueOf(genres.size()));
             });
             playlistData.setData(String.valueOf(0));
+
+            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
         }
 
         return view;

@@ -20,6 +20,7 @@ public class SettingsFragment extends Fragment {
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity) activity).modifyTitle("Paramêtres");
+            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
         }
         return inflater.inflate(R.layout.fragment_settings, container, false);
     }

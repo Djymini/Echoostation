@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
@@ -78,6 +79,10 @@ public class MusicPlayerFragment extends Fragment {
         playPause.setOnClickListener(v -> viewModel.playPause(requireContext()));
         next.setOnClickListener(v -> viewModel.next(requireContext()));
         prev.setOnClickListener(v -> viewModel.prev(requireContext()));
+
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
+        }
 
         return view;
     }

@@ -5,8 +5,10 @@ import static com.djymini.echoostation.utilities.Constants.REQUEST_CODE_DELETE;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -40,6 +42,7 @@ import com.djymini.echoostation.entities.Genre;
 import com.djymini.echoostation.fragments.EqualizerFragment;
 import com.djymini.echoostation.fragments.HomeFragment;
 import com.djymini.echoostation.fragments.LibraryFragment;
+import com.djymini.echoostation.fragments.MusicPlayerFragment;
 import com.djymini.echoostation.fragments.SettingsFragment;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
@@ -49,6 +52,7 @@ import com.djymini.echoostation.services.StatisticService;
 import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.PermissionManager;
+import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMediaViewModel;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMusicViewModelFactory;
 import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModelFactory;
@@ -94,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
     private long lastMusicDeletedId = -1;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
+    private MusicPlayerViewModel viewModel;
+    private FrameLayout miniPlayerContainer;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
         setPermissionViewModel();
         setMusicScanViewModel();
         setLoaderMediaViewModel();
+
+        setMiniPlayer();
     }
 
     @Override
@@ -272,4 +282,32 @@ public class MainActivity extends AppCompatActivity {
         currentAlbumList = loaderMediaViewModel.loadAlbums();
         currentGenreList = loaderMediaViewModel.loadGenres();
     }
+
+    public void setMiniPlayer(){
+        miniPlayerContainer = findViewById(R.id.mini_player_container);
+
+        viewModel = new ViewModelProvider(this).get(MusicPlayerViewModel.class);
+
+        /*viewModel.getCurrentItem().observe(this, item -> {
+            miniPlayerContainer.setVisibility(item != null ? View.VISIBLE : View.GONE);
+        });*/
+    }
+
+    public void updateMiniPlayerVisibility(Fragment fragment) {
+        if (miniPlayerContainer == null) return;
+
+        if (fragment instanceof MusicPlayerFragment) {
+            Log.d("echoostationTest : MainActivity", "true");
+            toolbar.setVisibility(View.GONE);
+            bottomNavMenu.setVisibility(View.GONE);
+            miniPlayerContainer.setVisibility(View.GONE);
+        } else {
+            Log.d("echoostationTes : MainActivity", "false");
+            toolbar.setVisibility(View.VISIBLE);
+            bottomNavMenu.setVisibility(View.VISIBLE);
+            viewModel.getCurrentItem().getValue();
+            miniPlayerContainer.setVisibility(viewModel.getCurrentItem().getValue() != null ? View.VISIBLE : View.GONE);
+        }
+    }
+
 }
