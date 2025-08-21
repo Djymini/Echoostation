@@ -19,7 +19,6 @@ public class EqualizerFragment extends Fragment {
         //TODO: Make the equalizer fragment for manage the sound (features/equalizer)
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Egaliseur");
             ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
         }
         return inflater.inflate(R.layout.fragment_equalizer, container, false);

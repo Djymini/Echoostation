@@ -148,7 +148,7 @@ public class MusicFragment extends EchoostationFragment {
         adapter.setOnMusicMenuClickListener((music, anchorView) -> {
             Activity activity = getActivity();
             if (activity instanceof MainActivity) {
-                ((MainActivity) activity).musicDialogManager.showBottomDialog(music);
+                ((MainActivity) activity).appInitializer.getMusicDialogManager().showBottomDialog(music);
             }
         });
 
@@ -213,7 +213,7 @@ public class MusicFragment extends EchoostationFragment {
     private void loadMusics() {
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).modifyTitle("Paramètres");
-            ((MainActivity) getActivity()).currentMusicList.observe(getViewLifecycleOwner(), musics -> {
+            ((MainActivity) getActivity()).loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
                 currentMusicList = new ArrayList<>(musics);
                 sortAndDisplayMusics(spinner.getSelectedItemPosition());
                 counterMusic.setText(musics.size() + " Titres");

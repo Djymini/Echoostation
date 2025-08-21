@@ -54,17 +54,16 @@ public class HomeFragment extends EchoostationFragment {
 
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Accueil");
-            ((MainActivity) getActivity()).currentMusicList.observe(getViewLifecycleOwner(), musics -> {
+            ((MainActivity) getActivity()).loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
                 musicData.setData(String.valueOf(musics.size()));
             });
-            ((MainActivity) getActivity()).currentArtistList.observe(getViewLifecycleOwner(), artists -> {
+            ((MainActivity) getActivity()).loaderMediaViewModel.loadArtists().observe(getViewLifecycleOwner(), artists -> {
                 artisteData.setData(String.valueOf(artists.size()));
             });
-            ((MainActivity) getActivity()).currentAlbumList.observe(getViewLifecycleOwner(), albums -> {
+            ((MainActivity) getActivity()).loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(), albums -> {
                 albumData.setData(String.valueOf(albums.size()));
             });
-            ((MainActivity) getActivity()).currentGenreList.observe(getViewLifecycleOwner(), genres -> {
+            ((MainActivity) getActivity()).loaderMediaViewModel.loadGenres().observe(getViewLifecycleOwner(), genres -> {
                 genreData.setData(String.valueOf(genres.size()));
             });
             playlistData.setData(String.valueOf(0));

@@ -127,7 +127,7 @@ public class LibraryFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                searchViewModel.setQuery(s); // met à jour le ViewModel partagé
+                searchViewModel.setQuery(s);
                 return true;
             }
         });

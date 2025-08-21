@@ -19,7 +19,6 @@ public class SettingsFragment extends Fragment {
         //TODO: Make the setting fragment (features/settings)
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
-            ((MainActivity) activity).modifyTitle("Paramêtres");
             ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
         }
         return inflater.inflate(R.layout.fragment_settings, container, false);
