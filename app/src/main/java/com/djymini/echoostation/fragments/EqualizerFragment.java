@@ -20,6 +20,7 @@ public class EqualizerFragment extends Fragment {
         Activity activity = getActivity();
         if (activity instanceof MainActivity) {
             ((MainActivity) activity).modifyTitle("Egaliseur");
+            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
         }
         return inflater.inflate(R.layout.fragment_equalizer, container, false);
     }

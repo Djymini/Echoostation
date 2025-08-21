@@ -13,6 +13,8 @@ import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.MediaMetadata;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +41,7 @@ import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.utilities.Constants;
+import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 
 import java.util.ArrayList;
@@ -51,6 +54,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class MusicFragment extends EchoostationFragment {
+    private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerView;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
@@ -63,6 +67,7 @@ public class MusicFragment extends EchoostationFragment {
     private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
     private List<MusicDto> musicsPendingDeletion;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private List<MediaItem> playlist;
 
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
@@ -124,6 +129,8 @@ public class MusicFragment extends EchoostationFragment {
             sortAndDisplayMusics(spinner.getSelectedItemPosition());
         });
 
+        playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
+
         SpinnerAdapter arrayAdapter = new SpinnerAdapter(requireContext(), sortCategories);
         spinner.setAdapter(arrayAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -163,7 +170,14 @@ public class MusicFragment extends EchoostationFragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                // TODO: Ajouter le lancement d'une musique et l'ajout à une liste de lecture
+                Log.d("echoostation : MusicFragement", String.valueOf(playlist.size()));
+                playerViewModel.playPlaylist(requireContext(), playlist, position);
+
+                requireActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.frame_layout, new MusicPlayerFragment())
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -182,6 +196,16 @@ public class MusicFragment extends EchoostationFragment {
                 }
         );
 
+        playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
+            // Ici tu peux changer l’UI, par ex. afficher un bouton pause/play
+            Log.d("MusicFragment", "isPlaying = " + isPlaying);
+        });
+
+        playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
+            if (item != null) {
+                Log.d("MusicFragment", "Lecture en cours: " + item.mediaMetadata.title);
+            }
+        });
 
         return view;
     }
@@ -241,6 +265,8 @@ public class MusicFragment extends EchoostationFragment {
                     sortedList.sort(Comparator.comparingLong(m -> m.createdAt));
                     break;
             }
+
+            playlist = loadPlaylist(sortedList);
             requireActivity().runOnUiThread(() -> adapter.submitList(sortedList));
         });
     }
@@ -309,5 +335,28 @@ public class MusicFragment extends EchoostationFragment {
                 })
                 .setNegativeButton("Non", null)
                 .show();
+    }
+
+    private List<MediaItem> loadPlaylist(List<MusicDto> list) {
+        List<MediaItem> items = new ArrayList<>();
+        Log.d("echoostation : MusicFragment getCurrentList().size()", String.valueOf(list.size()));
+        for (MusicDto music : list) {
+            MediaMetadata metadata = new MediaMetadata.Builder()
+                    .setTitle(music.title)
+                    .setArtist(music.artistName)
+                    .setArtworkUri(music.getCover())
+                    .build();
+
+            MediaItem mediaItem = new MediaItem.Builder()
+                    .setUri(music.path)
+                    .setMediaId(String.valueOf(music.id))
+                    .setMediaMetadata(metadata)
+                    .build();
+
+            items.add(mediaItem);
+        }
+
+        Log.d("echoostation : MusicFragment items.size()", String.valueOf(items.size()));
+        return items;
     }
 }
