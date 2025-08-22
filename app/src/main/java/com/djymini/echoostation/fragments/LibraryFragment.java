@@ -30,6 +30,7 @@ public class LibraryFragment extends Fragment {
     private static final String ARG_TAB_INDEX = "tab_index";
     private int selectedTabIndex = 0;
     private ShareSearchViewModel searchViewModel;
+    public int tabIndex;
 
     public static LibraryFragment newInstance(int tabIndex) {
         LibraryFragment fragment = new LibraryFragment();
@@ -106,7 +107,7 @@ public class LibraryFragment extends Fragment {
         });
 
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
+            ((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
         }
 
         return view;
@@ -137,7 +138,7 @@ public class LibraryFragment extends Fragment {
 
     private void changeTitle(String newTitle){
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).modifyTitle(newTitle);
+            ((MainActivity) getActivity()).navigator.modifyTitle(newTitle);
         };
     }
 }

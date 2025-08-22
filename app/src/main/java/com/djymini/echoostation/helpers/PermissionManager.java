@@ -33,6 +33,10 @@ public class PermissionManager {
         this.onPermissionDenied = onPermissionDenied;
     }
 
+    public ActivityResultLauncher<String> getPermissionLauncher() {
+        return permissionLauncher;
+    }
+
     public void checkAndRequestPermission() {
         String permission = getRequiredPermission();
 

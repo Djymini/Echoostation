@@ -81,7 +81,7 @@ public class MusicPlayerFragment extends Fragment {
         prev.setOnClickListener(v -> viewModel.prev(requireContext()));
 
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
+            ((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
         }
 
         return view;

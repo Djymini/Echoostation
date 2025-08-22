@@ -1,6 +1,5 @@
 package com.djymini.echoostation.viewModels.loaderMediaViewModel;
 
-import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -13,7 +12,6 @@ import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Genre;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LoaderMediaViewModel extends ViewModel {

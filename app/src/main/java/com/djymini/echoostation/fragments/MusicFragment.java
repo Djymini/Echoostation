@@ -212,7 +212,7 @@ public class MusicFragment extends EchoostationFragment {
 
     private void loadMusics() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).modifyTitle("Paramètres");
+            ((MainActivity) getActivity()).navigator.modifyTitle("Paramètres");
             ((MainActivity) getActivity()).loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
                 currentMusicList = new ArrayList<>(musics);
                 sortAndDisplayMusics(spinner.getSelectedItemPosition());

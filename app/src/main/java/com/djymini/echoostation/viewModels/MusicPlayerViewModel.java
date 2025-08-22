@@ -2,7 +2,6 @@ package com.djymini.echoostation.viewModels;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,6 +12,7 @@ import androidx.media3.session.MediaController;
 import androidx.media3.session.SessionToken;
 
 import com.djymini.echoostation.services.MusicPlayerService;
+import com.djymini.echoostation.utilities.Constants;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
@@ -31,7 +31,6 @@ public class MusicPlayerViewModel extends ViewModel {
 
     private void ensureConnected(Context context, Runnable onReady) {
         if (controller != null) {
-            // Déjà connecté → exécuter directement
             if (onReady != null) onReady.run();
             return;
         }
@@ -62,7 +61,6 @@ public class MusicPlayerViewModel extends ViewModel {
                 }
             }, MoreExecutors.directExecutor());
         } else {
-            // Une connexion est en cours → attendre le callback
             Futures.addCallback(controllerFuture, new com.google.common.util.concurrent.FutureCallback<MediaController>() {
                 @Override
                 public void onSuccess(MediaController ctrl) {
@@ -79,7 +77,7 @@ public class MusicPlayerViewModel extends ViewModel {
 
     public void playPlaylist(Context context, List<MediaItem> items, int startIndex) {
         ensureConnected(context, () -> {
-            controller.setMediaItems(items, startIndex, 0);
+            controller.setMediaItems(items, startIndex, Constants.TIME_UNSET);
             controller.prepare();
             controller.play();
         });

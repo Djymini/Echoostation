@@ -68,7 +68,7 @@ public class HomeFragment extends EchoostationFragment {
             });
             playlistData.setData(String.valueOf(0));
 
-            ((MainActivity) getActivity()).updateMiniPlayerVisibility(this);
+            ((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
         }
 
         return view;
@@ -77,7 +77,7 @@ public class HomeFragment extends EchoostationFragment {
     private void openLibraryTab(int tabIndex) {
         FragmentActivity activity = requireActivity();
         if (activity instanceof MainActivity) {
-            ((MainActivity) activity).openLibraryTab(tabIndex);
+            ((MainActivity) activity).openLibraryTab();
         }
     }
 

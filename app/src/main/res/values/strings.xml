@@ -45,6 +45,13 @@
     <string name="permission_required_message">L\'application a besoin d\'accéder à vos musiques pour fonctionner correctement.</string>
     <string name="permission_allow">Autoriser</string>
     <string name="permission_deny">Annuler</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="scanning_indicator">Scan en cours...</string>
+    <string-array name="fragment_name">
+        <item>Accueil</item>
+        <item>Bibliothèque</item>
+        <item>Egaliseur</item>
+        <item>Paramètres</item>
+    </string-array>
+
 </resources>
