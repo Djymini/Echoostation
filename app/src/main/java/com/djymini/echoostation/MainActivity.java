@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
         musicScannerViewModel.startScan();
     }
 
-    public void openLibraryTab() {
-        navigator.openLibraryTab();
+    public void openLibraryTab(int tabIndex) {
+        navigator.openLibraryTab(tabIndex);
     }
 }

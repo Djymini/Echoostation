@@ -24,21 +24,11 @@ import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.List;
-
 public class LibraryFragment extends Fragment {
     private static final String ARG_TAB_INDEX = "tab_index";
     private int selectedTabIndex = 0;
     private ShareSearchViewModel searchViewModel;
-    public int tabIndex;
-
-    public static LibraryFragment newInstance(int tabIndex) {
-        LibraryFragment fragment = new LibraryFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_TAB_INDEX, tabIndex);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    private int tabIndex = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,67 +40,53 @@ public class LibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
+
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
         ViewPager2 viewPager2 = view.findViewById(R.id.view_pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(requireActivity());
         viewPager2.setAdapter(viewPagerAdapter);
 
-        setHasOptionsMenu(true);
         searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
 
-        if (getArguments() != null) {
-            selectedTabIndex = getArguments().getInt(ARG_TAB_INDEX, 0);
+        if (getArguments() == null) createArgument();
+        selectedTabIndex = getArguments().getInt(ARG_TAB_INDEX, tabIndex);
+        viewPager2.setCurrentItem(selectedTabIndex, false);
+
+        setupTabs(tabLayout, viewPager2);
+        setupPageChangeListener(viewPager2);
+
+        MainActivity mainActivity = getMainActivity();
+        if (mainActivity != null) {
+            mainActivity.navigator.updateMiniPlayerVisibility(this);
         }
 
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-            switch (position) {
-                case 0: tab.setText(Constants.MUSIC_TITLE.toUpperCase()); break;
-                case 1: tab.setText(Constants.ALBUM_TITLE.toUpperCase()); break;
-                case 2: tab.setText(Constants.ARTIST_TITLE.toUpperCase()); break;
-                case 3: tab.setText(Constants.GENRE_TITLE.toUpperCase()); break;
-                case 4: tab.setText(Constants.PLAYLIST_TITLE.toUpperCase()); break;
-            }
-        }).attach();
+        return view;
+    }
 
-        String[] tabTitles = {
-                Constants.MUSIC_TITLE,
-                Constants.ALBUM_TITLE,
-                Constants.ARTIST_TITLE,
-                Constants.GENRE_TITLE,
-                Constants.PLAYLIST_TITLE
-        };
+    private void setupTabs(TabLayout tabLayout, ViewPager2 viewPager2) {
+        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+            tab.setText(Constants.LIBRARY_TAB_TITLE[position].toUpperCase());
+        }).attach();
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
             if (tab != null) {
                 TextView customTab = (TextView) LayoutInflater.from(requireContext())
                         .inflate(R.layout.custom_tab, tabLayout, false);
-                customTab.setText(tabTitles[i].toUpperCase());
+                customTab.setText(Constants.LIBRARY_TAB_TITLE[i].toUpperCase());
                 tab.setCustomView(customTab);
             }
         }
+    }
 
-        viewPager2.setCurrentItem(selectedTabIndex, false);
-
+    private void setupPageChangeListener(ViewPager2 viewPager2) {
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                switch (position) {
-                    case 0: changeTitle(Constants.MUSIC_TITLE); break;
-                    case 1: changeTitle(Constants.ALBUM_TITLE); break;
-                    case 2: changeTitle(Constants.ARTIST_TITLE); break;
-                    case 3: changeTitle(Constants.GENRE_TITLE); break;
-                    case 4: changeTitle(Constants.PLAYLIST_TITLE); break;
-                }
+                changeTitle(Constants.LIBRARY_TAB_TITLE[position]);
             }
         });
-
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
-        }
-
-        return view;
     }
 
     @Override
@@ -118,13 +94,11 @@ public class LibraryFragment extends Fragment {
         inflater.inflate(R.menu.action_bar, menu);
         MenuItem menuItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint("Recherche");
+        searchView.setQueryHint(getString(R.string.search_bar_text));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+            public boolean onQueryTextSubmit(String s) { return false; }
 
             @Override
             public boolean onQueryTextChange(String s) {
@@ -136,9 +110,25 @@ public class LibraryFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void changeTitle(String newTitle){
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigator.modifyTitle(newTitle);
-        };
+    private void changeTitle(String newTitle) {
+        MainActivity mainActivity = getMainActivity();
+        if (mainActivity != null) mainActivity.navigator.modifyTitle(newTitle);
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
+
+        ViewPager2 viewPager2 = getView() != null ? getView().findViewById(R.id.view_pager) : null;
+        if (viewPager2 != null) viewPager2.setCurrentItem(tabIndex, true);
+    }
+
+    private void createArgument() {
+        Bundle args = new Bundle();
+        args.putInt(ARG_TAB_INDEX, tabIndex);
+        setArguments(args);
+    }
+
+    private MainActivity getMainActivity() {
+        return getActivity() instanceof MainActivity ? (MainActivity) getActivity() : null;
     }
 }

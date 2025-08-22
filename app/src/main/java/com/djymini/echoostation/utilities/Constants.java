@@ -4,27 +4,29 @@ import android.Manifest;
 import android.net.Uri;
 
 public class Constants {
-    // Default values
+    // -------- Default values --------
     public static final String UNKNOWN_ALBUM = "Album inconnu";
     public static final String UNKNOWN_GENRE = "Genre inconnu";
     public static final String EMPTY_STRING = "";
 
-    // Permissions
+    // -------- Permissions --------
     public static final String PERMISSION_READ_MEDIA_AUDIO = Manifest.permission.READ_MEDIA_AUDIO;
     public static final String PERMISSION_READ_EXTERNAL_STORAGE = Manifest.permission.READ_EXTERNAL_STORAGE;
 
-    // MediaStore URIs
+    // -------- MediaStore URIs --------
     public static final String MEDIASTORE_EXTERNAL = "external";
     public static final Uri ALBUM_ART_URI = Uri.parse("content://media/external/audio/albumart");
 
-    // Titles
-    public static final String MUSIC_TITLE = "Titres";
-    public static final String ALBUM_TITLE = "Albums";
-    public static final String ARTIST_TITLE = "Artistes";
-    public static final String GENRE_TITLE = "Genres";
-    public static final String PLAYLIST_TITLE = "Playlists";
+    // -------- Titles --------
+    public static final String[] LIBRARY_TAB_TITLE = new String[] {
+            "Titres",
+            "Albums",
+            "Artistes",
+            "Genres",
+            "Playlists",
+    };
 
-    // Sorting categories
+    // -------- Sorting categories --------
     public static final String[] SORT_CATEGORIES = new String[] {
             "Trie par titre : A -> Z",
             "Trie par titre : Z -> A",
@@ -40,7 +42,7 @@ public class Constants {
             "Trie par date d'ajout : ancien -> récent"
     };
 
-    // Fragments
+    // -------- Fragments --------
     public static final String[] FRAGMENTS_NAMES = new String[] {
             "Accueil",
             "Bibliothèque",
@@ -55,6 +57,6 @@ public class Constants {
             "SETTINGS"
     };
 
-    // Misc
+    // -------- Misc --------
     public static final long TIME_UNSET = 0;
 }

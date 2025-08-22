@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.fragments.LibraryFragment;
 import com.djymini.echoostation.fragments.MusicPlayerFragment;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
@@ -76,8 +77,13 @@ public class Navigator {
         });
     }
 
-    public void openLibraryTab() {
+    public void openLibraryTab(int tabIndex) {
         bottomNavMenu.setSelectedItemId(R.id.library);
+        Fragment libraryFragment = fragmentInitializer.getFragment(R.id.library);
+        LibraryFragment libraryFragment1 = (LibraryFragment)libraryFragment;
+
+        libraryFragment1.setTabIndex(tabIndex);
+        showFragment(libraryFragment);
     }
 
     public void modifyTitle(String newText) {

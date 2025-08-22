@@ -1,4 +1,4 @@
-package com.djymini.echoostation;
+package com.djymini.echoostation.fragments;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.djymini.echoostation.fragments.MusicPlayerFragment;
+import com.djymini.echoostation.R;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 
 public class MiniPlayerFragment extends Fragment {

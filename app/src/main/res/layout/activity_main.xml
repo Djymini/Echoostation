@@ -136,7 +136,7 @@
 
             <fragment
                 android:id="@+id/mini_player_fragment"
-                android:name="com.djymini.echoostation.MiniPlayerFragment"
+                android:name="com.djymini.echoostation.fragments.MiniPlayerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
         </FrameLayout>
