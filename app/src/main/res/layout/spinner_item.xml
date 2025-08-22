@@ -6,6 +6,7 @@
     android:layout_alignParentStart="true"
     android:padding="10dp"
     android:textColor="@color/colorText"
+    android:background="@color/colorSecondary"
     android:textSize="16sp"
     android:fontFamily="@font/m_plus_rounded_1c_medium"
     android:singleLine="true"

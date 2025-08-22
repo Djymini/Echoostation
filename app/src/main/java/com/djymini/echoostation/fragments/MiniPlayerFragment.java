@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.media3.common.MediaItem;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,9 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 
 public class MiniPlayerFragment extends Fragment {
+
+    private static final float PLAY_PAUSE_SCALE = 1.2f;
+    private static final int ANIMATION_DURATION = 150;
 
     private MusicPlayerViewModel viewModel;
 
@@ -44,44 +48,51 @@ public class MiniPlayerFragment extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
 
-        // Observer l'état de lecture
         viewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
             playPause.setImageResource(isPlaying ? R.drawable.round_pause_24 : R.drawable.round_play_arrow_24);
             animatePlayPause(isPlaying);
         });
 
-        // Observer la musique actuelle
-        viewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
-            if (item != null) {
-                title.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : "Inconnu");
-                artist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : "Inconnu");
+        viewModel.getCurrentItem().observe(getViewLifecycleOwner(), this::updateUI);
 
-                Uri artwork = item.mediaMetadata.artworkUri;
-                Glide.with(this)
-                        .load(artwork)
-                        .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                        .error(R.drawable.echoostation_placeholder_music_3x)
-                        .into(cover);
-            }
-        });
-
-        // Gestion des clics
         playPause.setOnClickListener(v -> viewModel.playPause(requireContext()));
         next.setOnClickListener(v -> viewModel.next(requireContext()));
         prev.setOnClickListener(v -> viewModel.prev(requireContext()));
 
-        // Click sur le mini player pour ouvrir le player full-screen
-        container.setOnClickListener(v -> {
-            openFullPlayer();
-        });
+        container.setOnClickListener(v -> openFullPlayer());
 
         return view;
     }
 
+    private void updateUI(@Nullable MediaItem item) {
+        if (item != null && item.mediaMetadata != null) {
+            title.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : getString(R.string.unknow));
+            artist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : getString(R.string.unknow));
+
+            Uri artwork = item.mediaMetadata.artworkUri;
+            Glide.with(this)
+                    .load(artwork)
+                    .placeholder(R.drawable.echoostation_placeholder_music_3x)
+                    .error(R.drawable.echoostation_placeholder_music_3x)
+                    .into(cover);
+        } else {
+            title.setText(getString(R.string.unknow));
+            artist.setText(getString(R.string.unknow));
+            cover.setImageResource(R.drawable.echoostation_placeholder_music_3x);
+        }
+    }
+
     private void animatePlayPause(boolean isPlaying) {
-        playPause.animate().scaleX(1.2f).scaleY(1.2f).setDuration(150).withEndAction(() -> {
-            playPause.animate().scaleX(1f).scaleY(1f).setDuration(150).start();
-        }).start();
+        playPause.animate()
+                .scaleX(PLAY_PAUSE_SCALE)
+                .scaleY(PLAY_PAUSE_SCALE)
+                .setDuration(ANIMATION_DURATION)
+                .withEndAction(() -> playPause.animate()
+                        .scaleX(1f)
+                        .scaleY(1f)
+                        .setDuration(ANIMATION_DURATION)
+                        .start())
+                .start();
     }
 
     private void openFullPlayer() {
