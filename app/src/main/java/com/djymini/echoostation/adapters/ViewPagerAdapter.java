@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.fragments.AlbumFragment;
 import com.djymini.echoostation.fragments.ArtistFragment;
 import com.djymini.echoostation.fragments.GenreFragment;
@@ -21,7 +20,6 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position){
-            case 0: return new MusicFragment();
             case 1: return new AlbumFragment();
             case 2: return new ArtistFragment();
             case 3: return new GenreFragment();

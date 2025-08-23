@@ -43,32 +43,32 @@ public class Music {
 
     @NonNull
     @ColumnInfo(name = "path")
-    public String path;
+    public final String path;
 
     @NonNull
     @ColumnInfo(name = "title")
-    public String title;
+    public final String title;
 
     @ColumnInfo(name = "duration")
-    public long duration;
+    public final long duration;
 
     @ColumnInfo(name = "track")
-    public int track;
+    public final int track;
 
     @ColumnInfo(name = "is_favorite")
-    public boolean isFavorite;
+    public final boolean isFavorite;
 
     @ColumnInfo(name = "id_album")
-    public long albumId;
+    public final long albumId;
 
     @ColumnInfo(name = "id_genre")
-    public long genreId;
+    public final long genreId;
 
     @ColumnInfo(name = "id_statistic")
-    public long statisticId;
+    public final long statisticId;
 
     @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public final long createdAt;
 
     public Music(@NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long albumId, long genreId, long statisticId) {
         this.path = path;

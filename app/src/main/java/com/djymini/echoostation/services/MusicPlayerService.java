@@ -27,7 +27,7 @@ public class MusicPlayerService extends MediaLibraryService {
 
     @Nullable
     @Override
-    public MediaLibrarySession onGetSession(MediaSession.ControllerInfo controllerInfo) {
+    public MediaLibrarySession onGetSession(@NonNull MediaSession.ControllerInfo controllerInfo) {
         return mediaLibrarySession;
     }
 

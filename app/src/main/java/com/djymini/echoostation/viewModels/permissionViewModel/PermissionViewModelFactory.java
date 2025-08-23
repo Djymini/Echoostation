@@ -13,6 +13,7 @@ public class PermissionViewModelFactory implements ViewModelProvider.Factory {
         this.permissionManager = permissionManager;
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {

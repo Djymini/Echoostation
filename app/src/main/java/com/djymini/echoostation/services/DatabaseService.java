@@ -13,27 +13,26 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 
 public class DatabaseService {
-    private EchooStationDatabase database;
-    private AlbumDao albumDao;
-    private ArtistDao artistDao;
-    private GenreDao genreDao;
-    private MoodDao moodDao;
-    private MusicDao musicDao;
-    private PlaylistDao playlistDao;
-    private StatisticDao statisticDao;
+    private final AlbumDao albumDao;
+    private final ArtistDao artistDao;
+    private final GenreDao genreDao;
+    private final MoodDao moodDao;
+    private final MusicDao musicDao;
+    private final PlaylistDao playlistDao;
+    private final StatisticDao statisticDao;
 
-    private AlbumService albumService;
-    private ArtistService artistService;
-    private GenreService genreService;
-    private MusicService musicService;
-    private StatisticService statisticService;
+    private final AlbumService albumService;
+    private final ArtistService artistService;
+    private final GenreService genreService;
+    private final MusicService musicService;
+    private final StatisticService statisticService;
 
     public DatabaseService(Context context) {
-        this.database = DatabaseClient.getInstance(context).getDatabase();
+        EchooStationDatabase database = DatabaseClient.getInstance(context).getDatabase();
 
         this.albumDao = database.albumDao();
         this.artistDao = database.artistDao();
-        this.genreDao =database. genreDao();
+        this.genreDao = database. genreDao();
         this.moodDao = database.moodDao();
         this.musicDao = database.musicDao();
         this.playlistDao = database.playlistDao();

@@ -4,9 +4,9 @@ import com.djymini.echoostation.ui.MusicDialogManager;
 
 
 public class AppInitializer {
-    private MusicScanner musicScanner;
-    private PermissionManager permissionManager;
-    private MusicDialogManager musicDialogManager;
+    private final MusicScanner musicScanner;
+    private final PermissionManager permissionManager;
+    private final MusicDialogManager musicDialogManager;
 
     public AppInitializer(MusicScanner musicScanner, PermissionManager permissionManager, MusicDialogManager musicDialogManager) {
         this.musicScanner = musicScanner;

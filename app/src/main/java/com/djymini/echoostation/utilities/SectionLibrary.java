@@ -1,8 +1,8 @@
 package com.djymini.echoostation.utilities;
 
 public class SectionLibrary {
-    public int viewId;
-    public String title;
+    public final int viewId;
+    public final String title;
 
     public SectionLibrary(int viewId, String title) {
         this.viewId = viewId;

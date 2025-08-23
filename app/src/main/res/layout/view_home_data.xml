@@ -17,7 +17,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/m_plus_rounded_1c_black"
-                android:text="9999"
+                android:text="@string/test_number"
                 android:textSize="18sp"
                 android:textColor="@color/colorPrimary"/>
             <TextView
@@ -28,7 +28,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:fontFamily="@font/m_plus_rounded_1c_bold"
-                android:text="ANDROID"
+                android:text="@string/test_text"
                 android:textSize="14sp"
                 android:textColor="@color/colorPrimary"/>
         </RelativeLayout>

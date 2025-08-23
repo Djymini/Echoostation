@@ -4,29 +4,27 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 public class MusicDto implements Parcelable {
-    public long id;
-    public String path;
-    public String title;
-    public long duration;
-    public int track;
-    public boolean isFavorite;
-    public long albumId;
-    public String albumName;
-    public String coverPath;
-    public int year;
-    public String artistId;
-    public String artistName;
-    public long genreId;
-    public String genreName;
-    public long statisticId;
-    public int listeningNumber;
-    public int monthListeningNumber;
-    public long listeningTime;
-    public long monthListeningTime;
-    public long createdAt;
+    public final long id;
+    public final String path;
+    public final String title;
+    public final long duration;
+    public final int track;
+    public final boolean isFavorite;
+    public final long albumId;
+    public final String albumName;
+    public final String coverPath;
+    public final int year;
+    public final String artistId;
+    public final String artistName;
+    public final long genreId;
+    public final String genreName;
+    public final long statisticId;
+    public final int listeningNumber;
+    public final int monthListeningNumber;
+    public final long listeningTime;
+    public final long monthListeningTime;
+    public final long createdAt;
 
     public MusicDto(long id, String path, String title, long duration, int track, boolean isFavorite, long albumId, String albumName, String coverPath, int year, String artistId, String artistName, long genreId, String genreName, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
         this.id = id;

@@ -30,13 +30,13 @@ public class Playlist {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public final String name;
 
     @ColumnInfo(name = "id_statistic")
-    public long statisticId;
+    public final long statisticId;
 
     @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public final long createdAt;
 
     public Playlist(@NonNull String name, long statisticId) {
         this.name = name;

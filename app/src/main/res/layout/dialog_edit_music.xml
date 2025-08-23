@@ -4,50 +4,59 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:background="@color/colorSecondary"
-    android:outlineSpotShadowColor="@color/colorPrimary">
+    android:background="@color/colorSecondary">
 
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:inputType="text"
         android:textColor="@color/colorText"
-        android:hint="Titre" />
+        android:hint="@string/title" />
 
     <EditText
         android:id="@+id/editArtist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:inputType="text"
         android:textColor="@color/colorText"
-        android:hint="Artiste" />
+        android:hint="@string/artist" />
 
     <EditText
         android:id="@+id/editAlbum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:inputType="text"
         android:textColor="@color/colorText"
-        android:hint="Album" />
+        android:hint="@string/album" />
 
     <EditText
         android:id="@+id/editTrack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:inputType="number"
         android:textColor="@color/colorText"
-        android:hint="Numero de piste" />
+        android:hint="@string/track" />
 
     <EditText
         android:id="@+id/editGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autofillHints=""
+        android:inputType="text"
         android:textColor="@color/colorText"
-        android:hint="Genre" />
+        android:hint="@string/genre" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/m_plus_rounded_1c_extrabold"
-        android:text="Enregistrer"
+        android:text="@string/save"
         android:textSize="15sp"
         android:backgroundTint="@color/accentColor"
         android:textColor="@color/tab_text_color"/>

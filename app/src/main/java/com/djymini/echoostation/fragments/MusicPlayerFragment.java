@@ -7,7 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.media3.common.MediaItem;;
+import androidx.media3.common.MediaItem;
 
 import android.view.LayoutInflater;
 import android.view.View;

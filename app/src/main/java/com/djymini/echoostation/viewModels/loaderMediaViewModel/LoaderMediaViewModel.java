@@ -15,10 +15,10 @@ import com.djymini.echoostation.entities.Genre;
 import java.util.List;
 
 public class LoaderMediaViewModel extends ViewModel {
-    private MusicDao musicDao;
-    private ArtistDao artistDao;
-    private AlbumDao albumDao;
-    private GenreDao genreDao;
+    private final MusicDao musicDao;
+    private final ArtistDao artistDao;
+    private final AlbumDao albumDao;
+    private final GenreDao genreDao;
 
     public LoaderMediaViewModel(MusicDao musicDao, ArtistDao artistDao, AlbumDao albumDao, GenreDao genreDao) {
         this.musicDao = musicDao;

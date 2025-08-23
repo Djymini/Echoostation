@@ -1,5 +1,7 @@
 package com.djymini.echoostation.utilities;
 
+import androidx.annotation.NonNull;
+
 import com.djymini.echoostation.dtos.MusicDto;
 
 import java.util.Comparator;
@@ -30,6 +32,7 @@ public enum SortOption {
         return comparator;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return displayName;

@@ -6,7 +6,6 @@
     <string name="intro_text_2">L\'autorisation d\'accès au stockage en lecture et écriture est nécessaire pour correctement lire et éditer les fichiers audio.</string>
     <string name="confirm_authorization">AUTORISER</string>
 
-    <string name="home_fragment">Accueil</string>
     <string name="library_fragment">Bibliothèque</string>
     <string name="settings_fragment">Paramètres</string>
     <string name="equalizer_fragment">Egaliseur</string>
@@ -21,13 +20,12 @@
     <string name="logo_desciption">Echoo Station logo</string>
     <string name="ic_remove_bottom_sheet">Bottom sheet layout top icon</string>
     <string name="ic_close_bottom_sheet">Bottom sheet close icon</string>
-    <string name="ic_button_play_with_circle">Icon play</string>
-    <string name="ic_edit">Icone modifier</string>
-    <string name="ic_delete">Icone supprimer</string>
-    <string name="ic_sort">Icone trier</string>
-    <string name="ic_shuffle">Icone aléatoire</string>
+    <string name="ic_shuffle">Icone shuffle</string>
     <string name="album_cover">Couverture d\'album</string>
     <string name="ic_menu_dots">Icone menu</string>
+    <string name="ic_previous">Icone previous</string>
+    <string name="ic_next">Icone next</string>
+    <string name="ic_play_pause">Icone play and pause</string>
 
     <string name="search_bar_text">Recherche</string>
 
@@ -52,7 +50,7 @@
     <string name="permission_allow">Autoriser</string>
     <string name="permission_deny">Annuler</string>
 
-    <string name="scanning_indicator">Scan en cours...</string>
+    <string name="scanning_indicator">Scan en cours…</string>
     <string name="item_selected"> sélectionné(s)</string>
     <string name="delete_music">Supprimer la musique</string>
     <string name="delete_request1">Voulez-vous vraiment supprimer </string>
@@ -61,12 +59,26 @@
     <string name="no">Non</string>
     <string name="unknow">Inconnus</string>
 
-    <string-array name="fragment_name">
-        <item>Accueil</item>
-        <item>Bibliothèque</item>
-        <item>Egaliseur</item>
-        <item>Paramètres</item>
-    </string-array>
+    <string name="bottom_sheet_layout_title">Element</string>
+
+    <string name="play">Jouer</string>
+    <string name="custom">Modifier</string>
+    <string name="delete">Supprimer</string>
+    <string name="title">Titre</string>
+    <string name="artist">Artiste</string>
+    <string name="album">Album</string>
+    <string name="track">Numéro de piste</string>
+    <string name="genre">Genre</string>
+    <string name="save">Enregistrer</string>
+    <string name="counter_music">9999 Titres</string>
+    <string name="time_music">99:99</string>
+    <string name="bottom_menu_home">ACCUEIL</string>
+    <string name="bottom_menu_library">BIBLIOTHEQUE</string>
+    <string name="bottom_menu_equalizer">EGALISEUR</string>
+    <string name="bottom_menu_settings">PARAMETRES</string>
+    <string name="test_text">ANDROID</string>
+    <string name="test_number">9999</string>
+    <string name="ic_repeat">Icone repeat</string>
 
 
 </resources>

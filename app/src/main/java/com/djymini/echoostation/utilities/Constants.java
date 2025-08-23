@@ -26,22 +26,6 @@ public class Constants {
             "Playlists",
     };
 
-    // -------- Sorting categories --------
-    public static final String[] SORT_CATEGORIES = new String[] {
-            "Trie par titre : A -> Z",
-            "Trie par titre : Z -> A",
-            "Trie par durée : courte -> longue",
-            "Trie par durée : longue -> courte",
-            "Trie par album : A -> Z",
-            "Trie par album : Z -> A",
-            "Trie par artiste : A -> Z",
-            "Trie par artiste : Z -> A",
-            "Trie par nombre d'écoutes : plus -> moins",
-            "Trie par nombre d'écoutes : moins -> plus",
-            "Trie par date d'ajout : récent -> ancien",
-            "Trie par date d'ajout : ancien -> récent"
-    };
-
     // -------- Fragments --------
     public static final String[] FRAGMENTS_NAMES = new String[] {
             "Accueil",

@@ -35,22 +35,22 @@ public class Album {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public final String name;
 
     @ColumnInfo(name = "cover_path")
-    public String coverPath;
+    public final String coverPath;
 
     @ColumnInfo(name = "year")
-    public int year;
+    public final int year;
 
     @ColumnInfo(name = "id_artist")
-    public long artistId;
+    public final long artistId;
 
     @ColumnInfo(name = "id_statistic")
-    public long statisticId;
+    public final long statisticId;
 
     @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public final long createdAt;
 
     public Album(@NonNull String name, String coverPath, int year, long artistId, long statisticId) {
         this.name = name;

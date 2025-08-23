@@ -28,9 +28,8 @@ public class MiniPlayerFragment extends Fragment {
 
     private MusicPlayerViewModel viewModel;
 
-    private LinearLayout container;
     private ImageView cover;
-    private ImageButton playPause, next, prev;
+    private ImageButton playPause;
     private TextView title, artist;
 
     @Nullable
@@ -38,11 +37,11 @@ public class MiniPlayerFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup containerParent, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mini_player, containerParent, false);
 
-        container = view.findViewById(R.id.mini_player_container);
+        LinearLayout container = view.findViewById(R.id.mini_player_container);
         cover = view.findViewById(R.id.cover_art);
         playPause = view.findViewById(R.id.play_pause_button);
-        next = view.findViewById(R.id.next_button);
-        prev = view.findViewById(R.id.prev_button);
+        ImageButton next = view.findViewById(R.id.next_button);
+        ImageButton prev = view.findViewById(R.id.prev_button);
         title = view.findViewById(R.id.music_title);
         artist = view.findViewById(R.id.music_artist);
 
@@ -65,7 +64,7 @@ public class MiniPlayerFragment extends Fragment {
     }
 
     private void updateUI(@Nullable MediaItem item) {
-        if (item != null && item.mediaMetadata != null) {
+        if (item != null) {
             title.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : getString(R.string.unknow));
             artist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : getString(R.string.unknow));
 

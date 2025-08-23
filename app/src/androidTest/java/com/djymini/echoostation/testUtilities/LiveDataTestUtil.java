@@ -21,7 +21,7 @@ public class LiveDataTestUtil {
         };
 
         liveData.observeForever(observer);
-        latch.await(2, TimeUnit.SECONDS); // attendre max 2 sec
+        latch.await(2, TimeUnit.SECONDS);
         return (T) data[0];
     }
 }

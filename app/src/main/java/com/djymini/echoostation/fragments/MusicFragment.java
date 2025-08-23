@@ -230,7 +230,8 @@ public class MusicFragment extends EchoostationFragment {
             main.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
                 currentMusicList = new ArrayList<>(musics);
                 sortAndDisplayMusics(spinner.getSelectedItemPosition());
-                musicCounterView.setText(musics.size() + getString(R.string.music_fragment));
+                String counterMusic = musics.size() + getString(R.string.music_fragment);
+                musicCounterView.setText(counterMusic);
             });
         }
     }
@@ -314,9 +315,7 @@ public class MusicFragment extends EchoostationFragment {
         new AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.delete_music))
                 .setMessage(getString(R.string.delete_request1) + selected.size() + getString(R.string.delete_request2))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> {
-                    deleteSelectedMusics(selected);
-                })
+                .setPositiveButton(getString(R.string.yes), (dialog, which) -> deleteSelectedMusics(selected))
                 .setNegativeButton(getString(R.string.no), null)
                 .show();
     }

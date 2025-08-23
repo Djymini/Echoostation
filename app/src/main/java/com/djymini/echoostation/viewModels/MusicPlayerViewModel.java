@@ -2,7 +2,9 @@ package com.djymini.echoostation.viewModels;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -46,7 +48,7 @@ public class MusicPlayerViewModel extends ViewModel {
 
                     controller.addListener(new Player.Listener() {
                         @Override
-                        public void onEvents(Player player, Player.Events events) {
+                        public void onEvents(@NonNull @NonNull Player player, @NonNull @NonNull Player.Events events) {
                             isPlaying.postValue(player.isPlaying());
                             currentItem.postValue(player.getCurrentMediaItem());
                         }
@@ -56,8 +58,8 @@ public class MusicPlayerViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
-                    t.printStackTrace();
+                public void onFailure(@NonNull @NonNull Throwable t) {
+                    Log.e("MusicPlayerViewModel", "Erreur lors de la connexion au MediaController", t);
                 }
             }, MoreExecutors.directExecutor());
         } else {
@@ -68,8 +70,8 @@ public class MusicPlayerViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(Throwable t) {
-                    t.printStackTrace();
+                public void onFailure(@NonNull @NonNull Throwable t) {
+                    Log.e("MusicPlayerViewModel", "Erreur lors de la reconnexion au MediaController", t);
                 }
             }, MoreExecutors.directExecutor());
         }

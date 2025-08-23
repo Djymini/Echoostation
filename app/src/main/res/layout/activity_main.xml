@@ -5,7 +5,6 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".MainActivity">
     <RelativeLayout
         android:id="@+id/authorization_layout"
@@ -25,7 +24,6 @@
             android:textAlignment="center"
             android:lineSpacingExtra="-10sp"/>
         <TextView
-            android:id="@+id/intro_text_2"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -38,7 +36,6 @@
             android:lineSpacingExtra="-5sp"/>
 
         <ImageView
-            android:id="@+id/app_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -103,7 +100,6 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar">
 
             <ProgressBar
-                android:id="@+id/scan_progress_bar"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 style="?android:attr/progressBarStyleSmall"
@@ -115,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/m_plus_rounded_1c_medium"
-                android:text="Scan en cours..."
+                android:text="@string/scanning_indicator"
                 android:textColor="@color/colorText"
                 android:textSize="18sp"/>
         </LinearLayout>
@@ -134,7 +130,7 @@
             android:visibility="gone"
             tools:ignore="MissingConstraints">
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/mini_player_fragment"
                 android:name="com.djymini.echoostation.fragments.MiniPlayerFragment"
                 android:layout_width="match_parent"

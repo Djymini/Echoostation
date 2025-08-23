@@ -3,6 +3,8 @@ package com.djymini.echoostation.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.view.MenuHost;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.widget.ViewPager2;
@@ -26,14 +28,13 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class LibraryFragment extends Fragment {
     private static final String ARG_TAB_INDEX = "tab_index";
-    private int selectedTabIndex = 0;
     private ShareSearchViewModel searchViewModel;
     private int tabIndex = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        if (getArguments() == null) createArgument();
     }
 
     @Override
@@ -48,8 +49,8 @@ public class LibraryFragment extends Fragment {
 
         searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
 
-        if (getArguments() == null) createArgument();
-        selectedTabIndex = getArguments().getInt(ARG_TAB_INDEX, tabIndex);
+        Bundle args = getArguments();
+        int selectedTabIndex = (args != null) ? args.getInt(ARG_TAB_INDEX, tabIndex) : tabIndex;
         viewPager2.setCurrentItem(selectedTabIndex, false);
 
         setupTabs(tabLayout, viewPager2);
@@ -60,13 +61,15 @@ public class LibraryFragment extends Fragment {
             mainActivity.navigator.updateMiniPlayerVisibility(this);
         }
 
+        setupMenu();
+
         return view;
     }
 
     private void setupTabs(TabLayout tabLayout, ViewPager2 viewPager2) {
-        new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
-            tab.setText(Constants.LIBRARY_TAB_TITLE[position].toUpperCase());
-        }).attach();
+        new TabLayoutMediator(tabLayout, viewPager2,
+                (tab, position) -> tab.setText(Constants.LIBRARY_TAB_TITLE[position].toUpperCase()))
+                .attach();
 
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             TabLayout.Tab tab = tabLayout.getTabAt(i);
@@ -89,25 +92,37 @@ public class LibraryFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.action_bar, menu);
-        MenuItem menuItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) menuItem.getActionView();
-        searchView.setQueryHint(getString(R.string.search_bar_text));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+    private void setupMenu() {
+        MenuHost menuHost = requireActivity();
+        menuHost.addMenuProvider(new MenuProvider() {
             @Override
-            public boolean onQueryTextSubmit(String s) { return false; }
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+                menuInflater.inflate(R.menu.action_bar, menu);
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                searchViewModel.setQuery(s);
-                return true;
+                MenuItem menuItem = menu.findItem(R.id.search);
+                if (menuItem != null && menuItem.getActionView() instanceof SearchView) {
+                    SearchView searchView = (SearchView) menuItem.getActionView();
+                    searchView.setQueryHint(getString(R.string.search_bar_text));
+
+                    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                        @Override
+                        public boolean onQueryTextSubmit(String s) { return false; }
+
+                        @Override
+                        public boolean onQueryTextChange(String s) {
+                            searchViewModel.setQuery(s);
+                            return true;
+                        }
+                    });
+                }
+
             }
-        });
 
-        super.onCreateOptionsMenu(menu, inflater);
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+                return false;
+            }
+        }, getViewLifecycleOwner());
     }
 
     private void changeTitle(String newTitle) {

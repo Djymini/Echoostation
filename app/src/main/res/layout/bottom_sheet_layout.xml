@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,7 +18,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        tools:ignore="UseCompoundDrawables">
 
         <TextView
             android:id="@+id/title_dialog"
@@ -27,101 +30,60 @@
             android:fontFamily="@font/m_plus_rounded_1c_bold"
             android:singleLine="true"
             android:ellipsize="end"
-            android:text="Element"
+            android:text="@string/bottom_sheet_layout_title"
             android:padding="8dp"
             android:textColor="@color/accentColor"
             android:layout_marginStart="12dp"
-            android:layout_marginTop="5dp"
-            android:textSize="22sp" />
+            android:textSize="22sp">
+
+        </TextView>
 
         <ImageView
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:src="@drawable/ic_baseline_close_24"
             app:tint="@color/colorText"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:id="@+id/cancelButton"
             android:contentDescription="@string/ic_close_bottom_sheet"/>
     </LinearLayout>
 
-
-    <LinearLayout
+    <TextView
         android:id="@+id/layoutVideo"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:drawablePadding="30dp"
+        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:text="@string/play"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_round_play_circle_outline_24" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tint="@color/colorText"
-            android:src="@drawable/ic_round_play_circle_outline_24"
-            android:contentDescription="@string/ic_button_play_with_circle"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/m_plus_rounded_1c_medium"
-            android:text="Jouer"
-            android:textColor="@color/colorText"
-            android:layout_marginLeft="30dp"
-            android:textSize="18sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/layout_edit"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:drawablePadding="30dp"
+        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:text="@string/custom"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_round_mode_edit_24" />
 
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tint="@color/colorText"
-            android:src="@drawable/ic_round_mode_edit_24"
-            android:contentDescription="@string/ic_edit"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/m_plus_rounded_1c_medium"
-            android:text="Modifier"
-            android:textColor="@color/colorText"
-            android:layout_marginLeft="30dp"
-            android:textSize="18sp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <TextView
         android:id="@+id/layout_delete"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="30dp">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tint="@color/colorText"
-            android:src="@drawable/ic_round_delete_24"
-            android:contentDescription="@string/ic_delete"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/m_plus_rounded_1c_medium"
-            android:text="Supprimer"
-            android:textColor="@color/colorText"
-            android:layout_marginLeft="30dp"
-            android:textSize="18sp"/>
-    </LinearLayout>
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:drawablePadding="30dp"
+        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:text="@string/delete"
+        android:textColor="@color/colorText"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_round_delete_24" />
 </LinearLayout>
