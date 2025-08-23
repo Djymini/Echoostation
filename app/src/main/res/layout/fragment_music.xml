@@ -38,7 +38,7 @@
           android:layout_centerVertical="true"
           android:layout_alignParentEnd="true"
           android:textColor="@color/colorText"
-          android:fontFamily="@font/m_plus_rounded_1c_medium"
+          android:fontFamily="@font/ibm_plex_sans_medium"
           android:text="@string/counter_music"/>
    </RelativeLayout>
 

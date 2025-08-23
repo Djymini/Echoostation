@@ -4,7 +4,7 @@
     <string name="quit_app">QUITTER</string>
 
     <!-- Intro / Authorization -->
-    <string name="intro_text_1">Bienvenue sur Echoo Station, pour commencer nous avons besoin de votre autorisation</string>
+    <string name="intro_text_1">Bienvenue sur Echoo Station,\n\n Pour commencer nous avons besoin de votre autorisation</string>
     <string name="intro_text_2">L\'autorisation d\'accès au stockage en lecture et écriture est nécessaire pour correctement lire et éditer les fichiers audio.</string>
     <string name="confirm_authorization">AUTORISER</string>
 

@@ -30,13 +30,13 @@ public class Mood {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public final String name;
+    public  String name;
 
     @ColumnInfo(name = "id_statistic")
-    public final long statisticId;
+    public  long statisticId;
 
     @ColumnInfo(name = "created_at")
-    public final long createdAt;
+    public  long createdAt;
 
     public Mood(@NonNull String name, long statisticId) {
         this.name = name;

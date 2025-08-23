@@ -135,6 +135,8 @@ public class LibraryFragment extends Fragment {
 
         ViewPager2 viewPager2 = getView() != null ? getView().findViewById(R.id.view_pager) : null;
         if (viewPager2 != null) viewPager2.setCurrentItem(tabIndex, true);
+
+        changeTitle(Constants.LIBRARY_TAB_TITLE[tabIndex]);
     }
 
     private void createArgument() {

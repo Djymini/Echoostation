@@ -48,7 +48,7 @@ public class MusicPlayerViewModel extends ViewModel {
 
                     controller.addListener(new Player.Listener() {
                         @Override
-                        public void onEvents(@NonNull @NonNull Player player, @NonNull @NonNull Player.Events events) {
+                        public void onEvents(@NonNull Player player, @NonNull Player.Events events) {
                             isPlaying.postValue(player.isPlaying());
                             currentItem.postValue(player.getCurrentMediaItem());
                         }
@@ -58,7 +58,7 @@ public class MusicPlayerViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(@NonNull @NonNull Throwable t) {
+                public void onFailure(@NonNull Throwable t) {
                     Log.e("MusicPlayerViewModel", "Erreur lors de la connexion au MediaController", t);
                 }
             }, MoreExecutors.directExecutor());
@@ -70,7 +70,7 @@ public class MusicPlayerViewModel extends ViewModel {
                 }
 
                 @Override
-                public void onFailure(@NonNull @NonNull Throwable t) {
+                public void onFailure(@NonNull Throwable t) {
                     Log.e("MusicPlayerViewModel", "Erreur lors de la reconnexion au MediaController", t);
                 }
             }, MoreExecutors.directExecutor());

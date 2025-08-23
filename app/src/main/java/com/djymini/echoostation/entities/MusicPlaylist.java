@@ -29,10 +29,10 @@ import androidx.room.Index;
 )
 public class MusicPlaylist {
     @ColumnInfo(name = "id_music")
-    public final long musicId;
+    public  long musicId;
 
     @ColumnInfo(name = "id_playlist")
-    public final long playlistId;
+    public  long playlistId;
 
     public MusicPlaylist(long musicId, long playlistId) {
         this.musicId = musicId;

@@ -11,16 +11,16 @@ public class Statistic {
     public long id;
 
     @ColumnInfo(name = "listening_number")
-    public final int listeningNumber;
+    public  int listeningNumber;
 
     @ColumnInfo(name = "month_listening_number")
-    public final int monthListeningNumber;
+    public  int monthListeningNumber;
 
     @ColumnInfo(name = "listening_time")
-    public final long listeningTime;
+    public  long listeningTime;
 
     @ColumnInfo(name = "month_listening_time")
-    public final long monthListeningTime;
+    public  long monthListeningTime;
 
     public Statistic(int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime) {
         this.listeningNumber = listeningNumber;

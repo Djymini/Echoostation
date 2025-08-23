@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:padding="8dp"
-    android:background="?attr/colorSurface"
+    android:background="@color/accentColor"
     android:visibility="visible">
 
     <ImageView
@@ -30,8 +30,9 @@
             android:id="@+id/music_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ibm_plex_sans_bold"
             android:text="@string/title"
-            android:textColor="@android:color/black"
+            android:textColor="@color/colorText"
             android:textSize="16sp"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -40,8 +41,9 @@
             android:id="@+id/music_artist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/ibm_plex_sans_regular"
             android:text="@string/artist"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorText"
             android:textSize="14sp"
             android:maxLines="1"
             android:ellipsize="end" />

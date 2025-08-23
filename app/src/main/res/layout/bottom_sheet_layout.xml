@@ -27,7 +27,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:textAlignment="viewStart"
-            android:fontFamily="@font/m_plus_rounded_1c_bold"
+            android:fontFamily="@font/ibm_plex_sans_bold"
             android:singleLine="true"
             android:ellipsize="end"
             android:text="@string/bottom_sheet_layout_title"
@@ -55,10 +55,10 @@
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:drawablePadding="30dp"
-        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:fontFamily="@font/ibm_plex_sans_medium"
         android:text="@string/play"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:drawableStartCompat="@drawable/ic_round_play_circle_outline_24" />
 
     <TextView
@@ -68,10 +68,10 @@
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:drawablePadding="30dp"
-        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:fontFamily="@font/ibm_plex_sans_medium"
         android:text="@string/custom"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:drawableStartCompat="@drawable/ic_round_mode_edit_24" />
 
     <TextView
@@ -81,9 +81,9 @@
         android:layout_marginTop="10dp"
         android:padding="10dp"
         android:drawablePadding="30dp"
-        android:fontFamily="@font/m_plus_rounded_1c_medium"
+        android:fontFamily="@font/ibm_plex_sans_medium"
         android:text="@string/delete"
         android:textColor="@color/colorText"
-        android:textSize="18sp"
+        android:textSize="20sp"
         app:drawableStartCompat="@drawable/ic_round_delete_24" />
 </LinearLayout>

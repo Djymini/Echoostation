@@ -13,22 +13,22 @@
         android:visibility="gone">
         <TextView
             android:id="@+id/intro_text_1"
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginVertical="16dp"
-            android:fontFamily="@font/m_plus_rounded_1c_bold"
+            android:fontFamily="@font/ibm_plex_sans_medium"
             android:text="@string/intro_text_1"
             android:textSize="20sp"
             android:textColor="@color/colorText"
             android:textAlignment="center"
             android:lineSpacingExtra="-10sp"/>
         <TextView
-            android:layout_width="300dp"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_below="@id/intro_text_1"
-            android:fontFamily="@font/m_plus_rounded_1c"
+            android:fontFamily="@font/ibm_plex_sans_regular"
             android:text="@string/intro_text_2"
             android:textSize="16sp"
             android:textColor="@color/colorText"
@@ -60,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
+                android:fontFamily="@font/ibm_plex_sans_bold"
                 android:text="@string/confirm_authorization"
                 android:backgroundTint="@color/accentColor"/>
             <Button
@@ -67,6 +68,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/confirm_button"
+                android:fontFamily="@font/ibm_plex_sans_bold"
                 android:text="@string/quit_app"
                 android:textColor="@color/accentColor"
                 android:backgroundTint="@color/transparenceColor"/>
@@ -110,7 +112,7 @@
                 android:id="@+id/scan_progress_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/m_plus_rounded_1c_medium"
+                android:fontFamily="@font/ibm_plex_sans_medium_italic"
                 android:text="@string/scanning_indicator"
                 android:textColor="@color/colorText"
                 android:textSize="18sp"/>
