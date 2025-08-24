@@ -28,6 +28,12 @@ public class MusicPlayerViewModel extends ViewModel {
     private MediaController controller;
     private ListenableFuture<MediaController> controllerFuture;
 
+    private final MutableLiveData<Integer> repeatMode = new MutableLiveData<>(Player.REPEAT_MODE_OFF);
+    private final MutableLiveData<Boolean> shuffleEnabled = new MutableLiveData<>(false);
+
+    public LiveData<Integer> getRepeatMode() { return repeatMode; }
+    public LiveData<Boolean> getShuffleEnabled() { return shuffleEnabled; }
+
     public LiveData<Boolean> getIsPlaying() { return isPlaying; }
     public LiveData<MediaItem> getCurrentItem() { return currentItem; }
 
@@ -51,6 +57,8 @@ public class MusicPlayerViewModel extends ViewModel {
                         public void onEvents(@NonNull Player player, @NonNull Player.Events events) {
                             isPlaying.postValue(player.isPlaying());
                             currentItem.postValue(player.getCurrentMediaItem());
+                            repeatMode.postValue(player.getRepeatMode());
+                            shuffleEnabled.postValue(player.getShuffleModeEnabled());
                         }
                     });
 
@@ -66,6 +74,7 @@ public class MusicPlayerViewModel extends ViewModel {
             Futures.addCallback(controllerFuture, new com.google.common.util.concurrent.FutureCallback<MediaController>() {
                 @Override
                 public void onSuccess(MediaController ctrl) {
+                    controller = ctrl; // <--- important si reconnect
                     if (onReady != null) onReady.run();
                 }
 
@@ -76,6 +85,7 @@ public class MusicPlayerViewModel extends ViewModel {
             }, MoreExecutors.directExecutor());
         }
     }
+
 
     public void playPlaylist(Context context, List<MediaItem> items, int startIndex) {
         ensureConnected(context, () -> {
@@ -123,6 +133,28 @@ public class MusicPlayerViewModel extends ViewModel {
     public long getDuration() {
         return (controller != null) ? controller.getDuration() : 0;
     }
+
+    public void toggleRepeatMode(Context context) {
+        ensureConnected(context, () -> {
+            int mode = controller.getRepeatMode();
+            int newMode;
+            if (mode == Player.REPEAT_MODE_OFF) newMode = Player.REPEAT_MODE_ALL;
+            else if (mode == Player.REPEAT_MODE_ALL) newMode = Player.REPEAT_MODE_ONE;
+            else newMode = Player.REPEAT_MODE_OFF;
+
+            controller.setRepeatMode(newMode);
+            repeatMode.postValue(newMode);
+        });
+    }
+
+    public void toggleShuffle(Context context) {
+        ensureConnected(context, () -> {
+            boolean enabled = !controller.getShuffleModeEnabled();
+            controller.setShuffleModeEnabled(enabled);
+            shuffleEnabled.postValue(enabled);
+        });
+    }
+
 
 
     @Override
