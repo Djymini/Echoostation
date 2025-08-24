@@ -5,14 +5,15 @@
     android:layout_height="70dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:padding="8dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp"
     android:background="@color/accentColor"
     android:visibility="visible">
 
     <ImageView
         android:id="@+id/cover_art"
-        android:layout_width="54dp"
-        android:layout_height="54dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:scaleType="centerCrop"
         android:src="@drawable/echoostation_placeholder_music_3x"
         android:contentDescription="@string/album_cover" />

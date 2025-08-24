@@ -2,6 +2,6 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:textSize="11sp"
+    android:textSize="9sp"
     android:fontFamily="@font/ibm_plex_sans_bold"
     android:textColor="@color/tab_text_color"/>

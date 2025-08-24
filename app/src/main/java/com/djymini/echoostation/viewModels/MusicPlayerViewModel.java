@@ -92,6 +92,18 @@ public class MusicPlayerViewModel extends ViewModel {
         });
     }
 
+    public void pause(Context context) {
+        ensureConnected(context, () -> {
+            controller.pause();
+        });
+    }
+
+    public void play(Context context) {
+        ensureConnected(context, () -> {
+            controller.play();
+        });
+    }
+
     public void next(Context context) {
         ensureConnected(context, () -> controller.seekToNext());
     }
@@ -99,6 +111,19 @@ public class MusicPlayerViewModel extends ViewModel {
     public void prev(Context context) {
         ensureConnected(context, () -> controller.seekToPrevious());
     }
+
+    public void seekTo(Context context, long position) {
+        ensureConnected(context, () -> controller.seekTo(position));
+    }
+
+    public long getCurrentPosition() {
+        return (controller != null) ? controller.getCurrentPosition() : 0;
+    }
+
+    public long getDuration() {
+        return (controller != null) ? controller.getDuration() : 0;
+    }
+
 
     @Override
     protected void onCleared() {

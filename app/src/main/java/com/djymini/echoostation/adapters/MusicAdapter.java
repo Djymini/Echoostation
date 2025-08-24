@@ -20,6 +20,7 @@ import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
+import com.djymini.echoostation.utilities.TimeUtilities;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -85,7 +86,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         holder.title.setText(music.title);
         holder.artist.setText(music.artistName);
 
-        String durationStr = formatDuration(music.duration);
+        String durationStr = TimeUtilities.formatDuration(music.duration);
         holder.duration.setText(durationStr);
 
         Uri albumArt = music.getCover();
@@ -142,12 +143,6 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
             cover = itemView.findViewById(R.id.image_cover);
             menuButton = itemView.findViewById(R.id.item_menu_button);
         }
-    }
-
-    private String formatDuration(long durationMs) {
-        long minutes = (durationMs / 1000) / 60;
-        long seconds = (durationMs / 1000) % 60;
-        return String.format(Locale.US, "%02d:%02d", minutes, seconds);
     }
 
     public void setOnMusicMenuClickListener(OnMusicMenuClickListener listener) {

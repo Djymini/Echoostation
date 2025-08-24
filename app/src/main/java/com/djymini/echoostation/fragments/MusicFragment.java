@@ -326,7 +326,9 @@ public class MusicFragment extends EchoostationFragment {
             MediaMetadata metadata = new MediaMetadata.Builder()
                     .setTitle(music.title)
                     .setArtist(music.artistName)
+                    .setAlbumTitle(music.albumName)
                     .setArtworkUri(music.getCover())
+                    .setDurationMs(music.duration)
                     .build();
 
             MediaItem mediaItem = new MediaItem.Builder()

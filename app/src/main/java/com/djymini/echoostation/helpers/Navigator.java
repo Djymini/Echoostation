@@ -64,6 +64,8 @@ public class Navigator {
         modifyTitle(fragmentInitializer.getTitle(fragment));
         activeFragment = fragment;
         updateMiniPlayerVisibility(fragment);
+
+        updateToolbarMenu(fragment);
     }
 
     public void setupBottomNav() {
@@ -104,4 +106,13 @@ public class Navigator {
             miniPlayerContainer.setVisibility(View.GONE);
         }
     }
+
+    public void updateToolbarMenu(Fragment fragment) {
+        toolbar.getMenu().clear();
+
+        if (fragment instanceof LibraryFragment) {
+            toolbar.inflateMenu(R.menu.action_bar); // ta searchbar
+        }
+    }
+
 }

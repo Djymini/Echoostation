@@ -12,7 +12,7 @@
         android:layout_marginVertical="24dp"
         android:fontFamily="@font/ibm_plex_sans_medium"
         android:text="@string/album"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textColor="@color/colorText"
         android:textAlignment="center"/>
 
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ibm_plex_sans_bold"
         android:text="@string/title"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:textColor="@color/colorText"
         android:textAlignment="center"
         android:singleLine="true"
@@ -50,7 +50,7 @@
         android:layout_marginBottom="32dp"
         android:fontFamily="@font/ibm_plex_sans_regular"
         android:text="@string/artist"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:textColor="@color/colorText"
         android:textAlignment="center"
         android:singleLine="true"
@@ -112,5 +112,36 @@
             app:tint="@color/colorText" />
     </LinearLayout>
 
-
+    <LinearLayout
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="24dp">
+        <SeekBar
+            android:id="@+id/music_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="1000"
+            android:progressTint="@color/accentColor"
+            android:thumbTint="@color/accentColor"/>
+        <RelativeLayout
+            android:layout_width="320dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/current_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:fontFamily="@font/ibm_plex_sans_regular"
+                android:text="00:00"/>
+            <TextView
+                android:id="@+id/music_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:fontFamily="@font/ibm_plex_sans_regular"
+                android:text="00:00"/>
+        </RelativeLayout>
+    </LinearLayout>
 </LinearLayout>

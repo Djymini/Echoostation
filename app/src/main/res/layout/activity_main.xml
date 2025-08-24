@@ -75,31 +75,34 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/app_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible">
+
+        <!-- Toolbar en haut -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:layout_alignParentTop="true"
             app:title="@string/app_name"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            tools:ignore="MissingConstraints"
             android:background="@color/colorSecondary"
-            android:visibility="visible"/>
+            android:visibility="visible" />
 
+        <!-- Barre de progression juste en dessous de la toolbar -->
         <LinearLayout
             android:id="@+id/scan_progress_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/toolbar"
             android:gravity="center"
             android:orientation="horizontal"
             android:visibility="gone"
-            android:background="@color/colorSecondary"
-            app:layout_constraintTop_toBottomOf="@id/toolbar">
+            android:background="@color/colorSecondary">
 
             <ProgressBar
                 android:layout_width="18dp"
@@ -118,35 +121,44 @@
                 android:textSize="18sp"/>
         </LinearLayout>
 
+        <!-- Contenu principal (prend tout entre toolbar et bottom nav) -->
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
+            android:layout_height="match_parent"
+            android:layout_below="@id/scan_progress_container"
+            android:layout_above="@id/bottom_nav_menu" />
 
-        <!-- Mini Player -->
-        <FrameLayout
+        <!-- Mini Player flottant juste au-dessus de la BottomNavigation -->
+        <androidx.cardview.widget.CardView
             android:id="@+id/mini_player_container"
             android:layout_width="match_parent"
             android:layout_height="70dp"
+            android:layout_above="@id/bottom_nav_menu"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginBottom="12dp"
             android:visibility="gone"
-            tools:ignore="MissingConstraints">
+            app:cardCornerRadius="100dp"
+            android:outlineSpotShadowColor="@color/transparenceColor">
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/mini_player_fragment"
                 android:name="com.djymini.echoostation.fragments.MiniPlayerFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
+        <!-- Bottom Navigation collée en bas -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
             style="@style/CustomBottomNavigation"
             android:id="@+id/bottom_nav_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             app:menu="@menu/main_menu"
             app:itemIconTint="@color/nav_item_color"
             app:itemTextColor="@color/nav_item_color"
             android:visibility="visible"/>
-    </LinearLayout>
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
