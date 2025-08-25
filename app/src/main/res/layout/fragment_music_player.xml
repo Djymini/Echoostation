@@ -111,7 +111,7 @@
             android:layout_marginStart="24dp"
             android:contentDescription="@string/ic_shuffle"
             android:src="@drawable/round_shuffle_24"
-            app:tint="@color/colorText" />
+            app:tint="@color/colorText"/>
     </LinearLayout>
 
     <LinearLayout

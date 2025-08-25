@@ -66,6 +66,14 @@ public class LibraryFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden){
+            changeTitle(Constants.LIBRARY_TAB_TITLE[tabIndex]);
+        }
+    }
+
     private void setupTabs(TabLayout tabLayout, ViewPager2 viewPager2) {
         new TabLayoutMediator(tabLayout, viewPager2,
                 (tab, position) -> tab.setText(Constants.LIBRARY_TAB_TITLE[position].toUpperCase()))
@@ -87,6 +95,7 @@ public class LibraryFragment extends Fragment {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                tabIndex = position;
                 changeTitle(Constants.LIBRARY_TAB_TITLE[position]);
             }
         });
