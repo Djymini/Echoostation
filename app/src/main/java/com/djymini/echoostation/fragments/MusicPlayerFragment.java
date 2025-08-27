@@ -122,7 +122,7 @@ public class MusicPlayerFragment extends Fragment {
 
     private void notifyActivityMiniPlayer() {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
+            //((MainActivity) getActivity()).navigator.updateMiniPlayerVisibility(this);
         }
     }
 

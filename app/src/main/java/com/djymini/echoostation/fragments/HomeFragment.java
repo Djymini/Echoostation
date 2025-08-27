@@ -60,7 +60,7 @@ public class HomeFragment extends EchoostationFragment {
             }
         });
 
-        mainActivity.navigator.updateMiniPlayerVisibility(this);
+        //mainActivity.navigator.updateMiniPlayerVisibility(this);
         return view;
     }
 

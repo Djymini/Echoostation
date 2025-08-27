@@ -58,7 +58,7 @@ public class LibraryFragment extends Fragment {
 
         MainActivity mainActivity = getMainActivity();
         if (mainActivity != null) {
-            mainActivity.navigator.updateMiniPlayerVisibility(this);
+            //mainActivity.navigator.updateMiniPlayerVisibility(this);
         }
 
         setupMenu();

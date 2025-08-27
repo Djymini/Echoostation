@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import com.djymini.echoostation.fragments.TrueMusicPlayer;
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.Navigator;
@@ -31,6 +32,7 @@ import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewMod
 import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModel;
 import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class MainActivity extends AppCompatActivity {
     private DatabaseService dbService;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private PermissionViewModel permissionViewModel;
     public LoaderMediaViewModel loaderMediaViewModel;
     private MusicPlayerViewModel playerViewModel;
+    private TrueMusicPlayer trueMusicPlayer;
 
     public Navigator navigator;
     private boolean hasPermission = false;
@@ -57,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         BottomNavigationView bottomNavMenu = findViewById(R.id.bottom_nav_menu);
-        FrameLayout miniPlayerContainer = findViewById(R.id.mini_player_container);
+        //FrameLayout miniPlayerContainer = findViewById(R.id.mini_player_container);
 
         playerViewModel = new ViewModelProvider(this).get(MusicPlayerViewModel.class);
 
@@ -65,8 +68,12 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager(),
                 toolbar,
                 bottomNavMenu,
-                miniPlayerContainer,
-                playerViewModel
+                //miniPlayerContainer,
+                playerViewModel,
+                this.findViewById(R.id.main),
+                this,
+                this,
+                this
         );
 
         setupButtons();
@@ -80,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
 
         setupPermissionViewModel();
         setupMusicScanViewModel();
+
+        navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
     // -------- System / DB / Insets --------
@@ -109,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
         );
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
     }
+
+
 
     // -------- Buttons --------
     private void setupButtons() {

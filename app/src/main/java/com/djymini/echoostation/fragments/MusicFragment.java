@@ -151,11 +151,6 @@ public class MusicFragment extends EchoostationFragment {
                 updateActionModeTitle();
             } else {
                 playerViewModel.playPlaylist(requireContext(), playlist, position);
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.frame_layout, new MusicPlayerFragment())
-                        .addToBackStack(null)
-                        .commit();
             }
         });
     }

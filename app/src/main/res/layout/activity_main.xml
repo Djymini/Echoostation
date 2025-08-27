@@ -120,30 +120,167 @@
                 android:textSize="18sp"/>
         </LinearLayout>
 
-        <FrameLayout
-            android:id="@+id/frame_layout"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/scan_progress_container"
-            android:layout_above="@id/bottom_nav_menu" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/mini_player_container"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:layout_above="@id/bottom_nav_menu"
-            android:layout_marginHorizontal="8dp"
-            android:layout_marginBottom="12dp"
-            android:visibility="gone"
-            app:cardCornerRadius="100dp"
-            android:outlineSpotShadowColor="@color/shadowColor">
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/mini_player_fragment"
-                android:name="com.djymini.echoostation.fragments.MiniPlayerFragment"
+            android:layout_above="@id/bottom_nav_menu">
+            <FrameLayout
+                android:id="@+id/frame_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/player_bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:padding="4dp"
+                android:background="@android:color/white"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+                <TextView
+                    android:id="@+id/player_album"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/album"
+                    android:textSize="14sp"
+                    android:layout_marginVertical="4dp"
+                    android:visibility="gone"/>
+
+                <!-- Image du player (mini et full) -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="8dp"
+                    android:layout_marginTop="4dp">
+                    <ImageView
+                        android:id="@+id/player_cover"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:src="@drawable/echoostation_placeholder_album_3x" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Titre et artiste -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginLeft="8dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/player_title"
+                        android:layout_width="192dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/title"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/player_artist"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/artist"
+                        android:textColor="#888888" />
+                </LinearLayout>
+
+
+                <!-- Boutons de contrôle (toujours visibles) -->
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp">
+
+                    <ImageButton
+                        android:id="@+id/btn_repeat"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/ic_repeat"
+                        android:src="@drawable/round_repeat_24"
+                        android:visibility="gone"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_prev"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/ic_previous"
+                        android:src="@drawable/round_skip_previous_24"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_play"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/ic_play_pause"
+                        android:src="@drawable/round_play_arrow_24" />
+
+                    <ImageButton
+                        android:id="@+id/btn_next"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/ic_next"
+                        android:src="@drawable/round_skip_next_24" />
+
+                    <ImageButton
+                        android:id="@+id/btn_shuffle"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:contentDescription="@string/ic_shuffle"
+                        android:src="@drawable/round_shuffle_24"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <!-- Contenu supplémentaire visible seulement en full player -->
+                <LinearLayout
+                    android:id="@+id/full_content"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone">
+
+                    <SeekBar
+                        android:id="@+id/player_seekbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:max="1000"
+                        android:progressTint="@color/accentColor"
+                        android:thumbTint="@color/accentColor"/>
+                    <RelativeLayout
+                        android:layout_width="320dp"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/player_current_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:fontFamily="@font/ibm_plex_sans_regular"
+                            android:text="00:00"/>
+                        <TextView
+                            android:id="@+id/player_duration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:fontFamily="@font/ibm_plex_sans_regular"
+                            android:text="00:00"/>
+                    </RelativeLayout>
+
+                    <!-- Exemple : waveform, paroles, background etc -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contenu Full Player"
+                        android:textSize="16sp"
+                        android:textColor="#444444"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <!-- Bottom Navigation collée en bas -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
