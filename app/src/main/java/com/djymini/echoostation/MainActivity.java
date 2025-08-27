@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private PermissionViewModel permissionViewModel;
     public LoaderMediaViewModel loaderMediaViewModel;
     private MusicPlayerViewModel playerViewModel;
-    private TrueMusicPlayer trueMusicPlayer;
 
     public Navigator navigator;
     private boolean hasPermission = false;
@@ -82,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             navigator.initFragments();
+            navigator.initMusicPlayer();
             bottomNavMenu.setSelectedItemId(R.id.home);
         }
 

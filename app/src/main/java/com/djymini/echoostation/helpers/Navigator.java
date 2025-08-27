@@ -59,6 +59,14 @@ public class Navigator {
         activeFragment = homeFragment;
     }
 
+    public void initMusicPlayer() {
+        if (playerViewModel.getIsPlaying().getValue()){
+            trueMusicPlayer.getMainContent().setVisibility(View.VISIBLE);
+        } else{
+            trueMusicPlayer.getMainContent().setVisibility(View.GONE);
+        }
+    }
+
     public void showFragment(Fragment fragment) {
         if (fragment == activeFragment) return;
 

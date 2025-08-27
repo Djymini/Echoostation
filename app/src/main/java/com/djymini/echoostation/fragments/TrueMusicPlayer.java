@@ -61,6 +61,11 @@ public class TrueMusicPlayer {
         setupViewModel(lifecycleOwner, storeOwner);
         setupClickListeners();
         setupSeekBar();
+
+        viewModel.getIsPlaying().observe(lifecycleOwner, isPlaying -> {
+            if(isPlaying)
+                mainContent.setVisibility(View.VISIBLE);
+        });
     }
 
     public BottomSheetBehavior<View> getBottomSheetBehavior() {
