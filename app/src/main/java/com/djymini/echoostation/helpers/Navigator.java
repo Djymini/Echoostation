@@ -3,13 +3,20 @@ package com.djymini.echoostation.helpers;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -47,6 +54,12 @@ public class Navigator {
         this.fragmentInitializer = new FragmentInitializer();
         this.trueMusicPlayer = new TrueMusicPlayer(view, lifecycleOwner, storeOwner, context);
         this.context = context;
+
+        ViewCompat.setOnApplyWindowInsetsListener(bottomNavMenu, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            return insets;
+        });
     }
 
     public void initFragments() {
@@ -88,42 +101,63 @@ public class Navigator {
     }
 
     public void setupTrueMusicPlayer(View playerBottomSheet) {
-        trueMusicPlayer.setMainContent((LinearLayout) playerBottomSheet);
+        trueMusicPlayer.setMainContent((MotionLayout) playerBottomSheet);
         trueMusicPlayer.setBottomSheetBehavior(BottomSheetBehavior.from(playerBottomSheet));
         trueMusicPlayer.getBottomSheetBehavior().setPeekHeight(trueMusicPlayer.dpToPx(100, context));
         trueMusicPlayer.getBottomSheetBehavior().setHideable(false);
 
-        trueMusicPlayer.getBottomSheetBehavior().addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        bottomNavMenu.post(() -> {
+            int navHeight = bottomNavMenu.getHeight();
+            trueMusicPlayer.getBottomSheetBehavior()
+                    .setPeekHeight(trueMusicPlayer.dpToPx(84, context) + navHeight);
+        });
+
+        MotionLayout motionLayout = (MotionLayout) playerBottomSheet;
+
+        // 🔥 Ajout du TransitionListener pour gérer le textSize en sp
+        motionLayout.setTransitionListener(new MotionLayout.TransitionListener() {
             @Override
-            public void onStateChanged(View bottomSheet, int newState) {
-                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
-                    trueMusicPlayer.getFullContent().setVisibility(View.VISIBLE);
-                    trueMusicPlayer.showFullContent();
-                    toolbar.setVisibility(View.GONE);
-                    bottomNavMenu.setVisibility(View.GONE);
-                } else if (newState == BottomSheetBehavior.STATE_COLLAPSED) {
-                    trueMusicPlayer.getFullContent().setVisibility(View.GONE);
-                    trueMusicPlayer.hideFullContent();
-                    toolbar.setVisibility(View.VISIBLE);
-                    bottomNavMenu.setVisibility(View.VISIBLE);
+            public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {}
+
+            @Override
+            public void onTransitionChange(MotionLayout motionLayout, int startId, int endId, float progress) {
+                TextView titleView = motionLayout.findViewById(R.id.player_title);
+                TextView artistView = motionLayout.findViewById(R.id.player_artist);
+
+                if (titleView != null) {
+                    float minSize = 16f; // sp en mode collapsed
+                    float maxSize = 20f; // sp en mode expanded
+                    float newSize = minSize + (maxSize - minSize) * progress;
+                    titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
+                }
+
+                if (artistView != null) {
+                    float minSize = 14f; // sp collapsed
+                    float maxSize = 18f; // sp expanded (tu peux changer si besoin)
+                    float newSize = minSize + (maxSize - minSize) * progress;
+                    artistView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
                 }
             }
 
             @Override
-            public void onSlide(View bottomSheet, float slideOffset) {
-                // slideOffset: 0 = mini, 1 = full
-                float scale = 64f + (286f - 64f) * slideOffset;
-                trueMusicPlayer.getPlayerCover().getLayoutParams().width = trueMusicPlayer.dpToPx((int) scale, context);
-                trueMusicPlayer.getPlayerCover().getLayoutParams().height = trueMusicPlayer.dpToPx((int) scale, context);
-                trueMusicPlayer.getPlayerCover().requestLayout();
+            public void onTransitionCompleted(MotionLayout motionLayout, int currentId) {}
 
-                // Texte scaling (optionnel)
-                trueMusicPlayer.getPlayerTitle().setTextSize(14 + 6 * slideOffset);  // 14sp -> 18sp
-                trueMusicPlayer.getPlayerArtist().setTextSize(12 + 2 * slideOffset); // 12sp -> 14sp
-                trueMusicPlayer.getPlayerTitle().setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                        14 + (20 - 14) * slideOffset);
-                trueMusicPlayer.getPlayerArtist().setTextSize(TypedValue.COMPLEX_UNIT_SP,
-                        12 + (14 - 12) * slideOffset);
+            @Override
+            public void onTransitionTrigger(MotionLayout motionLayout, int triggerId, boolean positive, float progress) {}
+        });
+
+        trueMusicPlayer.getBottomSheetBehavior().addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                // rien de spécial ici
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                // on applique la progression du BottomSheet au MotionLayout
+                if (slideOffset >= 0) {
+                    motionLayout.setProgress(slideOffset);
+                }
             }
         });
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#0d172f</color>
-    <color name="colorSecondary">#192D5C</color>
-    <color name="colorThird">#233F80</color>
+    <color name="colorPrimary">#02070a</color>
+    <color name="colorSecondary">#05131c</color>
+    <color name="colorThird">#081d2b</color>
     <color name="shadowColor">#FFFFFF</color>
-    <color name="colorText">#EBEFFA</color>
-    <color name="disableText">#575f73</color>
+    <color name="colorText">#f5fafd</color>
+    <color name="disableText">#33383b</color>
     <color name="accentColor">#2892d7</color>
-    <color name="selectedColor">#BE2892D7</color>
+    <color name="selectedColor">#3cabc3</color>
     <color name="transparenceColor">#0DE9E8F0</color>
     <color name="trueTransparenceColor">#000D172F</color>
 </resources>

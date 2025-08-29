@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.constraintlayout.motion.widget.MotionLayout;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,7 +29,8 @@ public class TrueMusicPlayer {
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private ImageView playerCover;
     private TextView playerTitle, playerArtist, playerAlbum, currentTimeView, durationView;
-    private LinearLayout mainContent, fullContent;
+    private LinearLayout fullContent;
+    private MotionLayout mainContent;
     private ImageButton repeatButton, shuffleButon, playPauseButton, nextButton, prevButton;
 
     private MusicPlayerViewModel viewModel;
@@ -61,6 +63,7 @@ public class TrueMusicPlayer {
         setupViewModel(lifecycleOwner, storeOwner);
         setupClickListeners();
         setupSeekBar();
+        handler.post(updateSeekBarRunnable);
 
         viewModel.getIsPlaying().observe(lifecycleOwner, isPlaying -> {
             if(isPlaying)
@@ -100,11 +103,11 @@ public class TrueMusicPlayer {
         return playerAlbum;
     }
 
-    public LinearLayout getMainContent() {
+    public MotionLayout getMainContent() {
         return mainContent;
     }
 
-    public void setMainContent(LinearLayout mainContent) {
+    public void setMainContent(MotionLayout mainContent) {
         this.mainContent = mainContent;
     }
 
@@ -112,7 +115,7 @@ public class TrueMusicPlayer {
         repeatButton.setVisibility(View.GONE);
         shuffleButon.setVisibility(View.GONE);
         playerAlbum.setVisibility(View.GONE);
-        mainContent.setOrientation(LinearLayout.HORIZONTAL);
+        //mainContent.setOrientation(LinearLayout.HORIZONTAL);
         playerTitle.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         playerArtist.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
     }
@@ -121,7 +124,7 @@ public class TrueMusicPlayer {
         repeatButton.setVisibility(View.VISIBLE);
         shuffleButon.setVisibility(View.VISIBLE);
         playerAlbum.setVisibility(View.VISIBLE);
-        mainContent.setOrientation(LinearLayout.VERTICAL);
+        //mainContent.setOrientation(LinearLayout.VERTICAL);
         playerTitle.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
         playerArtist.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
     }
@@ -168,7 +171,7 @@ public class TrueMusicPlayer {
             playerTitle.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : "Inconnus");
             playerArtist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : "Inconnus");
             playerAlbum.setText(item.mediaMetadata.albumTitle != null ? item.mediaMetadata.albumTitle : "Inconnus");
-            durationView.setText(TimeUtilities.formatDuration(viewModel.getDuration()));
+            durationView.setText(item.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(item.mediaMetadata.durationMs) : "Inconnus");
 
             Uri artworkUri = item.mediaMetadata.artworkUri;
             Glide.with(context)
@@ -180,6 +183,7 @@ public class TrueMusicPlayer {
             playerTitle.setText("Inconnus");
             playerArtist.setText("Inconnus");
             playerAlbum.setText("Inconnus");
+            durationView.setText("99:99");
             playerCover.setImageResource(R.drawable.echoostation_placeholder_music_3x);
         }
     }
