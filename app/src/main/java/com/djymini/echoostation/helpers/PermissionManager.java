@@ -33,6 +33,10 @@ public class PermissionManager {
         this.onPermissionDenied = onPermissionDenied;
     }
 
+    public ActivityResultLauncher<String> getPermissionLauncher() {
+        return permissionLauncher;
+    }
+
     public void checkAndRequestPermission() {
         String permission = getRequiredPermission();
 
@@ -74,24 +78,15 @@ public class PermissionManager {
         permissionLauncher.launch(permission);
     }
 
-    public void registerPermissionLauncher(){
-        permissionLauncher = ((MainActivity) activity).registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                onPermissionGranted.run();
+    public void registerPermissionLauncher() {
+        permissionLauncher = ((MainActivity) activity)
+                .registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
+                            .get(PermissionViewModel.class);
+                    vm.setPermissionGranted(isGranted);
 
-                if (activity instanceof MainActivity) {
-                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
-                            .get(PermissionViewModel.class);
-                    vm.setPermissionGranted(true);
-                }
-            } else {
-                if (activity instanceof MainActivity) {
-                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
-                            .get(PermissionViewModel.class);
-                    vm.setPermissionGranted(false);
-                }
-            }
-        });
+                    if (isGranted) onPermissionGranted.run();
+                });
     }
 
     public void checkPermission(RelativeLayout authorizationLayout, ConstraintLayout appLayout, Context context){

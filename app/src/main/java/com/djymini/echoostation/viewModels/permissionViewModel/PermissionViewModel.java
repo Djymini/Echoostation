@@ -38,10 +38,13 @@ public class PermissionViewModel extends ViewModel {
         boolean granted = permissionManager.isPermissionGranted(permission);
 
         isPermissionGranted.setValue(granted);
-        shouldShowRationale.setValue(ActivityCompat.shouldShowRequestPermissionRationale(
-                (Activity) context,
-                permission
-        ));
+        if (context instanceof Activity) {
+            shouldShowRationale.setValue(ActivityCompat.shouldShowRequestPermissionRationale(
+                    (Activity) context,
+                    permission
+            ));
+        }
+
     }
 
     public void requestPermission() {

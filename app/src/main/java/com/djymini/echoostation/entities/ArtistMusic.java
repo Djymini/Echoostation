@@ -29,13 +29,13 @@ import androidx.room.Index;
 )
 public class ArtistMusic {
     @ColumnInfo(name = "id_music")
-    public int musicId;
+    public  int musicId;
 
     @ColumnInfo(name = "id_artist")
-    public int artistId;
+    public  int artistId;
 
     @ColumnInfo(name = "position")
-    public int position;
+    public  int position;
 
     public ArtistMusic(int musicId, int artistId, int position) {
         this.musicId = musicId;

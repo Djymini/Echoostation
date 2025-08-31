@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/accentColor</item>
         <item name="colorSurface">@color/transparenceColor</item>
         <item name="toolbarStyle">@style/MyToolbarStyle</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
     <style name="ThemeOverlay.BottomNavigation" parent="">

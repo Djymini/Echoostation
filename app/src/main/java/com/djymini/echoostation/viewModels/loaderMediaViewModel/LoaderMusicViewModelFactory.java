@@ -8,16 +8,12 @@ import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
 import com.djymini.echoostation.daos.MusicDao;
-import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModel;
-
-import java.util.List;
 
 public class LoaderMusicViewModelFactory implements ViewModelProvider.Factory{
-    private MusicDao musicDao;
-    private ArtistDao artistDao;
-    private AlbumDao albumDao;
-    private GenreDao genreDao;
+    private final MusicDao musicDao;
+    private final ArtistDao artistDao;
+    private final AlbumDao albumDao;
+    private final GenreDao genreDao;
 
     public LoaderMusicViewModelFactory(MusicDao musicDao, ArtistDao artistDao, AlbumDao albumDao, GenreDao genreDao) {
         this.musicDao = musicDao;
@@ -26,6 +22,7 @@ public class LoaderMusicViewModelFactory implements ViewModelProvider.Factory{
         this.genreDao = genreDao;
     }
 
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
@@ -34,4 +31,5 @@ public class LoaderMusicViewModelFactory implements ViewModelProvider.Factory{
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }
+
 }

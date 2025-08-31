@@ -30,19 +30,19 @@ public class Artist {
 
     @NonNull
     @ColumnInfo(name = "name")
-    public String name;
+    public  String name;
 
     @ColumnInfo(name = "photo_path")
-    public String photoPath;
+    public  String photoPath;
 
     @ColumnInfo(name = "description")
-    public String description;
+    public  String description;
 
     @ColumnInfo(name = "id_statistic")
-    public long statisticId;
+    public  long statisticId;
 
     @ColumnInfo(name = "created_at")
-    public long createdAt;
+    public  long createdAt;
 
     public Artist(@NonNull String name, String photoPath, String description, long statisticId) {
         this.name = name;

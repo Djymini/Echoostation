@@ -1,5 +1,7 @@
 package com.djymini.echoostation.services;
 
+import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.media3.common.MediaItem;
@@ -27,7 +29,7 @@ public class MusicPlayerService extends MediaLibraryService {
 
     @Nullable
     @Override
-    public MediaLibrarySession onGetSession(MediaSession.ControllerInfo controllerInfo) {
+    public MediaLibrarySession onGetSession(@NonNull MediaSession.ControllerInfo controllerInfo) {
         return mediaLibrarySession;
     }
 
@@ -50,4 +52,15 @@ public class MusicPlayerService extends MediaLibraryService {
             return Futures.immediateFuture(LibraryResult.ofItem(item, /* position */ null));
         }
     }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        super.onTaskRemoved(rootIntent);
+        if (exoPlayer != null) {
+            exoPlayer.stop();
+            exoPlayer.release();
+        }
+        stopSelf();
+    }
+
 }

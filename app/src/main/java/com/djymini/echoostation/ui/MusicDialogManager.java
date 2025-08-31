@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -98,10 +99,14 @@ public class MusicDialogManager {
         cancelButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-        dialog.getWindow().setGravity(Gravity.BOTTOM);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            window.getAttributes().windowAnimations = R.style.DialogAnimation;
+            window.setGravity(Gravity.BOTTOM);
+        }
+
     }
 
     public void handleDeleteMusic(MusicDto musicDto) {
@@ -117,16 +122,14 @@ public class MusicDialogManager {
                         activity.getContentResolver(), uris
                 ).getIntentSender();
 
-                // On stocke juste l'ID pour suppression future si OK
                 lastMusicDeletedId = musicDto.id;
 
                 activity.startIntentSenderForResult(deleteRequest, REQUEST_CODE_DELETE, null, 0, 0, 0);
 
             } catch (IntentSender.SendIntentException e) {
-                e.printStackTrace();
+                Log.e("MusicDialogManager", "Erreur lors de la demande de suppression de musique", e);
             }
         } else {
-            // API < 30 : suppression directe (pas de boîte système)
             int deleted = activity.getContentResolver().delete(uri, null, null);
             if (deleted > 0) {
                 executor.execute(() -> {
@@ -212,7 +215,11 @@ public class MusicDialogManager {
         });
 
         dialog.show();
-        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+
     }
 
     public long getLastMusicDeletedId() {

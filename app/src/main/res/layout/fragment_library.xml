@@ -1,52 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.LibraryFragment">
-    <RelativeLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tablayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:tabIndicatorColor="@color/accentColor"
+        app:tabSelectedTextColor="@color/accentColor"
+        android:background="@color/colorSecondary">
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/music_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tablayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            app:tabIndicatorColor="@color/accentColor"
-            app:tabSelectedTextColor="@color/accentColor"
-            android:background="@color/colorSecondary">
-            <com.google.android.material.tabs.TabItem
-                android:text="MUSIQUE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/album_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <com.google.android.material.tabs.TabItem
-                android:text="ALBUM"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/artist_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <com.google.android.material.tabs.TabItem
-                android:text="ARTISTE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/genre_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <com.google.android.material.tabs.TabItem
-                android:text="GENRE"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <com.google.android.material.tabs.TabItem
+            android:text="@string/playlist_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.tabs.TabLayout>
 
-            <com.google.android.material.tabs.TabItem
-                android:text="PLAYLIST"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.tabs.TabLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/view_pager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/tablayout"/>
-    </RelativeLayout>
-</FrameLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
+</LinearLayout>
