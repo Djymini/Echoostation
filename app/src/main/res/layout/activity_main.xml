@@ -231,22 +231,15 @@
                 android:src="@drawable/round_skip_previous_24"
                 app:tint="@color/colorText"/>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/btn_play_container"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                app:cardCornerRadius="100dp"
-                android:backgroundTint="@color/accentColor">
-                <ImageButton
-                    android:id="@+id/btn_play"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@null"
-                    android:contentDescription="@string/ic_play_pause"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/round_play_arrow_24"
-                    app:tint="@color/colorText"/>
-            </androidx.cardview.widget.CardView>
+            <ImageButton
+                android:id="@+id/btn_play"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:contentDescription="@string/ic_play_pause"
+                android:scaleType="fitCenter"
+                android:src="@drawable/round_play_arrow_24"
+                app:tint="@color/colorText"/>
 
             <ImageButton
                 android:id="@+id/btn_next"

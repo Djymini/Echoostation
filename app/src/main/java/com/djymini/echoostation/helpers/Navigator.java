@@ -157,6 +157,8 @@ public class Navigator {
                 // on applique la progression du BottomSheet au MotionLayout
                 if (slideOffset >= 0) {
                     motionLayout.setProgress(slideOffset);
+
+                    bottomNavMenu.setTranslationY(bottomNavMenu.getHeight() * slideOffset);
                 }
             }
         });

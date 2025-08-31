@@ -58,13 +58,13 @@
             <Layout
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                motion:layout_constraintEnd_toStartOf="@id/btn_play_container"
+                motion:layout_constraintEnd_toStartOf="@id/btn_play"
                 motion:layout_constraintTop_toTopOf="@id/player_album_cover"
                 motion:layout_constraintBottom_toBottomOf="@id/player_album_cover"
                 android:layout_marginEnd="2dp"/>
         </Constraint>
 
-        <Constraint android:id="@id/btn_play_container">
+        <Constraint android:id="@id/btn_play">
             <Layout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
@@ -146,7 +146,7 @@
                 motion:layout_constraintWidth_max="345dp"
                 motion:layout_constraintTop_toBottomOf="@id/player_title"
                 motion:layout_constraintStart_toStartOf="@id/player_album_cover2"
-                motion:layout_constraintEnd_toEndOf="@id/player_album_cover"
+                motion:layout_constraintEnd_toEndOf="@id/player_album_cover2"
                 android:layout_marginTop="2dp"/>
         </Constraint>
 
@@ -155,8 +155,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 motion:layout_constraintEnd_toStartOf="@id/btn_prev"
-                motion:layout_constraintTop_toTopOf="@id/btn_play_container"
-                motion:layout_constraintBottom_toBottomOf="@id/btn_play_container"
+                motion:layout_constraintTop_toTopOf="@id/btn_play"
+                motion:layout_constraintBottom_toBottomOf="@id/btn_play"
                 android:layout_marginEnd="24dp"/>
             <PropertySet android:alpha="1"/>
         </Constraint>
@@ -165,19 +165,19 @@
             <Layout
                 android:layout_width="47dp"
                 android:layout_height="47dp"
-                motion:layout_constraintEnd_toStartOf="@id/btn_play_container"
-                motion:layout_constraintTop_toTopOf="@id/btn_play_container"
-                motion:layout_constraintBottom_toBottomOf="@id/btn_play_container"
+                motion:layout_constraintEnd_toStartOf="@id/btn_play"
+                motion:layout_constraintTop_toTopOf="@id/btn_play"
+                motion:layout_constraintBottom_toBottomOf="@id/btn_play"
                 android:layout_marginEnd="24dp"/>
         </Constraint>
 
-        <Constraint android:id="@id/btn_play_container">
+        <Constraint android:id="@id/btn_play">
             <Layout
                 android:layout_width="56dp"
                 android:layout_height="56dp"
                 motion:layout_constraintTop_toBottomOf="@id/player_artist"
                 motion:layout_constraintStart_toStartOf="@id/player_album_cover2"
-                motion:layout_constraintEnd_toEndOf="@id/player_album_cover"
+                motion:layout_constraintEnd_toEndOf="@id/player_album_cover2"
                 android:layout_marginTop="32dp"/>
         </Constraint>
 
@@ -185,9 +185,9 @@
             <Layout
                 android:layout_width="47dp"
                 android:layout_height="47dp"
-                motion:layout_constraintStart_toEndOf="@id/btn_play_container"
-                motion:layout_constraintTop_toTopOf="@id/btn_play_container"
-                motion:layout_constraintBottom_toBottomOf="@id/btn_play_container"
+                motion:layout_constraintStart_toEndOf="@id/btn_play"
+                motion:layout_constraintTop_toTopOf="@id/btn_play"
+                motion:layout_constraintBottom_toBottomOf="@id/btn_play"
                 android:layout_marginStart="24dp"/>
         </Constraint>
 
@@ -196,8 +196,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 motion:layout_constraintStart_toEndOf="@id/btn_next"
-                motion:layout_constraintTop_toTopOf="@id/btn_play_container"
-                motion:layout_constraintBottom_toBottomOf="@id/btn_play_container"
+                motion:layout_constraintTop_toTopOf="@id/btn_play"
+                motion:layout_constraintBottom_toBottomOf="@id/btn_play"
                 android:layout_marginStart="24dp"/>
             <PropertySet android:alpha="1"/>
         </Constraint>
@@ -206,7 +206,7 @@
             <Layout
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                motion:layout_constraintTop_toBottomOf="@id/btn_play_container"
+                motion:layout_constraintTop_toBottomOf="@id/btn_play"
                 motion:layout_constraintStart_toStartOf="parent"
                 motion:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="24dp"/>
