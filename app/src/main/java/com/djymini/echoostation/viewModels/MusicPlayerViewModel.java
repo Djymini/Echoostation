@@ -37,6 +37,11 @@ public class MusicPlayerViewModel extends ViewModel {
     public LiveData<Boolean> getIsPlaying() { return isPlaying; }
     public LiveData<MediaItem> getCurrentItem() { return currentItem; }
 
+    public MediaController getController() {
+        return controller;
+    }
+
+
     private void ensureConnected(Context context, Runnable onReady) {
         if (controller != null) {
             if (onReady != null) onReady.run();

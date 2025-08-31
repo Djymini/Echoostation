@@ -18,12 +18,17 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.adapters.CoverCarouselAdapter;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrueMusicPlayer {
     private BottomSheetBehavior<View> bottomSheetBehavior;
@@ -38,6 +43,12 @@ public class TrueMusicPlayer {
     private Handler handler = new Handler(Looper.getMainLooper());
     private Runnable updateSeekBarRunnable;
     private Context context;
+    private ViewPager2 playerCarousel;
+
+    private CoverCarouselAdapter adapter;
+    private boolean userSwipe = false;
+
+
 
     private final float MINI_SIZE = 64f;   // taille mini player
     private final float FULL_SIZE = 200f;
@@ -59,6 +70,9 @@ public class TrueMusicPlayer {
         shuffleButon = view.findViewById(R.id.btn_shuffle);
         mainContent = view.findViewById(R.id.player_bottom_sheet);
         fullContent = view.findViewById(R.id.full_content);
+        playerCarousel = view.findViewById(R.id.player_carousel);
+
+        setupCarousel();
 
         setupViewModel(lifecycleOwner, storeOwner);
         setupClickListeners();
@@ -167,26 +181,49 @@ public class TrueMusicPlayer {
     }
 
     private void updateUI(MediaItem item) {
-        if (item != null) {
-            playerTitle.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : "Inconnus");
-            playerArtist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : "Inconnus");
-            playerAlbum.setText(item.mediaMetadata.albumTitle != null ? item.mediaMetadata.albumTitle : "Inconnus");
-            durationView.setText(item.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(item.mediaMetadata.durationMs) : "Inconnus");
+        if (viewModel.getController() == null) return;
 
-            Uri artworkUri = item.mediaMetadata.artworkUri;
+        Player player = viewModel.getController();
+        List<MediaItem> carouselItems = new ArrayList<>();
+
+        int prevIndex = player.getPreviousMediaItemIndex();
+        int nextIndex = player.getNextMediaItemIndex();
+
+        MediaItem prev = prevIndex != -1 ? player.getMediaItemAt(prevIndex) : null;
+        MediaItem current = player.getCurrentMediaItem();
+        MediaItem next = nextIndex != -1 ? player.getMediaItemAt(nextIndex) : null;
+
+        if (prev != null) carouselItems.add(prev);
+        if (current != null) carouselItems.add(current);
+        if (next != null) carouselItems.add(next);
+
+        // on MAJ la liste de l’adapter
+        adapter.setItems(carouselItems);
+
+        // on force la position sur le courant
+        int currentIndex = prev != null ? 1 : 0;
+        userSwipe = false; // bloquer le callback pendant MAJ
+        playerCarousel.setCurrentItem(currentIndex, false);
+        userSwipe = true;
+
+        // UI textuel
+        if (current != null) {
+            playerTitle.setText(current.mediaMetadata.title != null ? current.mediaMetadata.title : "Inconnus");
+            playerArtist.setText(current.mediaMetadata.artist != null ? current.mediaMetadata.artist : "Inconnus");
+            playerAlbum.setText(current.mediaMetadata.albumTitle != null ? current.mediaMetadata.albumTitle : "Inconnus");
+            durationView.setText(current.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(current.mediaMetadata.durationMs) : "Inconnus");
+
+            Uri artworkUri = current.mediaMetadata.artworkUri;
             Glide.with(context)
                     .load(artworkUri)
-                    .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                    .error(R.drawable.echoostation_placeholder_music_3x)
+                    .placeholder(R.drawable.echoostation_placeholder_album_3x)
+                    .override(350, 350)
+                    .error(R.drawable.echoostation_placeholder_album_3x)
                     .into(playerCover);
-        } else {
-            playerTitle.setText("Inconnus");
-            playerArtist.setText("Inconnus");
-            playerAlbum.setText("Inconnus");
-            durationView.setText("99:99");
-            playerCover.setImageResource(R.drawable.echoostation_placeholder_music_3x);
         }
     }
+
+
 
     private void setupClickListeners() {
         playPauseButton.setOnClickListener(v -> viewModel.playPause(context));
@@ -232,4 +269,23 @@ public class TrueMusicPlayer {
             }
         };
     }
+
+    private void setupCarousel() {
+        adapter = new CoverCarouselAdapter(context, new ArrayList<>());
+        playerCarousel.setAdapter(adapter);
+
+        playerCarousel.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                if (!userSwipe) return; // éviter les triggers pendant updateUI
+
+                if (position == 0) {
+                    viewModel.prev(context);
+                } else if (position == adapter.getItemCount() - 1) {
+                    viewModel.next(context);
+                }
+            }
+        });
+    }
+
 }
