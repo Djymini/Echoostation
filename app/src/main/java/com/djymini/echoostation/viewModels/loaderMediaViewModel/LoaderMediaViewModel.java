@@ -7,6 +7,7 @@ import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
 import com.djymini.echoostation.daos.MusicDao;
+import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
@@ -29,6 +30,6 @@ public class LoaderMediaViewModel extends ViewModel {
 
     public LiveData<List<MusicDto>> loadMusics() {return musicDao.getAllMusicDetailLive();}
     public LiveData<List<Artist>> loadArtists() {return artistDao.getAllLive();}
-    public LiveData<List<Album>> loadAlbums() {return albumDao.getAllLive();}
+    public LiveData<List<AlbumDto>> loadAlbums() {return albumDao.getAllAlbumDetailLive();}
     public LiveData<List<Genre>> loadGenres() {return genreDao.getAllLive();}
 }

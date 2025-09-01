@@ -37,6 +37,7 @@
     <string name="genre">Genre</string>
     <string name="save">Enregistrer</string>
     <string name="counter_music">9999 Titres</string>
+    <string name="counter_album">9999 Albums</string>
     <string name="time_music">99:99</string>
     <string name="bottom_sheet_layout_title">Element</string>
 

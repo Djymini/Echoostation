@@ -7,6 +7,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.djymini.echoostation.dtos.AlbumDto;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
 
 import java.util.List;
@@ -34,8 +36,30 @@ public interface AlbumDao {
     @Query("SELECT * FROM album")
     LiveData<List<Album>> getAllLive();
 
+    @Query("SELECT " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "ar.id AS artistId, ar.name AS artistName, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM album al " +
+            "JOIN artist ar ON al.id_artist = ar.id " +
+            "JOIN statistic s ON al.id_statistic = s.id")
+    LiveData<List<AlbumDto>> getAllAlbumDetailLive();
+
     @Query("SELECT * FROM album")
     List<Album> getAll();
+
+    @Query("SELECT " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "ar.id AS artistId, ar.name AS artistName, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM album al " +
+            "JOIN artist ar ON al.id_artist = ar.id " +
+            "JOIN statistic s ON al.id_statistic = s.id")
+    List<AlbumDto> getAllAlbumDetail();
 
     @Query("SELECT * FROM album WHERE id = :id")
     Album getById(long id);
