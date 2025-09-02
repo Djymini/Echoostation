@@ -1,5 +1,7 @@
 package com.djymini.echoostation.entities;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -56,5 +58,19 @@ public class Artist {
     public Artist(long id, @NonNull String name, String photoPath, String description, long statisticId) {
         this(name, photoPath, description, statisticId);
         this.id = id;
+    }
+
+    @Ignore
+    public Artist(Artist artist, String photoPath, String description) {
+        this.id = artist.id;
+        this.name = artist.name;
+        this.photoPath = photoPath;
+        this.description = description;
+        this.statisticId = artist.statisticId;
+        this.createdAt = artist.createdAt;
+    }
+
+    public Uri getPhoto(){
+        return Uri.parse(photoPath);
     }
 }

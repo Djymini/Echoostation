@@ -1,11 +1,6 @@
 package com.djymini.echoostation.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentUris;
-import android.content.IntentSender;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -18,7 +13,6 @@ import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,11 +27,8 @@ import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
-import com.djymini.echoostation.adapters.MusicAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.AlbumDto;
-import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.utilities.SortOption;
 import com.djymini.echoostation.utilities.SortOptionAlbum;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
@@ -175,7 +166,7 @@ public class AlbumFragment extends EchoostationFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortAndDisplayMusics(position);
+                sortAndDisplayAlbums(position);
             }
 
             @Override
@@ -189,7 +180,7 @@ public class AlbumFragment extends EchoostationFragment {
 
         searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
             search = query;
-            sortAndDisplayMusics(spinner.getSelectedItemPosition());
+            sortAndDisplayAlbums(spinner.getSelectedItemPosition());
         });
 
         playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
@@ -226,14 +217,14 @@ public class AlbumFragment extends EchoostationFragment {
             main.navigator.modifyTitle(getString(R.string.library_fragment));
             main.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(), albums -> {
                 currentAlbumList = new ArrayList<>(albums);
-                sortAndDisplayMusics(spinner.getSelectedItemPosition());
+                sortAndDisplayAlbums(spinner.getSelectedItemPosition());
                 String counterAlbum = albums.size() + getString(R.string.album_fragment);
                 albumCounterView.setText(counterAlbum);
             });
         }
     }
 
-    private void sortAndDisplayMusics(int position) {
+    private void sortAndDisplayAlbums(int position) {
         if (currentAlbumList == null) return;
 
         executor.execute(() -> {

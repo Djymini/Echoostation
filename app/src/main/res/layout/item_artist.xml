@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="12dp"
+    android:layout_marginBottom="24dp">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="100dp"
+        android:layout_marginBottom="4dp">
+        <ImageView
+            android:id="@+id/artist_image"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/album_cover"
+            android:src="@drawable/echoostation_placeholder_album_3x"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/artist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:fontFamily="@font/ibm_plex_sans_bold"
+        android:includeFontPadding="false"
+        android:text="@string/artist"
+        android:textColor="@color/colorText"
+        android:textSize="13sp"
+        android:textAlignment="center"/>
+</LinearLayout>

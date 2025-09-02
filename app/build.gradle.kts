@@ -71,4 +71,12 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.8.0")
     implementation("androidx.media3:media3-ui-compose:1.8.0")
     implementation ("androidx.media3:media3-session:1.8.0")
+
+    // Retrofit pour les appels API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp pour intercepteurs (facultatif mais pratique)
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 }

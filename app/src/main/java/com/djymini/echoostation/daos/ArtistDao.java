@@ -22,6 +22,12 @@ public interface ArtistDao {
     @Update
     void update(Artist artist);
 
+    @Query("UPDATE artist SET photo_path = :photoPath WHERE id = :id;")
+    void modifyPhoto(long id, String photoPath);
+
+    @Query("UPDATE artist SET description = :description WHERE id = :id;")
+    void modifyDescription(long id, String description);
+
     @Query("SELECT EXISTS(SELECT 1 FROM artist WHERE id = :id)")
     boolean existsById(long id);
 
