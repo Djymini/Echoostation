@@ -15,6 +15,7 @@ public class AlbumDto implements Parcelable {
     public int year;
     public long artistId;
     public String artistName;
+    public String artistPhotoCover;
     public long statisticId;
     public int listeningNumber;
     public int monthListeningNumber;
@@ -22,13 +23,14 @@ public class AlbumDto implements Parcelable {
     public long monthListeningTime;
     public long createdAt;
 
-    public AlbumDto(long id, String name, String coverPath, int year, long artistId, String artistName, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
+    public AlbumDto(long id, String name, String coverPath, int year, long artistId, String artistName, String artistPhotoCover, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
         this.id = id;
         this.name = name;
         this.coverPath = coverPath;
         this.year = year;
         this.artistId = artistId;
         this.artistName = artistName;
+        this.artistPhotoCover = artistPhotoCover;
         this.statisticId = statisticId;
         this.listeningNumber = listeningNumber;
         this.monthListeningNumber = monthListeningNumber;
@@ -44,6 +46,7 @@ public class AlbumDto implements Parcelable {
         year = in.readInt();
         artistId = in.readLong();
         artistName = in.readString();
+        artistPhotoCover = in.readString();
         statisticId = in.readLong();
         listeningNumber = in.readInt();
         monthListeningNumber = in.readInt();
@@ -60,6 +63,7 @@ public class AlbumDto implements Parcelable {
         dest.writeInt(year);
         dest.writeLong(artistId);
         dest.writeString(artistName);
+        dest.writeString(artistPhotoCover);
         dest.writeLong(statisticId);
         dest.writeInt(listeningNumber);
         dest.writeInt(monthListeningNumber);

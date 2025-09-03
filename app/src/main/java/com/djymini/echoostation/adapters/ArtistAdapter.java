@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.AlbumDto;
+import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
@@ -28,8 +29,8 @@ import java.util.List;
 import java.util.Set;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder> {
-    private final List<Artist> artists = new ArrayList<>();
-    private final Set<Artist> selectedItems = new HashSet<>();
+    private final List<ArtistDto> artists = new ArrayList<>();
+    private final Set<ArtistDto> selectedItems = new HashSet<>();
     private OnMusicMenuClickListener menuClickListener;
     private OnItemLongClickListener longClickListener;
     private OnItemClickListener clickListener;
@@ -43,7 +44,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         this.clickListener = listener;
     }
 
-    public void submitList(List<Artist> newArtists) {
+    public void submitList(List<ArtistDto> newArtists) {
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new DiffUtil.Callback() {
             @Override
             public int getOldListSize() {
@@ -80,7 +81,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
 
     @Override
     public void onBindViewHolder(@NonNull ArtistViewHolder holder, int position) {
-        Artist artist = artists.get(position);
+        ArtistDto artist = artists.get(position);
         holder.artistName.setText(artist.name);
 
         String photoPath = artist.photoPath;
@@ -126,7 +127,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         return artists.size();
     }
 
-    public List<Artist> getCurrentList(){
+    public List<ArtistDto> getCurrentList(){
         return artists;
     }
 
@@ -145,7 +146,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         this.menuClickListener = listener;
     }
 
-    public void toggleSelection(Artist item) {
+    public void toggleSelection(ArtistDto item) {
         int index = artists.indexOf(item);
         if (index == -1) return;
 
@@ -158,10 +159,10 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
     }
 
     public void clearSelection() {
-        Set<Artist> oldSelection = new HashSet<>(selectedItems);
+        Set<ArtistDto> oldSelection = new HashSet<>(selectedItems);
         selectedItems.clear();
 
-        for (Artist item : oldSelection) {
+        for (ArtistDto item : oldSelection) {
             int index = artists.indexOf(item);
             if (index != -1) {
                 notifyItemChanged(index);
@@ -169,7 +170,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         }
     }
 
-    public Set<Artist> getSelectedItems() {
+    public Set<ArtistDto> getSelectedItems() {
         return selectedItems;
     }
 

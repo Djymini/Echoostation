@@ -1,20 +1,16 @@
 package com.djymini.echoostation.adapters;
 
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
@@ -27,14 +23,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
+public class MusicAlbumAdapter extends RecyclerView.Adapter<MusicAlbumAdapter.MusicAlbumViewHolder> {
     private final List<MusicDto> musics = new ArrayList<>();
     private final Set<MusicDto> selectedItems = new HashSet<>();
     private OnMusicMenuClickListener menuClickListener;
     private OnItemLongClickListener longClickListener;
     private OnItemClickListener clickListener;
 
-    public MusicAdapter() {
+    public MusicAlbumAdapter() {
     }
 
     public void setOnItemLongClickListener(OnItemLongClickListener listener) {
@@ -74,26 +70,19 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
 
     @NonNull
     @Override
-    public MusicViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music, parent, false);
-        return new MusicViewHolder(view);
+    public MusicAlbumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_music_album, parent, false);
+        return new MusicAlbumViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MusicAlbumViewHolder holder, int position) {
         MusicDto music = musics.get(position);
         holder.title.setText(music.title);
         holder.artist.setText(music.artistName);
+        holder.numberTrack.setText(String.valueOf(music.track));
 
         String durationStr = TimeUtilities.formatDuration(music.duration);
-        holder.duration.setText(durationStr);
-
-        Uri albumArt = music.getCover();
-        Glide.with(holder.itemView.getContext())
-                .load(albumArt)
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
-                .into(holder.cover);
 
         holder.menuButton.setOnClickListener(v -> {
             if (menuClickListener != null) {
@@ -127,19 +116,17 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         return musics;
     }
 
-    public static class MusicViewHolder extends RecyclerView.ViewHolder {
+    public static class MusicAlbumViewHolder extends RecyclerView.ViewHolder {
         final TextView title;
         final TextView artist;
-        final TextView duration;
-        final ImageView cover;
+        final TextView numberTrack;
         final ImageButton menuButton;
 
-        MusicViewHolder(@NonNull View itemView) {
+        MusicAlbumViewHolder(@NonNull View itemView) {
             super(itemView);
             title = itemView.findViewById(R.id.music_title);
             artist = itemView.findViewById(R.id.music_artist);
-            duration = itemView.findViewById(R.id.music_duration);
-            cover = itemView.findViewById(R.id.image_cover);
+            numberTrack = itemView.findViewById(R.id.music_number);
             menuButton = itemView.findViewById(R.id.item_menu_button);
         }
     }

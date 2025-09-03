@@ -35,6 +35,7 @@ import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
+import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.ui.MusicDialogManager;

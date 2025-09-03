@@ -12,4 +12,14 @@ public class TimeUtilities {
         long seconds = (durationMs / 1000) % 60;
         return String.format(Locale.US, "%02d:%02d", minutes, seconds);
     }
+
+    public static String formatDurationWithHour(long durationMs) {
+        long totalSeconds = durationMs / 1000;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
 }

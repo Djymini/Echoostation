@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -30,6 +31,7 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ArtistAdapter;
 import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.AlbumDto;
+import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.utilities.SortOption;
 import com.djymini.echoostation.utilities.SortOptionAlbum;
@@ -48,14 +50,14 @@ import java.util.stream.Collectors;
 public class ArtistFragment extends EchoostationFragment {
     private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerView;
-    private List<Artist> currentArtistList = new ArrayList<>();
+    private List<ArtistDto> currentArtistList = new ArrayList<>();
     private ArtistAdapter adapter;
     private TextView artistCounterView;
     private Spinner spinner;
     private String search;
     private ActionMode actionMode;
     private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
-    private List<Artist> artistsPendingDeletion;
+    private List<ArtistDto> artistsPendingDeletion;
     private ExecutorService executor;
     private List<MediaItem> playlist;
 
@@ -74,7 +76,7 @@ public class ArtistFragment extends EchoostationFragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
-                Set<Artist> selectedCopy = new HashSet<>(adapter.getSelectedItems());
+                Set<ArtistDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
                 //confirmAndDeleteSelectedMusics(selectedCopy);
                 mode.finish();
                 return true;
@@ -135,18 +137,34 @@ public class ArtistFragment extends EchoostationFragment {
                 actionMode = ((AppCompatActivity) requireActivity())
                         .startSupportActionMode(actionModeCallback);
             }
-            Artist artist = adapter.getCurrentList().get(position);
+            ArtistDto artist = adapter.getCurrentList().get(position);
             adapter.toggleSelection(artist);
             updateActionModeTitle();
         });
 
         adapter.setOnItemClickListener(position -> {
             if (actionMode != null) {
-                Artist artist = adapter.getCurrentList().get(position);
+                ArtistDto artist = adapter.getCurrentList().get(position);
                 adapter.toggleSelection(artist);
                 updateActionModeTitle();
             } else {
-                playerViewModel.playPlaylist(requireContext(), playlist, position);
+                if(getActivity() instanceof MainActivity){
+                    MainActivity main = (MainActivity) getActivity();
+                    FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
+
+                    Fragment fragment = ArtistInfoFragment.newInstance(adapter.getCurrentList().get(position));
+
+                    if (!fragment.isAdded()) {
+                        transaction.add(R.id.frame_layout, fragment);
+                    } else {
+                        transaction.show(fragment);
+                    }
+
+                    transaction.hide(main.navigator.getActiveFragment()).commit();
+
+                    main.navigator.modifyTitle(adapter.getCurrentList().get(position).name);
+                    main.navigator.setActiveFragment(fragment);
+                }
             }
         });
     }
@@ -213,7 +231,7 @@ public class ArtistFragment extends EchoostationFragment {
         if (currentArtistList == null) return;
 
         executor.execute(() -> {
-            List<Artist> filtered = new ArrayList<>(fullTextSearchByLogicalOr(currentArtistList, search));
+            List<ArtistDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(currentArtistList, search));
 
             if (position >= 0 && position < SortOption.values().length) {
                 SortOptionArtist option = SortOptionArtist.values()[position];
@@ -225,7 +243,7 @@ public class ArtistFragment extends EchoostationFragment {
         });
     }
 
-    private List<Artist> fullTextSearchByLogicalOr(List<Artist> artistList, String keyword) {
+    private List<ArtistDto> fullTextSearchByLogicalOr(List<ArtistDto> artistList, String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) return artistList;
 
         return artistList.stream()

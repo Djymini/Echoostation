@@ -35,7 +35,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class MainActivity extends AppCompatActivity {
-    private DatabaseService dbService;
+    public DatabaseService dbService;
     public AppInitializer appInitializer;
 
     private MusicScannerViewModel musicScannerViewModel;

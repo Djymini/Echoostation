@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.entities.Artist;
 
 import java.util.List;
@@ -36,6 +37,15 @@ public interface ArtistDao {
 
     @Query("SELECT * FROM artist")
     LiveData<List<Artist>> getAllLive();
+
+    @Query("SELECT " +
+            "ar.id AS id, ar.name AS name, ar.photo_path AS photoPath, ar.description AS description, ar.created_at AS createdAt, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM artist ar " +
+            "JOIN statistic s ON ar.id_statistic = s.id")
+    LiveData<List<ArtistDto>> getAllDetailLive();
 
     @Query("SELECT * FROM artist")
     List<Artist> getAll();

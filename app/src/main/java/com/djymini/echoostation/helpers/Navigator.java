@@ -219,4 +219,15 @@ public class Navigator {
         }
     }
 
+    public FragmentManager getFragmentManager() {
+        return fragmentManager;
+    }
+
+    public Fragment getActiveFragment() {
+        return activeFragment;
+    }
+
+    public void setActiveFragment(Fragment activeFragment) {
+        this.activeFragment = activeFragment;
+    }
 }
