@@ -37,7 +37,7 @@ public interface AlbumDao {
     LiveData<List<Album>> getAllLive();
 
     @Query("SELECT " +
-            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
             "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
@@ -51,7 +51,7 @@ public interface AlbumDao {
     List<Album> getAll();
 
     @Query("SELECT " +
-            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
             "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
@@ -74,7 +74,7 @@ public interface AlbumDao {
     List<Album> search(String query);
 
     @Query("SELECT " +
-            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
             "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
@@ -86,7 +86,7 @@ public interface AlbumDao {
     LiveData<List<AlbumDto>> getAllByArtistDetailLive(long artistId);
 
     @Query("SELECT " +
-            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
             "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
@@ -97,6 +97,33 @@ public interface AlbumDao {
             "WHERE al.id = :albumId")
     AlbumDto getAlbumDetail(long albumId);
 
+    @Query("SELECT " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
+            "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM album al " +
+            "JOIN artist ar ON al.id_artist = ar.id " +
+            "JOIN statistic s ON al.id_statistic = s.id " +
+            "ORDER BY s.month_listening_number DESC LIMIT 3")
+    LiveData<List<AlbumDto>> getTopAlbumsDetail();
+
+    @Query("SELECT " +
+            "al.id AS id, al.name AS name, al.cover_path AS coverPath, al.year AS year, al.id_artist AS artistId, al.created_at AS createdAt, al.last_played AS lastPlayed, " +
+            "ar.id AS artistId, ar.name AS artistName, ar.photo_path AS artistPhotoCover, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM album al " +
+            "JOIN artist ar ON al.id_artist = ar.id " +
+            "JOIN statistic s ON al.id_statistic = s.id " +
+            "ORDER BY al.created_at DESC LIMIT 6")
+    LiveData<List<AlbumDto>> getRecentAlbumsDetail();
+
     @Query("SELECT * FROM album WHERE id_artist = :artistId")
     List<Album> getAllByArtist(long artistId);
+
+    @Query("UPDATE album SET last_played = :time WHERE id = :id")
+    void updateLastPlay(long id, long time);
 }

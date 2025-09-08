@@ -52,6 +52,9 @@ public class Album {
     @ColumnInfo(name = "created_at")
     public long createdAt;
 
+    @ColumnInfo(name = "last_played")
+    public  long lastPlayed;
+
     public Album(@NonNull String name, String coverPath, int year, long artistId, long statisticId) {
         this.name = name;
         this.coverPath = coverPath;
@@ -59,6 +62,7 @@ public class Album {
         this.artistId = artistId;
         this.statisticId = statisticId;
         this.createdAt = TimeUtilities.currentTimeMillis();
+        this.lastPlayed = 0;
     }
 
     @Ignore

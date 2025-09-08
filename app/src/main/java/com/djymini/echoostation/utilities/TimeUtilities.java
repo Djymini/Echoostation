@@ -1,5 +1,8 @@
 package com.djymini.echoostation.utilities;
 
+import com.djymini.echoostation.dtos.MusicDto;
+
+import java.util.List;
 import java.util.Locale;
 
 public class TimeUtilities {
@@ -20,6 +23,15 @@ public class TimeUtilities {
         long seconds = totalSeconds % 60;
 
         return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    public static String durationTotal(List<MusicDto> musicList){
+        long durationTotal = 0;
+        for(MusicDto music : musicList){
+            durationTotal += music.duration;
+        }
+
+        return formatDurationWithHour(durationTotal);
     }
 
 }

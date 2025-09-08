@@ -1,6 +1,8 @@
 package com.djymini.echoostation.fragments;
 
 import android.content.ContentUris;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -8,6 +10,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.MediaItem;
@@ -16,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
+import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
+import com.djymini.echoostation.adapters.MusicAdapter;
 import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
@@ -51,6 +60,7 @@ import java.util.concurrent.Executors;
 public class ArtistInfoFragment extends Fragment {
     private static final String ARG_ARTIST = "artist";
     private ArtistDto artist;
+
     private List<MusicDto> musicList;
     private List<AlbumDto> albumList;
     private List<AlbumDto> albumApparitionList = new ArrayList<>();
@@ -58,13 +68,15 @@ public class ArtistInfoFragment extends Fragment {
     private ImageView backgroundImage, albumImage, artistImage;
     private TextView albumName, albumDate, artistName, numberTrack, durationTotal, artistNumberAlbum, artistDescription;
     private Button playButton, shuffleButton;
+    private LinearLayout bestSongContainer, albumContainer, albumApparitionContainer, biographieContainer;
 
     private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerViewBestSongs, recyclerViewAlbum, recyclerViewAlbumApparition;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private List<MusicDto> bestListeningSong = new ArrayList<>();
+    private List<MediaItem> playlist2;
     private List<AlbumDto> albumArtistList = new ArrayList<>();
-    private MusicAlbumAdapter adapterMusic;
+    private MusicAdapter adapterMusic;
     private AlbumAdapter adapterAlbum, adapterAlbumApparition;
     private TextView musicCounterView;
     private Spinner spinner;
@@ -110,6 +122,31 @@ public class ArtistInfoFragment extends Fragment {
 
         loadMusics();
 
+        Toolbar toolbar = main.navigator.getToolbar(); // ou getActivity().findViewById(...)
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // Affiche le bouton retour
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            boolean nightMode = (getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+
+            Drawable upArrow = ContextCompat.getDrawable(requireContext(),
+                    nightMode ? R.drawable.round_arrow_back_24_night : R.drawable.round_arrow_back_24_normal);
+
+            if (upArrow != null) {
+                activity.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
+        }
+
+        // Gérer le clic
+        toolbar.setNavigationOnClickListener(v -> {
+            main.navigator.goBackToLibrary();
+        });
+
         return view;
     }
 
@@ -123,6 +160,11 @@ public class ArtistInfoFragment extends Fragment {
         recyclerViewBestSongs = view.findViewById(R.id.recycler_view_best_song);
         recyclerViewAlbum = view.findViewById(R.id.recycler_view_album);
         recyclerViewAlbumApparition = view.findViewById(R.id.recycler_view_album_apparition);
+
+        bestSongContainer = view.findViewById(R.id.best_song_container);
+        albumContainer = view.findViewById(R.id.album_container);
+        albumApparitionContainer = view.findViewById(R.id.album_apparition_container);
+        biographieContainer = view.findViewById(R.id.biographie_container);
     }
 
     private void setupUi(){
@@ -145,12 +187,30 @@ public class ArtistInfoFragment extends Fragment {
                 .into(backgroundImage);
     }
 
-    private void setText(){
+    private void setText() {
         artistName.setText(artist.name);
-        artistDescription.setText(artist.description);
+
+        if (artist.description != null && !artist.description.isEmpty()) {
+            artistDescription.setText(HtmlCompat.fromHtml(artist.description, HtmlCompat.FROM_HTML_MODE_LEGACY));
+            artistDescription.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            biographieContainer.setVisibility(View.GONE);
+        }
     }
 
     private void loadMusics() {
+        main.dbService.getMusicDao().getMusicDetailByArtistLiveBest5(artist.id).observe(getViewLifecycleOwner(), musics -> {
+            bestListeningSong = new ArrayList<>(musics);
+            sortAndDisplayBestMusics();
+
+        });
+
+        main.dbService.getAlbumDao().getAllByArtistDetailLive(artist.id).observe(getViewLifecycleOwner(), albums -> {
+            albumList = new ArrayList<>(albums);
+            artistNumberAlbum.setText(albumArtistList.size() > 1 ? albums.size() + " albums" : albums.size() + " album");
+            sortAndDisplayAlbum();
+        });
+
         main.dbService.getMusicDao().getMusicDetailByArtistLive(artist.id).observe(getViewLifecycleOwner(), musics -> {
             currentMusicList = new ArrayList<>(musics);
             durationTotal.setText(durationTotal(musics));
@@ -165,23 +225,12 @@ public class ArtistInfoFragment extends Fragment {
                     if (!alreadyInList) {
                         albumApparitionList.add(albumDto);
                     }
+                    sortAndDisplayAlbumApparition();
                 });
             }
 
-            sortAndDisplayAlbumApparition();
         });
 
-        main.dbService.getMusicDao().getMusicDetailByArtistLiveBest5(artist.id).observe(getViewLifecycleOwner(), musics -> {
-            bestListeningSong = new ArrayList<>(musics);
-            sortAndDisplayBestMusics();
-
-        });
-
-        main.dbService.getAlbumDao().getAllByArtistDetailLive(artist.id).observe(getViewLifecycleOwner(), albums -> {
-            albumList = new ArrayList<>(albums);
-            artistNumberAlbum.setText(albumArtistList.size() > 1 ? albums.size() + " albums" : albums.size() + " album");
-            sortAndDisplayAlbum();
-        });
     }
 
     private String durationTotal(List<MusicDto> musicList){
@@ -195,7 +244,7 @@ public class ArtistInfoFragment extends Fragment {
 
     private void setupRecyclerViewBestSongs() {
         recyclerViewBestSongs.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapterMusic = new MusicAlbumAdapter();
+        adapterMusic = new MusicAdapter();
         recyclerViewBestSongs.setAdapter(adapterMusic);
 
         adapterMusic.setOnMusicMenuClickListener((music, anchorView) -> {
@@ -208,9 +257,10 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void setupRecyclerViewAlbum() {
-        recyclerViewAlbum.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewAlbum.setClipToPadding(false);
-        recyclerViewAlbum.setClipChildren(false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        recyclerViewAlbum.setLayoutManager(linearLayoutManager);
         adapterAlbum = new AlbumAdapter();
         recyclerViewAlbum.setAdapter(adapterAlbum);
 
@@ -237,9 +287,10 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void setupRecyclerViewAlbumApparition() {
-        recyclerViewAlbumApparition.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerViewAlbumApparition.setClipToPadding(false);
-        recyclerViewAlbumApparition.setClipChildren(false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+        recyclerViewAlbumApparition.setLayoutManager(linearLayoutManager);
         adapterAlbumApparition = new AlbumAdapter();
         recyclerViewAlbumApparition.setAdapter(adapterAlbumApparition);
 
@@ -266,18 +317,28 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void sortAndDisplayBestMusics() {
-        if (musicList == null) return;
+        if (bestListeningSong == null) return;
+
+        if(bestListeningSong.size() >= 1){
+            bestSongContainer.setVisibility(View.VISIBLE);
+        }else {
+            bestSongContainer.setVisibility(View.GONE);
+        }
 
         executor.execute(() -> {
             List<MusicDto> filtered = bestListeningSong;
-            Collections.sort(filtered, (music1, music2) -> music1.listeningNumber - music2.listeningNumber);
-            //playlist = loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapterMusic.submitList(filtered));
         });
     }
 
     private void sortAndDisplayAlbum() {
         if (albumList == null) return;
+
+        if(albumList.size() >= 1){
+            albumContainer.setVisibility(View.VISIBLE);
+        }else {
+            albumContainer.setVisibility(View.GONE);
+        }
 
         executor.execute(() -> {
             List<AlbumDto> filtered = albumList;
@@ -288,7 +349,14 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void sortAndDisplayAlbumApparition() {
-        if (albumList == null) return;
+        if (albumApparitionList == null) return;
+
+
+        if(albumApparitionList.size() >= 1){
+            albumApparitionContainer.setVisibility(View.VISIBLE);
+        }else {
+            albumApparitionContainer.setVisibility(View.GONE);
+        }
 
         executor.execute(() -> {
             List<AlbumDto> filtered = albumApparitionList;

@@ -52,7 +52,6 @@ import java.util.stream.Collectors;
 import java.util.concurrent.Executors;
 
 public class MusicFragment extends EchoostationFragment {
-    private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerView;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
@@ -64,6 +63,7 @@ public class MusicFragment extends EchoostationFragment {
     private List<MusicDto> musicsPendingDeletion;
     private ExecutorService executor;
     private List<MediaItem> playlist;
+    private MainActivity main;
 
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
@@ -94,6 +94,13 @@ public class MusicFragment extends EchoostationFragment {
             MusicFragment.this.actionMode = null;
         }
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        main = (MainActivity) getActivity();
+        executor = Executors.newSingleThreadExecutor();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -151,7 +158,7 @@ public class MusicFragment extends EchoostationFragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                playerViewModel.playPlaylist(requireContext(), playlist, position);
+                main.playerViewModel.playPlaylist(requireContext(), playlist, position);
             }
         });
     }
@@ -183,18 +190,18 @@ public class MusicFragment extends EchoostationFragment {
 
     private void setupObservers() {
         ShareSearchViewModel searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
-        playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
+        //main.playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
 
         searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
             search = query;
             sortAndDisplayMusics(spinner.getSelectedItemPosition());
         });
 
-        playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
+        main.playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
             // TODO visuel lecture
         });
 
-        playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
+        main.playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
             if (item != null) {
                 // TODO visuel item sélectionné
             }

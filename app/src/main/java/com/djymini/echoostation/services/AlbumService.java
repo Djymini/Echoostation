@@ -8,6 +8,7 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.helpers.StatisticHelper;
 import com.djymini.echoostation.utilities.Constants;
+import com.djymini.echoostation.utilities.TimeUtilities;
 
 public class AlbumService {
     private static final String TAG = "AlbumService";
@@ -77,6 +78,7 @@ public class AlbumService {
 
     public void incrementListeningNumberStatistic(Album album){
         statisticHelper.incrementListeningNumber(album, album.id);
+        albumDao.updateLastPlay(album.id, TimeUtilities.currentTimeMillis());
     }
 
     public void incrementListeningTimeStatistic(Album album, long time){

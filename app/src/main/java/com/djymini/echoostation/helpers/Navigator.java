@@ -1,5 +1,6 @@
 package com.djymini.echoostation.helpers;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
@@ -45,14 +46,14 @@ public class Navigator {
     private Fragment activeFragment;
 
     public Navigator(FragmentManager fragmentManager, Toolbar toolbar, BottomNavigationView bottomNavMenu,
-                     /*FrameLayout miniPlayerContainer,*/ MusicPlayerViewModel playerViewModel, View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context) {
+                     /*FrameLayout miniPlayerContainer,*/ MusicPlayerViewModel playerViewModel, View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity activity) {
         this.fragmentManager = fragmentManager;
         this.toolbar = toolbar;
         this.bottomNavMenu = bottomNavMenu;
         //this.miniPlayerContainer = miniPlayerContainer;
         this.playerViewModel = playerViewModel;
         this.fragmentInitializer = new FragmentInitializer();
-        this.trueMusicPlayer = new TrueMusicPlayer(view, lifecycleOwner, storeOwner, context);
+        this.trueMusicPlayer = new TrueMusicPlayer(view, lifecycleOwner, storeOwner, context, activity);
         this.context = context;
 
         ViewCompat.setOnApplyWindowInsetsListener(bottomNavMenu, (v, insets) -> {
@@ -99,6 +100,27 @@ public class Navigator {
 
         updateToolbarMenu(fragment);
     }
+
+    public void goBackToLibrary() {
+        Fragment libraryFragment = fragmentInitializer.getFragment(R.id.library);
+        if (libraryFragment == null) return;
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if (!libraryFragment.isAdded()) {
+            transaction.add(R.id.frame_layout, libraryFragment);
+        } else {
+            transaction.show(libraryFragment);
+        }
+
+        if (activeFragment != null) {
+            transaction.hide(activeFragment);
+        }
+
+        transaction.commit();
+        activeFragment = libraryFragment;
+        updateToolbarMenu(libraryFragment);
+    }
+
 
     public void setupTrueMusicPlayer(View playerBottomSheet) {
         trueMusicPlayer.setMainContent((MotionLayout) playerBottomSheet);
@@ -175,6 +197,7 @@ public class Navigator {
     public void setupBottomNav() {
         bottomNavMenu.setOnItemSelectedListener(item -> {
             Fragment fragmentForLoad = fragmentInitializer.getFragment(item.getItemId());
+            String tag = String.valueOf(item.getItemId());
             if (fragmentForLoad != null) {
                 showFragment(fragmentForLoad);
                 return true;
@@ -229,5 +252,9 @@ public class Navigator {
 
     public void setActiveFragment(Fragment activeFragment) {
         this.activeFragment = activeFragment;
+    }
+
+    public Toolbar getToolbar() {
+        return toolbar;
     }
 }

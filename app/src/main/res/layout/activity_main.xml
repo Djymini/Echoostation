@@ -300,6 +300,57 @@
                         android:text="00:00"
                         android:textColor="@color/colorText"/>
                 </RelativeLayout>
+                <TextView
+                    android:id="@+id/position_item"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_plex_sans_regular"
+                    android:text="99/99"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/round_comment_24"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/colorText"/>
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:src="@drawable/round_favorite_border_24"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/colorText"/>
+
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/round_add_circle_outline_24"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/colorText"/>
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:src="@drawable/round_playlist_play_24"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/colorText"/>
+                    <ImageButton
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/round_more_horiz_24"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        app:tint="@color/colorText"/>
+                </LinearLayout>
             </LinearLayout>
 
         </androidx.constraintlayout.motion.widget.MotionLayout>

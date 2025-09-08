@@ -58,6 +58,27 @@ public class Music {
     @ColumnInfo(name = "is_favorite")
     public  boolean isFavorite;
 
+    @ColumnInfo(name = "is_good")
+    public  boolean isGood;
+
+    @ColumnInfo(name = "is_motived")
+    public  boolean isMotived;
+
+    @ColumnInfo(name = "is_music_party")
+    public  boolean isMusicParty;
+
+    @ColumnInfo(name = "is_chill")
+    public  boolean isChill;
+
+    @ColumnInfo(name = "is_night")
+    public  boolean isNight;
+
+    @ColumnInfo(name = "is_sad")
+    public  boolean isSad;
+
+    @ColumnInfo(name = "is_work_music")
+    public  boolean isWorkMusic;
+
     @ColumnInfo(name = "id_album")
     public  long albumId;
 
@@ -70,21 +91,32 @@ public class Music {
     @ColumnInfo(name = "created_at")
     public  long createdAt;
 
-    public Music(@NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long albumId, long genreId, long statisticId) {
+    @ColumnInfo(name = "last_played")
+    public  long lastPlayed;
+
+    public Music(@NonNull String path, @NonNull String title, long duration, int track, long albumId, long genreId, long statisticId) {
         this.path = path;
         this.title = title;
         this.duration = duration;
         this.track = track;
-        this.isFavorite = isFavorite;
+        this.isFavorite = false;
+        this.isGood = false;
+        this.isMotived = false;
+        this.isMusicParty = false;
+        this.isChill = false;
+        this.isNight = false;
+        this.isSad = false;
+        this.isWorkMusic = false;
         this.albumId = albumId;
         this.genreId = genreId;
         this.statisticId = statisticId;
         this.createdAt = TimeUtilities.currentTimeMillis();
+        this.lastPlayed = 0;
     }
 
     @Ignore
-    public Music(long id, @NonNull String path, @NonNull String title, long duration, int track, boolean isFavorite, long albumId, long genreId, long statisticId) {
-        this(path, title, duration, track, isFavorite, albumId, genreId, statisticId);
+    public Music(long id, @NonNull String path, @NonNull String title, long duration, int track, long albumId, long genreId, long statisticId) {
+        this(path, title, duration, track, albumId, genreId, statisticId);
         this.id = id;
     }
 
@@ -96,9 +128,17 @@ public class Music {
         this.duration = music.duration;
         this.track = track;
         this.isFavorite = music.isFavorite;
+        this.isGood = music.isGood;
+        this.isMotived = music.isMotived;
+        this.isMusicParty = music.isMusicParty;
+        this.isChill = music.isChill;
+        this.isNight = music.isNight;
+        this.isSad = music.isSad;
+        this.isWorkMusic = music.isWorkMusic;
         this.albumId = albumId;
         this.genreId = genreId;
         this.statisticId = music.statisticId;
         this.createdAt = music.createdAt;
+        this.lastPlayed = music.lastPlayed;
     }
 }

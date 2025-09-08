@@ -11,6 +11,13 @@ public class MusicDto implements Parcelable {
     public final long duration;
     public final int track;
     public final boolean isFavorite;
+    public final boolean isGood;
+    public final boolean isMotived;
+    public final boolean isMusicParty;
+    public final boolean isChill;
+    public final boolean isNight;
+    public final boolean isSad;
+    public final boolean isWorkMusic;
     public final long albumId;
     public final String albumName;
     public final String coverPath;
@@ -25,14 +32,22 @@ public class MusicDto implements Parcelable {
     public final long listeningTime;
     public final long monthListeningTime;
     public final long createdAt;
+    public final long lastPlayed;
 
-    public MusicDto(long id, String path, String title, long duration, int track, boolean isFavorite, long albumId, String albumName, String coverPath, int year, String artistId, String artistName, long genreId, String genreName, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
+    public MusicDto(long id, String path, String title, long duration, int track, boolean isFavorite, boolean isGood, boolean isMotived, boolean isMusicParty, boolean isChill, boolean isNight, boolean isSad, boolean isWorkMusic, long albumId, String albumName, String coverPath, int year, String artistId, String artistName, long genreId, String genreName, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt, long lastPlayed) {
         this.id = id;
         this.path = path;
         this.title = title;
         this.duration = duration;
         this.track = track;
         this.isFavorite = isFavorite;
+        this.isGood = isGood;
+        this.isMotived = isMotived;
+        this.isMusicParty = isMusicParty;
+        this.isChill = isChill;
+        this.isNight = isNight;
+        this.isSad = isSad;
+        this.isWorkMusic = isWorkMusic;
         this.albumId = albumId;
         this.albumName = albumName;
         this.coverPath = coverPath;
@@ -47,6 +62,7 @@ public class MusicDto implements Parcelable {
         this.listeningTime = listeningTime;
         this.monthListeningTime = monthListeningTime;
         this.createdAt = createdAt;
+        this.lastPlayed = lastPlayed;
     }
 
     protected MusicDto(Parcel in) {
@@ -56,6 +72,13 @@ public class MusicDto implements Parcelable {
         duration = in.readLong();
         track = in.readInt();
         isFavorite = in.readByte() != 0;
+        isGood = in.readByte() != 0;
+        isMotived = in.readByte() != 0;
+        isMusicParty = in.readByte() != 0;
+        isChill = in.readByte() != 0;
+        isNight = in.readByte() != 0;
+        isSad = in.readByte() != 0;
+        isWorkMusic = in.readByte() != 0;
         albumId = in.readLong();
         albumName = in.readString();
         coverPath = in.readString();
@@ -70,6 +93,7 @@ public class MusicDto implements Parcelable {
         listeningTime = in.readLong();
         monthListeningTime = in.readLong();
         createdAt = in.readLong();
+        lastPlayed = in.readLong();
     }
 
     @Override
@@ -80,6 +104,13 @@ public class MusicDto implements Parcelable {
         dest.writeLong(duration);
         dest.writeInt(track);
         dest.writeByte((byte) (isFavorite ? 1 : 0));
+        dest.writeByte((byte) (isGood ? 1 : 0));
+        dest.writeByte((byte) (isMotived ? 1 : 0));
+        dest.writeByte((byte) (isMusicParty ? 1 : 0));
+        dest.writeByte((byte) (isChill ? 1 : 0));
+        dest.writeByte((byte) (isNight ? 1 : 0));
+        dest.writeByte((byte) (isSad ? 1 : 0));
+        dest.writeByte((byte) (isWorkMusic ? 1 : 0));
         dest.writeLong(albumId);
         dest.writeString(albumName);
         dest.writeString(coverPath);
@@ -94,6 +125,7 @@ public class MusicDto implements Parcelable {
         dest.writeLong(listeningTime);
         dest.writeLong(monthListeningTime);
         dest.writeLong(createdAt);
+        dest.writeLong(lastPlayed);
     }
 
     @Override

@@ -20,6 +20,7 @@ public class ArtistDto implements Parcelable {
     public long listeningTime;
     public long monthListeningTime;
     public long createdAt;
+    public long lastPlayed;
 
     public ArtistDto(Parcel in) {
         this.id = in.readLong();
@@ -32,9 +33,10 @@ public class ArtistDto implements Parcelable {
         this.listeningTime = in.readLong();
         this.monthListeningTime = in.readLong();
         this.createdAt = in.readLong();
+        this.lastPlayed = in.readLong();
     }
 
-    public ArtistDto(long id, String name, String photoPath, String description, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
+    public ArtistDto(long id, String name, String photoPath, String description, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt, long lastPlayed) {
         this.id = id;
         this.name = name;
         this.photoPath = photoPath;
@@ -45,6 +47,7 @@ public class ArtistDto implements Parcelable {
         this.listeningTime = listeningTime;
         this.monthListeningTime = monthListeningTime;
         this.createdAt = createdAt;
+        this.lastPlayed = lastPlayed;
     }
 
     @Override
@@ -59,6 +62,7 @@ public class ArtistDto implements Parcelable {
         dest.writeLong(listeningTime);
         dest.writeLong(monthListeningTime);
         dest.writeLong(createdAt);
+        dest.writeLong(lastPlayed);
     }
 
     @Override

@@ -15,6 +15,7 @@ import com.djymini.echoostation.helpers.StatisticHelper;
 import com.djymini.echoostation.interfaces.LastFmApi;
 import com.djymini.echoostation.interfaces.SpotifyApi;
 import com.djymini.echoostation.utilities.Constants;
+import com.djymini.echoostation.utilities.TimeUtilities;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -128,6 +129,7 @@ public class ArtistService {
 
     public void incrementListeningNumberStatistic(Artist artist){
         statisticHelper.incrementListeningNumber(artist, artist.id);
+        artistDao.updateLastPlay(artist.id, TimeUtilities.currentTimeMillis());
     }
 
     public void incrementListeningTimeStatistic(Artist artist, long time){

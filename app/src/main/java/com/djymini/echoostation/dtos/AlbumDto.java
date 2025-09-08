@@ -22,8 +22,9 @@ public class AlbumDto implements Parcelable {
     public long listeningTime;
     public long monthListeningTime;
     public long createdAt;
+    public long lastPlayed;
 
-    public AlbumDto(long id, String name, String coverPath, int year, long artistId, String artistName, String artistPhotoCover, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt) {
+    public AlbumDto(long id, String name, String coverPath, int year, long artistId, String artistName, String artistPhotoCover, long statisticId, int listeningNumber, int monthListeningNumber, long listeningTime, long monthListeningTime, long createdAt, long lastPlayed) {
         this.id = id;
         this.name = name;
         this.coverPath = coverPath;
@@ -37,6 +38,7 @@ public class AlbumDto implements Parcelable {
         this.listeningTime = listeningTime;
         this.monthListeningTime = monthListeningTime;
         this.createdAt = createdAt;
+        this.lastPlayed = lastPlayed;
     }
 
     protected AlbumDto(Parcel in) {
@@ -53,6 +55,7 @@ public class AlbumDto implements Parcelable {
         listeningTime = in.readLong();
         monthListeningTime = in.readLong();
         createdAt = in.readLong();
+        lastPlayed = in.readLong();
     }
 
     @Override
@@ -70,6 +73,7 @@ public class AlbumDto implements Parcelable {
         dest.writeLong(listeningTime);
         dest.writeLong(monthListeningTime);
         dest.writeLong(createdAt);
+        dest.writeLong(lastPlayed);
 
     }
 

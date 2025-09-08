@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f5fafd</color>
-    <color name="colorSecondary">#f1f8fc</color>
-    <color name="colorThird">#ebf5fb</color>
-    <color name="shadowColor">#000000</color>
-    <color name="colorText">#02070a</color>
-    <color name="disableText">#b0b5b8</color>
     <color name="accentColor">#2892d7</color>
-    <color name="selectedColor">#3cabc3</color>
+
+    <color name="colorPrimary">#F5F9FC</color>
+    <color name="colorSecondary">#E3EFF7</color>
+    <color name="colorThird">#C9E2F2</color>
+
+    <color name="colorText">#0D1B2A</color>
+    <color name="colorTextSecond">#334155</color>
+    <color name="disableText">#a8afb6</color>
+
+    <color name="shadowColor">#000000</color>
+
+    <color name="selectedColor">#1D75B5</color>
+
     <color name="transparenceColor">#0D0D172F</color>
     <color name="trueTransparenceColor">#000D172F</color>
 </resources>

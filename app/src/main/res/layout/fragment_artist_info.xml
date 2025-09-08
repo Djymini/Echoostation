@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.AlbumInfoFragment">
+    tools:context=".fragments.ArtistInfoFragment">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -32,7 +32,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_above="@id/info_container"
                 android:fontFamily="@font/ibm_plex_sans_bold"
-                android:text="Album"
+                android:includeFontPadding="false"
+                android:text="Artiste"
                 android:textAlignment="center"
                 android:textSize="35dp"/>
 
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/view"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:gravity="center">
                 <TextView
                     android:id="@+id/artist_number_album"
@@ -50,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:includeFontPadding="false"
                     android:text="99 Albums"
                     android:textAlignment="center"
                     android:textSize="16dp"/>
@@ -59,7 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:text=" • "
+                    android:includeFontPadding="false"
+                    android:text="  •  "
                     android:textAlignment="center"
                     android:textSize="16dp"/>
 
@@ -69,7 +72,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:text="999 morceaux"
+                    android:includeFontPadding="false"
+                    android:text="999 titres"
                     android:textAlignment="center"
                     android:textSize="16dp"/>
 
@@ -78,7 +82,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ibm_plex_sans_medium"
-                    android:text=" • "
+                    android:includeFontPadding="false"
+                    android:text="  •  "
                     android:textAlignment="center"
                     android:textSize="16dp"/>
 
@@ -88,6 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:includeFontPadding="false"
                     android:text="99:99:99"
                     android:textAlignment="center"
                     android:textSize="16dp"/>
@@ -95,73 +101,97 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/best_song_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="12dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Morceaux les plus écoutés"/>
+                android:fontFamily="@font/ibm_plex_sans_bold"
+                android:includeFontPadding="false"
+                android:text="Titres les plus écoutés"
+                android:textSize="22sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_best_song"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:clipToPadding="false"
-                android:paddingBottom="82dp"/>
+                android:layout_marginTop="8dp"
+                android:nestedScrollingEnabled="false"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/album_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="12dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Albums"/>
+                android:fontFamily="@font/ibm_plex_sans_bold"
+                android:includeFontPadding="false"
+                android:text="Albums"
+                android:textSize="22sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_album"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:clipToPadding="false"
-                android:paddingBottom="82dp"/>
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/album_apparition_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="12dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Apparaits sur"/>
+                android:fontFamily="@font/ibm_plex_sans_bold"
+                android:includeFontPadding="false"
+                android:text="Apparait sur"
+                android:textSize="22sp"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_album_apparition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:clipToPadding="false"
-                android:paddingBottom="82dp"/>
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/biographie_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="12dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Biographie"/>
+                android:fontFamily="@font/ibm_plex_sans_bold"
+                android:includeFontPadding="false"
+                android:text="Biographie"
+                android:textSize="22sp"/>
 
             <TextView
                 android:id="@+id/artist_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Text"/>
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/ibm_plex_sans_medium"
+                android:includeFontPadding="false"
+                android:text="Text"
+                android:textAlignment="gravity"
+                android:textSize="14sp"/>
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

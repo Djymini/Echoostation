@@ -46,12 +46,16 @@ public class Artist {
     @ColumnInfo(name = "created_at")
     public  long createdAt;
 
+    @ColumnInfo(name = "last_played")
+    public  long lastPlayed;
+
     public Artist(@NonNull String name, String photoPath, String description, long statisticId) {
         this.name = name;
         this.photoPath = photoPath;
         this.description = description;
         this.statisticId = statisticId;
         this.createdAt = TimeUtilities.currentTimeMillis();
+        this.lastPlayed = 0;
     }
 
     @Ignore
@@ -68,6 +72,7 @@ public class Artist {
         this.description = description;
         this.statisticId = artist.statisticId;
         this.createdAt = artist.createdAt;
+        this.lastPlayed = artist.lastPlayed;
     }
 
     public Uri getPhoto(){

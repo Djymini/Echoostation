@@ -6,6 +6,7 @@ import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.helpers.StatisticHelper;
+import com.djymini.echoostation.utilities.TimeUtilities;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class MusicService {
 
             if(!musicDao.existsByPath(musicPath)){
                 long statisticId = statisticService.createStatistic();
-                Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, false, albumId, genreId, statisticId);
+                Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, albumId, genreId, statisticId);
                 long musicId = musicDao.insert(musicForAddInDb);
                 linkArtistWithMusic(artistIds, musicId);
 
@@ -82,6 +83,7 @@ public class MusicService {
 
     public void incrementListeningNumberStatistic(Music music){
         statisticHelper.incrementListeningNumber(music, music.id);
+        musicDao.updateLastPlay(music.id, TimeUtilities.currentTimeMillis());
     }
 
     public void incrementListeningTimeStatistic(Music music, long time){

@@ -16,12 +16,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.AlbumDto;
-import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
-import com.djymini.echoostation.utilities.TimeUtilities;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -131,7 +128,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
 
         AlbumViewHolder(@NonNull View itemView) {
             super(itemView);
-            albumName = itemView.findViewById(R.id.album_name);
+            albumName = itemView.findViewById(R.id.playlist_name);
             artist = itemView.findViewById(R.id.album_artist);
             cover = itemView.findViewById(R.id.album_cover);
             menuButton = itemView.findViewById(R.id.item_menu_button);

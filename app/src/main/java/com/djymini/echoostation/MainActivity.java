@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private MusicScannerViewModel musicScannerViewModel;
     private PermissionViewModel permissionViewModel;
     public LoaderMediaViewModel loaderMediaViewModel;
-    private MusicPlayerViewModel playerViewModel;
+    public MusicPlayerViewModel playerViewModel;
 
     public Navigator navigator;
     private boolean hasPermission = false;
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         BottomNavigationView bottomNavMenu = findViewById(R.id.bottom_nav_menu);
-        //FrameLayout miniPlayerContainer = findViewById(R.id.mini_player_container);
 
         playerViewModel = new ViewModelProvider(this).get(MusicPlayerViewModel.class);
 
@@ -67,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager(),
                 toolbar,
                 bottomNavMenu,
-                //miniPlayerContainer,
                 playerViewModel,
                 this.findViewById(R.id.main),
+                this,
                 this,
                 this,
                 this

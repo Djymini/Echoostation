@@ -86,7 +86,10 @@ public class MusicPlayerFragment extends Fragment {
                 playPauseButton.setImageResource(isPlaying ? R.drawable.round_pause_24 : R.drawable.round_play_arrow_24)
         );
 
-        viewModel.getCurrentItem().observe(getViewLifecycleOwner(), this::updateUI);
+        viewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
+            updateUI(item);
+
+        });
 
         viewModel.getRepeatMode().observe(getViewLifecycleOwner(), mode -> {
             switch (mode) {

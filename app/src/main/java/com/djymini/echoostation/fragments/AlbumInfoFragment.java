@@ -3,6 +3,8 @@ package com.djymini.echoostation.fragments;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.IntentSender;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,9 +13,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.media3.common.MediaMetadata;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,24 +35,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
-import com.djymini.echoostation.adapters.AlbumAdapter;
 import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.ui.MusicDialogManager;
-import com.djymini.echoostation.utilities.SortOption;
 import com.djymini.echoostation.utilities.TimeUtilities;
-import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -61,7 +59,6 @@ public class AlbumInfoFragment extends Fragment {
     private TextView albumName, albumDate, artistName, numberTrack, durationTotal;
     private Button playButton, shuffleButton;
 
-    private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerView;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAlbumAdapter adapter;
@@ -124,18 +121,48 @@ public class AlbumInfoFragment extends Fragment {
             album = getArguments().getParcelable(ARG_ALBUM);
             main = (MainActivity) getActivity();
         }
+        executor = Executors.newSingleThreadExecutor();
+
+        executor.execute(() -> {
+            musicList = main.dbService.getMusicDao().getMusicDetailByAlbum(album.id);
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album_info, container, false);
-        executor = Executors.newSingleThreadExecutor();
+
         bindView(view);
         setupUi();
         setupRecyclerView();
 
         loadMusics();
+
+        Toolbar toolbar = main.navigator.getToolbar(); // ou getActivity().findViewById(...)
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // Affiche le bouton retour
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            boolean nightMode = (getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+
+            Drawable upArrow = ContextCompat.getDrawable(requireContext(),
+                    nightMode ? R.drawable.round_arrow_back_24_night : R.drawable.round_arrow_back_24_normal);
+
+            if (upArrow != null) {
+                activity.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
+        }
+
+        // Gérer le clic
+        toolbar.setNavigationOnClickListener(v -> {
+            main.navigator.goBackToLibrary();
+        });
 
         return view;
     }
@@ -144,7 +171,7 @@ public class AlbumInfoFragment extends Fragment {
         backgroundImage = view.findViewById(R.id.background_image);
         albumImage = view.findViewById(R.id.album_image);
         artistImage = view.findViewById(R.id.artist_image);
-        albumName = view.findViewById(R.id.album_name);
+        albumName = view.findViewById(R.id.playlist_name);
         albumDate = view.findViewById(R.id.album_date);
         artistName = view.findViewById(R.id.artist_name);
         numberTrack = view.findViewById(R.id.number_tracks);
@@ -159,6 +186,14 @@ public class AlbumInfoFragment extends Fragment {
         setAlbumImage(backgroundImage);
         setAlbumImage(albumImage);
         setArtistImage();
+
+        playButton.setOnClickListener(v -> {
+            playAlbum();
+        });
+
+        shuffleButton.setOnClickListener(v -> {
+            shuffleAlbum();
+        });
     }
 
     private void setAlbumImage(ImageView imageView){
@@ -193,15 +228,10 @@ public class AlbumInfoFragment extends Fragment {
     }
 
     private void setNumberTrackAndDuration(){
-        executor.execute(() -> {
-            musicList = main.dbService.getMusicDao().getMusicDetailByAlbum(album.id);
-
-            String totalMusic = musicList.size() > 1 ? String.valueOf(musicList.size()) + " morceaux" : String.valueOf(musicList.size()) + " morceau";
-            String duration = "Durée : " + durationTotal();
-
-            numberTrack.setText(totalMusic);
-            durationTotal.setText(duration);
-        });
+        String totalMusic = musicList.size() > 1 ? String.valueOf(musicList.size()) + " morceaux" : String.valueOf(musicList.size()) + " morceau";
+        String duration = "Durée : " + durationTotal();
+        numberTrack.setText(totalMusic);
+        durationTotal.setText(duration);
     }
 
     private String durationTotal(){
@@ -238,7 +268,7 @@ public class AlbumInfoFragment extends Fragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                playerViewModel.playPlaylist(requireContext(), playlist, position);
+                main.playerViewModel.playPlaylist(requireContext(), playlist, position);
             }
         });
     }
@@ -297,21 +327,56 @@ public class AlbumInfoFragment extends Fragment {
     }
 
     private void sortAndDisplayMusics() {
-        if (currentMusicList == null) return;
+        if (musicList == null) return;
 
         executor.execute(() -> {
-            List<MusicDto> filtered = currentMusicList;
+            List<MusicDto> filtered = musicList;
             Collections.sort(filtered, (music1, music2) -> music1.track - music2.track);
 
-            //playlist = loadPlaylist(filtered);
+            playlist = loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });
     }
 
     private void loadMusics() {
-        main.dbService.getMusicDao().getMusicDetailByAlbumLive(album.id).observe(getViewLifecycleOwner(), musics -> {
-            currentMusicList = new ArrayList<>(musics);
-            sortAndDisplayMusics();
-        });
+        sortAndDisplayMusics();
+    }
+
+    private List<MediaItem> loadPlaylist(List<MusicDto> list) {
+        List<MediaItem> items = new ArrayList<>();
+        for (MusicDto music : list) {
+            MediaMetadata metadata = new MediaMetadata.Builder()
+                    .setTitle(music.title)
+                    .setArtist(music.artistName)
+                    .setAlbumTitle(music.albumName)
+                    .setArtworkUri(music.getCover())
+                    .setDurationMs(music.duration)
+                    .build();
+
+            MediaItem mediaItem = new MediaItem.Builder()
+                    .setUri(music.path)
+                    .setMediaId(String.valueOf(music.id))
+                    .setMediaMetadata(metadata)
+                    .build();
+
+            items.add(mediaItem);
+        }
+        return items;
+    }
+
+    private void playAlbum(){
+        main.playerViewModel.playPlaylist(requireContext(), playlist, 0);
+    }
+
+    private void shuffleAlbum(){
+        int musicPosition = (int) ( Math.random() * musicList.size()-1 );
+        main.playerViewModel.playPlaylist(requireContext(), playlist, musicPosition);
+        main.playerViewModel.toggleShuffle(requireContext());
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        executor.shutdownNow();
     }
 }
