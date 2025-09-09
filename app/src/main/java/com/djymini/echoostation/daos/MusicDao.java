@@ -273,8 +273,6 @@ public interface MusicDao {
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music am ON m.id = am.id_music " +
-            "JOIN artist ar ON ar.id = am.id_artist " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
             "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
@@ -283,7 +281,7 @@ public interface MusicDao {
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
             "   GROUP BY am_sorted.id_music " +
             ") AS artist_data ON artist_data.musicId = m.id " +
-            "WHERE ar.id = :artistId")
+            "WHERE artist_data.artistId = :artistId")
     LiveData<List<MusicDto>> getMusicDetailByArtistLive(long artistId);
 
     @Query("SELECT " +
@@ -299,8 +297,6 @@ public interface MusicDao {
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music am ON m.id = am.id_music " +
-            "JOIN artist ar ON ar.id = am.id_artist " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
             "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
@@ -309,7 +305,7 @@ public interface MusicDao {
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
             "   GROUP BY am_sorted.id_music " +
             ") AS artist_data ON artist_data.musicId = m.id " +
-            "WHERE ar.id = :artistId ORDER BY s.listening_number DESC LIMIT 5")
+            "WHERE artist_data.artistId = :artistId ORDER BY s.listening_number DESC LIMIT 5")
     LiveData<List<MusicDto>> getMusicDetailByArtistLiveBest5(long artistId);
 
     @Query("SELECT " +
@@ -325,8 +321,6 @@ public interface MusicDao {
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music am ON m.id = am.id_music " +
-            "JOIN artist ar ON ar.id = am.id_artist " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
             "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
@@ -351,8 +345,6 @@ public interface MusicDao {
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music am ON m.id = am.id_music " +
-            "JOIN artist ar ON ar.id = am.id_artist " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
             "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
@@ -377,8 +369,6 @@ public interface MusicDao {
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
-            "JOIN artist_music am ON m.id = am.id_music " +
-            "JOIN artist ar ON ar.id = am.id_artist " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
             "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +

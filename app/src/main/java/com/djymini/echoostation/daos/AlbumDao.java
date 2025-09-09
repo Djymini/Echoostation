@@ -106,7 +106,7 @@ public interface AlbumDao {
             "FROM album al " +
             "JOIN artist ar ON al.id_artist = ar.id " +
             "JOIN statistic s ON al.id_statistic = s.id " +
-            "ORDER BY s.month_listening_number DESC LIMIT 3")
+            "ORDER BY s.month_listening_number DESC LIMIT 6")
     LiveData<List<AlbumDto>> getTopAlbumsDetail();
 
     @Query("SELECT " +

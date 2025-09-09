@@ -6,7 +6,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="8dp"
+    android:paddingHorizontal="8dp"
+    android:clipToPadding="false"
+    android:paddingBottom="94dp"
     tools:context=".fragments.HomeFragment">
     <ScrollView
         android:layout_width="match_parent"
@@ -20,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+                android:layout_marginVertical="32dp">
                 <LinearLayout
                     android:layout_width="88dp"
                     android:layout_height="wrap_content"
@@ -131,17 +133,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:layout_marginTop="60dp"
                 android:background="@color/colorSecondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginVertical="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="18dp"
                     android:fontFamily="@font/ibm_plex_sans_bold_italic"
                     android:includeFontPadding="false"
                     android:text="@string/thematic_playlist"
@@ -414,17 +416,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:layout_marginTop="60dp"
                 android:background="@color/colorSecondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginVertical="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="18dp"
                     android:fontFamily="@font/ibm_plex_sans_bold_italic"
                     android:includeFontPadding="false"
                     android:text="@string/top_artist"
@@ -443,17 +445,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:layout_marginTop="60dp"
                 android:background="@color/colorSecondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginVertical="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="18dp"
                     android:fontFamily="@font/ibm_plex_sans_bold_italic"
                     android:includeFontPadding="false"
                     android:text="@string/top_album"
@@ -472,17 +474,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:layout_marginTop="60dp"
                 android:background="@color/colorSecondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginVertical="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="18dp"
                     android:fontFamily="@font/ibm_plex_sans_bold_italic"
                     android:includeFontPadding="false"
                     android:text="@string/recently_add"
@@ -501,17 +503,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
-                android:layout_marginTop="60dp"
                 android:background="@color/colorSecondary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginTop="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="18dp"
                     android:fontFamily="@font/ibm_plex_sans_bold_italic"
                     android:includeFontPadding="false"
                     android:text="@string/statistics"
@@ -692,7 +694,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="24dp">
                     <TextView
                         android:id="@+id/never_played"
                         android:layout_width="wrap_content"

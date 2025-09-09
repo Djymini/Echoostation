@@ -9,6 +9,7 @@ import androidx.media3.common.MediaMetadata;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,7 +94,6 @@ public class PlaylistListMusicFragment extends Fragment {
         setupButton();
         setupRecyclerView();
         sortAndDisplayMusics();
-
 
         return view;
     }
@@ -189,11 +189,8 @@ public class PlaylistListMusicFragment extends Fragment {
         if (musicList == null) return;
 
         executor.execute(() -> {
-            List<MusicDto> filtered = musicList;
-            Collections.sort(filtered, (music1, music2) -> music1.track - music2.track);
-
-            playlist = loadPlaylist(filtered);
-            requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
+            playlist = loadPlaylist(musicList);
+            requireActivity().runOnUiThread(() -> adapter.submitList(musicList));
         });
     }
 

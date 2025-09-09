@@ -3,7 +3,6 @@ package com.djymini.echoostation.fragments;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,7 +17,6 @@ import android.widget.TextView;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.PlaylistListMusicFragment;
-import com.djymini.echoostation.PlaylistType;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
 import com.djymini.echoostation.adapters.ArtistAdapter;
@@ -26,8 +24,6 @@ import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.utilities.SectionLibrary;
-import com.djymini.echoostation.utilities.SortOption;
-import com.djymini.echoostation.utilities.SortOptionArtist;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.views.ViewHomeData;
 
@@ -60,7 +56,7 @@ public class HomeFragment extends EchoostationFragment {
 
     private MainActivity main;
     private ExecutorService executor;
-    private List<ImageButton> imageButtonList = new ArrayList<>();
+    private final List<ImageButton> imageButtonList = new ArrayList<>();
 
     private RecyclerView recyclerViewTopArtist;
     private RecyclerView recyclerViewTopAlbum;
@@ -215,9 +211,7 @@ public class HomeFragment extends EchoostationFragment {
     private void sortAndDisplayArtists() {
         if (topArtistList == null) return;
 
-        executor.execute(() -> {
-            requireActivity().runOnUiThread(() -> artistAdapter.submitList(topArtistList));
-        });
+        executor.execute(() -> requireActivity().runOnUiThread(() -> artistAdapter.submitList(topArtistList)));
     }
 
     private void loadArtists() {
@@ -282,17 +276,13 @@ public class HomeFragment extends EchoostationFragment {
     private void sortAndDisplayAlbums() {
         if (topAlbumList == null) return;
 
-        executor.execute(() -> {
-            requireActivity().runOnUiThread(() -> albumAdapter.submitList(topAlbumList));
-        });
+        executor.execute(() -> requireActivity().runOnUiThread(() -> albumAdapter.submitList(topAlbumList)));
     }
 
     private void sortAndDisplayRecentAlbums() {
         if (recentAlbumList == null) return;
 
-        executor.execute(() -> {
-            requireActivity().runOnUiThread(() -> recentAlbumAdapter.submitList(recentAlbumList));
-        });
+        executor.execute(() -> requireActivity().runOnUiThread(() -> recentAlbumAdapter.submitList(recentAlbumList)));
     }
 
     private void loadAlbums() {

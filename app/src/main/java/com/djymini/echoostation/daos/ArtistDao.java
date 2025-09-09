@@ -54,7 +54,7 @@ public interface ArtistDao {
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
             "FROM artist ar " +
             "JOIN statistic s ON ar.id_statistic = s.id " +
-            "ORDER BY s.month_listening_number DESC LIMIT 3")
+            "ORDER BY s.month_listening_number DESC LIMIT 6")
     LiveData<List<ArtistDto>> getTopDetailLive();
 
     @Query("SELECT * FROM artist")
