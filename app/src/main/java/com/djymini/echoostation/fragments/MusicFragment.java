@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ public class MusicFragment extends EchoostationFragment {
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
     private TextView musicCounterView;
+    private ImageButton shuffleButton;
     private Spinner spinner;
     private String search;
     private ActionMode actionMode;
@@ -124,6 +126,11 @@ public class MusicFragment extends EchoostationFragment {
         recyclerView = view.findViewById(R.id.recycler_view_song);
         musicCounterView = view.findViewById(R.id.number_music);
         spinner = view.findViewById(R.id.spinner);
+        shuffleButton = view.findViewById(R.id.shuffle_button);
+
+        shuffleButton.setOnClickListener(v -> {
+            shuffleMusic();
+        });
 
         setupRecyclerView();
         setupSpinner();
@@ -344,6 +351,12 @@ public class MusicFragment extends EchoostationFragment {
         }
 
         return items;
+    }
+
+    private void shuffleMusic(){
+        int musicPosition = (int) ( Math.random() * currentMusicList.size()-1 );
+        main.playerViewModel.playPlaylist(requireContext(), playlist, musicPosition);
+        main.playerViewModel.toggleShuffle(requireContext());
     }
 
     @Override

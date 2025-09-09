@@ -275,14 +275,14 @@ public interface MusicDao {
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
-            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist) AS artistId, " +
             "          GROUP_CONCAT(a.name, ', ') AS artistName " +
             "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
             "   GROUP BY am_sorted.id_music " +
             ") AS artist_data ON artist_data.musicId = m.id " +
-            "WHERE artist_data.artistId = :artistId")
-    LiveData<List<MusicDto>> getMusicDetailByArtistLive(long artistId);
+            "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%')")
+    LiveData<List<MusicDto>> getMusicDetailByArtistLive(String artistId);
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
@@ -299,14 +299,16 @@ public interface MusicDao {
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
-            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist) AS artistId, " +
             "          GROUP_CONCAT(a.name, ', ') AS artistName " +
-            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
-            "   JOIN artist a ON a.id = am_sorted.id_artist " +
-            "   GROUP BY am_sorted.id_music " +
-            ") AS artist_data ON artist_data.musicId = m.id " +
-            "WHERE artist_data.artistId = :artistId ORDER BY s.listening_number DESC LIMIT 5")
-    LiveData<List<MusicDto>> getMusicDetailByArtistLiveBest5(long artistId);
+                    "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+                    "   JOIN artist a ON a.id = am_sorted.id_artist " +
+                    "   GROUP BY am_sorted.id_music " +
+                    ") AS artist_data ON artist_data.musicId = m.id " +
+                    "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%') " +
+                    "ORDER BY s.listening_number DESC LIMIT 5")
+    LiveData<List<MusicDto>> getMusicDetailByArtistLiveBest5(String artistId);
+
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +

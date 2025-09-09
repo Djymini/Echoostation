@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:paddingBottom="12dp"
+    android:orientation="vertical"
+    android:gravity="center">
+    <androidx.cardview.widget.CardView
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        app:cardCornerRadius="100dp"
+        android:backgroundTint="@color/colorThird">
+        <ImageButton
+            android:id="@+id/image_button"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:contentDescription="@string/image_button_home"
+            android:scaleType="fitCenter" />
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/name_button"
+        android:layout_width="66dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/ibm_plex_sans_medium"
+        android:includeFontPadding="false"
+        android:textColor="@color/colorTextSecond"
+        android:textSize="12sp"
+        android:textAlignment="center"
+        android:singleLine="true"
+        android:ellipsize="end"/>
+</LinearLayout>

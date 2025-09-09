@@ -110,25 +110,25 @@ public class PlaylistListMusicFragment extends Fragment {
                 case "Les plus écoutés":
                     playlistDefaultImage = R.drawable.round_trending_up_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Mix Good vibe":
+                case "Good vibe":
                     playlistDefaultImage = R.drawable.round_sentiment_very_satisfied_24;
                     return main.dbService.getMusicDao().getMusicDetailRecentlyLstening();
-                case "Mix Motivation":
+                case "Motivation":
                     playlistDefaultImage = R.drawable.round_fitness_center_24;
                     return main.dbService.getMusicDao().getMusicDetailFavorite();
-                case "Mix Fête":
+                case "Fête":
                     playlistDefaultImage = R.drawable.outline_celebration_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Mix Détente":
+                case "Détente":
                     playlistDefaultImage = R.drawable.outline_spa_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Mix Nuit":
+                case "Nuit":
                     playlistDefaultImage = R.drawable.outline_bedtime_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Mix Tristesse":
+                case "Tristesse":
                     playlistDefaultImage = R.drawable.round_sentiment_dissatisfied_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Mix Travail":
+                case "Travail":
                     playlistDefaultImage = R.drawable.outline_work_outline_24;
                     return main.dbService.getMusicDao().getMusicDetailMostListening();
             }

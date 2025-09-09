@@ -2,6 +2,8 @@ package com.djymini.echoostation.utilities;
 
 import android.Manifest;
 import android.net.Uri;
+import com.djymini.echoostation.BuildConfig;
+
 
 public class Constants {
     // -------- Default values --------
@@ -41,9 +43,10 @@ public class Constants {
             "SETTINGS"
     };
 
-    public static final String TA_CLE_LASTFM = "aec501537ea2718240cfaf622d475498";
-    public static final String CLIENT_ID = "5483e1a14ad24b0eae06efe014080a3d";
-    public static final String CLIENT_SECRET = "460c521e59e2491480613ca0d2d4b237";
+    // -------- API Keys --------
+    public static final String TA_CLE_LASTFM = BuildConfig.CLE_LASTFM;
+    public static final String CLIENT_ID = BuildConfig.CLIENT_ID_SPOTIFY;
+    public static final String CLIENT_SECRET = BuildConfig.CLIENT_SECRET_SPOTIFY;
 
     // -------- Misc --------
     public static final long TIME_UNSET = 0;

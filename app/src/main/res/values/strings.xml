@@ -98,7 +98,7 @@
     <string name="favoris">Favoris</string>
     <string name="most_listening_icon_description">most listening icon</string>
     <string name="most_listening">Les plus écoutés</string>
-    <string name="thematic_playlist">PLAYLISTS THEMATIQUES</string>
+    <string name="thematic_playlist">MIXES</string>
     <string name="good_vibe_icon_description">good vibe icon</string>
     <string name="good_vibe">Good vibe</string>
     <string name="motivation_icon_description">Motivation icon</string>
@@ -108,8 +108,8 @@
     <string name="night">Nuit</string>
     <string name="sad">Tristesse</string>
     <string name="work">Travail</string>
-    <string name="top_artist">TOP ARTISTES</string>
-    <string name="top_album">TOP ALBUMS</string>
+    <string name="top_artist">TOP ARTISTES DU MOIS</string>
+    <string name="top_album">TOP ALBUMS DU MOIS</string>
     <string name="recently_add">AJOUTES RECEMENTS</string>
     <string name="statistics">STATISTIQUES</string>
     <string name="mounth_statistics">STATISTIQUES DU MOIS</string>
@@ -124,4 +124,5 @@
     <string name="sad_icon_description">Sad icon</string>
     <string name="work_icon_description">Work icon</string>
     <string name="night_icon_description">Night icon</string>
+    <string name="image_button_home">Image button home</string>
 </resources>

@@ -16,4 +16,17 @@
 
     <color name="transparenceColor">#0D0D172F</color>
     <color name="trueTransparenceColor">#000D172F</color>
+
+    <color name="good_vibe_color">#FFB400</color>
+    <color name="motivation_color">#00C853</color>
+    <color name="fete_color">#FF4081</color>
+    <color name="detente_color">#26C6DA</color>
+    <color name="nuit_color">#7E57C2</color>
+    <color name="tristesse_color">#1E88E5</color>
+    <color name="gaming_color">#FF6D00</color>
+    <color name="matin_color">#FDD835</color>
+    <color name="marche_color">#43A047</color>
+    <color name="conduite_color">#00897B</color>
+    <color name="travail_color">#546E7A</color>
+    <color name="reflexion_color">#D81B60</color>
 </resources>

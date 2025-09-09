@@ -199,7 +199,7 @@ public class ArtistInfoFragment extends Fragment {
     }
 
     private void loadMusics() {
-        main.dbService.getMusicDao().getMusicDetailByArtistLiveBest5(artist.id).observe(getViewLifecycleOwner(), musics -> {
+        main.dbService.getMusicDao().getMusicDetailByArtistLiveBest5(String.valueOf(artist.id)).observe(getViewLifecycleOwner(), musics -> {
             bestListeningSong = new ArrayList<>(musics);
             sortAndDisplayBestMusics();
 
@@ -211,7 +211,7 @@ public class ArtistInfoFragment extends Fragment {
             sortAndDisplayAlbum();
         });
 
-        main.dbService.getMusicDao().getMusicDetailByArtistLive(artist.id).observe(getViewLifecycleOwner(), musics -> {
+        main.dbService.getMusicDao().getMusicDetailByArtistLive(String.valueOf(artist.id)).observe(getViewLifecycleOwner(), musics -> {
             currentMusicList = new ArrayList<>(musics);
             durationTotal.setText(durationTotal(musics));
             numberTrack.setText(currentMusicList.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau");

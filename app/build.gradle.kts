@@ -2,9 +2,18 @@ plugins {
     id("com.android.application")
 }
 
+val CLE_LASTFM: String = if (project.hasProperty("CLE_LASTFM")) project.property("CLE_LASTFM") as String else ""
+val CLIENT_ID_SPOTIFY: String = if (project.hasProperty("CLIENT_ID_SPOTIFY")) project.property("CLIENT_ID_SPOTIFY") as String else ""
+val CLIENT_SECRET_SPOTIFY: String = if (project.hasProperty("CLIENT_SECRET_SPOTIFY")) project.property("CLIENT_SECRET_SPOTIFY") as String else ""
+
+
 android {
     namespace = "com.djymini.echoostation"
     compileSdk = 35
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.djymini.echoostation"
@@ -20,6 +29,10 @@ android {
                 arguments.put("room.schemaLocation", "$projectDir/schemas")
             }
         }
+
+        buildConfigField("String", "CLE_LASTFM", "\"$CLE_LASTFM\"")
+        buildConfigField("String", "CLIENT_ID_SPOTIFY", "\"$CLIENT_ID_SPOTIFY\"")
+        buildConfigField("String", "CLIENT_SECRET_SPOTIFY", "\"$CLIENT_SECRET_SPOTIFY\"")
     }
 
     buildTypes {
@@ -36,6 +49,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+
 
 dependencies {
     implementation(libs.appcompat)

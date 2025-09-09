@@ -12,6 +12,11 @@
        android:gravity="center_vertical"
        android:paddingHorizontal="8dp"
        android:background="@color/colorSecondary">
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+         android:layout_alignParentTop="true"
+          android:background="@color/colorThird"/>
 
       <Spinner
           android:id="@+id/spinner"
@@ -22,6 +27,7 @@
           android:entries="@array/sort_categories"/>
 
       <ImageButton
+          android:id="@+id/shuffle_button"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
