@@ -20,16 +20,20 @@ import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
+import com.djymini.echoostation.utilities.SortOption;
 import com.djymini.echoostation.utilities.TimeUtilities;
+import com.l4digital.fastscroll.FastScrollRecyclerView;
+import com.l4digital.fastscroll.FastScroller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> {
+public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHolder> implements FastScroller.SectionIndexer {
     private final List<MusicDto> musics = new ArrayList<>();
     private final Set<MusicDto> selectedItems = new HashSet<>();
+    private SortOption currentSort = SortOption.TITLE_ASC;
     private OnMusicMenuClickListener menuClickListener;
     private OnItemLongClickListener longClickListener;
     private OnItemClickListener clickListener;
@@ -172,7 +176,41 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MusicViewHol
         }
     }
 
+    public void setSortOption(SortOption option) {
+        this.currentSort = option;
+        notifyDataSetChanged();
+    }
+
     public Set<MusicDto> getSelectedItems() {
         return selectedItems;
+    }
+
+    @NonNull
+    @Override
+    public String getSectionText(int position) {
+        if (musics.isEmpty() || position < 0 || position >= musics.size()) {
+            return "";
+        }
+
+        MusicDto music = musics.get(position);
+        switch (currentSort) {
+            case ARTIST_ASC:
+            case ARTIST_DESC:
+                return music.artistName != null && !music.artistName.isEmpty()
+                        ? music.artistName.substring(0, 1).toUpperCase()
+                        : "#";
+            case ALBUM_ASC:
+            case ALBUM_DESC:
+                return music.albumName != null && !music.albumName.isEmpty()
+                        ? music.albumName.substring(0, 1).toUpperCase()
+                        : "#";
+            case DURATION_ASC:
+            case DURATION_DESC:
+                return TimeUtilities.formatDuration(music.duration);
+            default: // TITLE
+                return music.title != null && !music.title.isEmpty()
+                        ? music.title.substring(0, 1).toUpperCase()
+                        : "#";
+        }
     }
 }

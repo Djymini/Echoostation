@@ -2,9 +2,9 @@ plugins {
     id("com.android.application")
 }
 
-val CLE_LASTFM: String = if (project.hasProperty("CLE_LASTFM")) project.property("CLE_LASTFM") as String else ""
-val CLIENT_ID_SPOTIFY: String = if (project.hasProperty("CLIENT_ID_SPOTIFY")) project.property("CLIENT_ID_SPOTIFY") as String else ""
-val CLIENT_SECRET_SPOTIFY: String = if (project.hasProperty("CLIENT_SECRET_SPOTIFY")) project.property("CLIENT_SECRET_SPOTIFY") as String else ""
+val cleLastfm: String = if (project.hasProperty("CLE_LASTFM")) project.property("CLE_LASTFM") as String else ""
+val clientIdSpotify: String = if (project.hasProperty("CLIENT_ID_SPOTIFY")) project.property("CLIENT_ID_SPOTIFY") as String else ""
+val clientSecretSpotify: String = if (project.hasProperty("CLIENT_SECRET_SPOTIFY")) project.property("CLIENT_SECRET_SPOTIFY") as String else ""
 
 
 android {
@@ -30,9 +30,9 @@ android {
             }
         }
 
-        buildConfigField("String", "CLE_LASTFM", "\"$CLE_LASTFM\"")
-        buildConfigField("String", "CLIENT_ID_SPOTIFY", "\"$CLIENT_ID_SPOTIFY\"")
-        buildConfigField("String", "CLIENT_SECRET_SPOTIFY", "\"$CLIENT_SECRET_SPOTIFY\"")
+        buildConfigField("String", "CLE_LASTFM", "\"$cleLastfm\"")
+        buildConfigField("String", "CLIENT_ID_SPOTIFY", "\"$clientIdSpotify\"")
+        buildConfigField("String", "CLIENT_SECRET_SPOTIFY", "\"$clientSecretSpotify\"")
     }
 
     buildTypes {
@@ -93,4 +93,8 @@ dependencies {
     // OkHttp pour intercepteurs (facultatif mais pratique)
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // Scrollbar
+    implementation("io.github.l4digital:fastscroll:2.1.0")
+
 }

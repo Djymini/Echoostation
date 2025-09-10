@@ -1,26 +1,16 @@
 package com.djymini.echoostation.fragments;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ContentUris;
-import android.content.IntentSender;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.media3.common.MediaItem;
-import androidx.media3.common.MediaMetadata;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import androidx.appcompat.view.ActionMode;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,17 +22,15 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
-import com.djymini.echoostation.adapters.MusicAlbumAdapter;
-import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.ui.MusicDialogManager;
+import com.djymini.echoostation.helpers.MediaItemHelper;
+import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.SortOption;
-import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
+import com.l4digital.fastscroll.FastScrollRecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -53,16 +41,13 @@ import java.util.stream.Collectors;
 import java.util.concurrent.Executors;
 
 public class MusicFragment extends EchoostationFragment {
-    private RecyclerView recyclerView;
+    private FastScrollRecyclerView recyclerView;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private MusicAdapter adapter;
     private TextView musicCounterView;
-    private ImageButton shuffleButton;
     private Spinner spinner;
     private String search;
     private ActionMode actionMode;
-    private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
-    private List<MusicDto> musicsPendingDeletion;
     private ExecutorService executor;
     private List<MediaItem> playlist;
     private MainActivity main;
@@ -83,7 +68,7 @@ public class MusicFragment extends EchoostationFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
                 Set<MusicDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
-                confirmAndDeleteSelectedMusics(selectedCopy);
+                main.deleteManager.confirmAndDeleteSelectedMusics(selectedCopy, requireContext(), MusicFragment.this, executor);
                 mode.finish();
                 return true;
             }
@@ -108,15 +93,11 @@ public class MusicFragment extends EchoostationFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
-
-        EchooStationDatabase db = DatabaseClient.getInstance(requireContext()).getDatabase();
-        setupDaoAndService(db);
-
+        setupDaoAndService(main);
         executor = Executors.newSingleThreadExecutor();
 
         setupUI(view);
         setupObservers();
-
         loadMusics();
 
         return view;
@@ -126,21 +107,22 @@ public class MusicFragment extends EchoostationFragment {
         recyclerView = view.findViewById(R.id.recycler_view_song);
         musicCounterView = view.findViewById(R.id.number_music);
         spinner = view.findViewById(R.id.spinner);
-        shuffleButton = view.findViewById(R.id.shuffle_button);
+        ImageButton shuffleButton = view.findViewById(R.id.shuffle_button);
 
-        shuffleButton.setOnClickListener(v -> {
-            shuffleMusic();
-        });
+        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleMusic(currentMusicList, playlist, main, requireContext()));
 
         setupRecyclerView();
         setupSpinner();
-        setupDeleteLauncher();
+        main.deleteManager.setupDeleteLauncher(executor, this);
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MusicAdapter();
-        recyclerView.setAdapter(adapter);
+        RecyclerViewHelper.setupRecyclerViewLinear(recyclerView, getContext(), adapter, LinearLayoutManager.VERTICAL, true);
+
+        recyclerView.setBubbleColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary));
+        recyclerView.setBubbleTextColor(ContextCompat.getColor(requireContext(), R.color.colorText));
+        recyclerView.setHandleColor(ContextCompat.getColor(requireContext(), R.color.colorThird));
 
         adapter.setOnMusicMenuClickListener((music, anchorView) -> {
             if (getActivity() instanceof MainActivity) {
@@ -197,7 +179,6 @@ public class MusicFragment extends EchoostationFragment {
 
     private void setupObservers() {
         ShareSearchViewModel searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
-        //main.playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
 
         searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
             search = query;
@@ -213,23 +194,6 @@ public class MusicFragment extends EchoostationFragment {
                 // TODO visuel item sélectionné
             }
         });
-    }
-
-    private void setupDeleteLauncher() {
-        deleteMultipleLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartIntentSenderForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && musicsPendingDeletion != null) {
-                        List<MusicDto> toDelete = new ArrayList<>(musicsPendingDeletion);
-                        executor.execute(() -> {
-                            for (MusicDto music : toDelete) {
-                                musicDao.deleteById(music.id);
-                            }
-                        });
-                    }
-                    musicsPendingDeletion = null;
-                }
-        );
     }
 
 
@@ -255,9 +219,11 @@ public class MusicFragment extends EchoostationFragment {
             if (position >= 0 && position < SortOption.values().length) {
                 SortOption option = SortOption.values()[position];
                 filtered.sort(option.getComparator());
+
+                requireActivity().runOnUiThread(() -> adapter.setSortOption(option));
             }
 
-            playlist = loadPlaylist(filtered);
+            playlist = MediaItemHelper.loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });
     }
@@ -283,80 +249,6 @@ public class MusicFragment extends EchoostationFragment {
         } else {
             actionMode.setTitle(count + getString(R.string.item_selected));
         }
-    }
-
-    private void deleteSelectedMusics(Set<MusicDto> selected) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            List<Uri> uris = new ArrayList<>();
-            for (MusicDto music : selected) {
-                long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
-                if (mediaStoreId != -1) {
-                    uris.add(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId));
-                }
-            }
-
-            if (!uris.isEmpty()) {
-                musicsPendingDeletion = new ArrayList<>(selected);
-                IntentSender sender = MediaStore.createDeleteRequest(
-                        requireActivity().getContentResolver(), uris
-                ).getIntentSender();
-                deleteMultipleLauncher.launch(new IntentSenderRequest.Builder(sender).build());
-            }
-        } else {
-            executor.execute(() -> {
-                for (MusicDto music : selected) {
-                    long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
-                    if (mediaStoreId != -1) {
-                        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId);
-                        int deleted = requireActivity().getContentResolver().delete(uri, null, null);
-                        if (deleted > 0) {
-                            musicDao.deleteById(music.id);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-
-    private void confirmAndDeleteSelectedMusics(Set<MusicDto> selected) {
-        if (selected.isEmpty()) return;
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.delete_music))
-                .setMessage(getString(R.string.delete_request1) + selected.size() + getString(R.string.delete_request2))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> deleteSelectedMusics(selected))
-                .setNegativeButton(getString(R.string.no), null)
-                .show();
-    }
-
-    private List<MediaItem> loadPlaylist(List<MusicDto> list) {
-        List<MediaItem> items = new ArrayList<>();
-        for (MusicDto music : list) {
-            MediaMetadata metadata = new MediaMetadata.Builder()
-                    .setTitle(music.title)
-                    .setArtist(music.artistName)
-                    .setAlbumTitle(music.albumName)
-                    .setArtworkUri(music.getCover())
-                    .setDurationMs(music.duration)
-                    .build();
-
-            MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
-                    .setMediaId(String.valueOf(music.id))
-                    .setMediaMetadata(metadata)
-                    .build();
-
-            items.add(mediaItem);
-        }
-
-        return items;
-    }
-
-    private void shuffleMusic(){
-        int musicPosition = (int) ( Math.random() * currentMusicList.size()-1 );
-        main.playerViewModel.playPlaylist(requireContext(), playlist, musicPosition);
-        main.playerViewModel.toggleShuffle(requireContext());
     }
 
     @Override

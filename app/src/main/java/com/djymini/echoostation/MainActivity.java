@@ -3,7 +3,6 @@ package com.djymini.echoostation;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -17,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.djymini.echoostation.fragments.TrueMusicPlayer;
 import com.djymini.echoostation.helpers.AppInitializer;
+import com.djymini.echoostation.helpers.DeleteManager;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.Navigator;
 import com.djymini.echoostation.helpers.PermissionManager;
@@ -32,11 +31,11 @@ import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewMod
 import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModel;
 import com.djymini.echoostation.viewModels.permissionViewModel.PermissionViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class MainActivity extends AppCompatActivity {
     public DatabaseService dbService;
     public AppInitializer appInitializer;
+    public DeleteManager deleteManager;
 
     private MusicScannerViewModel musicScannerViewModel;
     private PermissionViewModel permissionViewModel;
@@ -86,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         setupPermissionViewModel();
         setupMusicScanViewModel();
+        deleteManager = new DeleteManager(this, this);
 
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }

@@ -127,15 +127,15 @@ public class HomeFragment extends EchoostationFragment {
 
     private void setupRecyclerViewButton(){
         HomeImageButtonAdapter homeImageButtonAdapterMix = new HomeImageButtonAdapter(homeImageButtonListMix, main);
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewButtonMix, getContext(), homeImageButtonAdapterMix, 4, true);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewButtonMix, getContext(), homeImageButtonAdapterMix, 4, false);
 
         HomeImageButtonAdapter homeImageButtonAdapterPrimary = new HomeImageButtonAdapter(homeImageButtonListPrimary, main);
-        RecyclerViewHelper.setupRecyclerViewLinear(recyclerViewButtonPrimary, getContext(), homeImageButtonAdapterPrimary, LinearLayoutManager.HORIZONTAL, true);
+        RecyclerViewHelper.setupRecyclerViewLinear(recyclerViewButtonPrimary, getContext(), homeImageButtonAdapterPrimary, LinearLayoutManager.HORIZONTAL, false);
     }
 
     private void setupRecyclerViewTopArtist() {
         artistAdapter = new ArtistAdapter();
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopArtist, getContext(), artistAdapter, 3, true);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopArtist, getContext(), artistAdapter, 3, false);
 
         artistAdapter.setOnItemClickListener(position -> {
             Fragment fragment = ArtistInfoFragment.newInstance(artistAdapter.getCurrentList().get(position));
@@ -145,7 +145,7 @@ public class HomeFragment extends EchoostationFragment {
 
     private void setupRecyclerViewTopAlbum() {
         albumAdapter = new AlbumAdapter();
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopAlbum, getContext(), albumAdapter, 3, true);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopAlbum, getContext(), albumAdapter, 3, false);
 
         albumAdapter.setOnItemClickListener(position -> {
             Fragment fragment = AlbumInfoFragment.newInstance(albumAdapter.getCurrentList().get(position));
@@ -155,7 +155,7 @@ public class HomeFragment extends EchoostationFragment {
 
     private void setupRecyclerViewRecentAlbum() {
         recentAlbumAdapter = new AlbumAdapter();
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewAlbumRecentlyAdded, getContext(), recentAlbumAdapter, 3, true);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewAlbumRecentlyAdded, getContext(), recentAlbumAdapter, 3, false);
 
         recentAlbumAdapter.setOnItemClickListener(position -> {
             Fragment fragment = AlbumInfoFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position));

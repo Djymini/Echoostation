@@ -3,6 +3,7 @@ package com.djymini.echoostation.fragments;
 import androidx.fragment.app.Fragment;
 
 import com.djymini.echoostation.EchooStationDatabase;
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
@@ -31,14 +32,14 @@ public class EchoostationFragment extends Fragment{
     public MusicService musicService;
     public StatisticService statisticService;
 
-    public void setupDaoAndService(EchooStationDatabase db){
-        musicDao = db.musicDao();
-        statisticDao = db.statisticDao();
-        artistDao = db.artistDao();
-        albumDao = db.albumDao();
-        genreDao = db.genreDao();
-        moodDao = db.moodDao();
-        playlistDao = db.playlistDao();
+    public void setupDaoAndService(MainActivity main){
+        musicDao = main.dbService.getMusicDao();
+        statisticDao = main.dbService.getStatisticDao();
+        artistDao = main.dbService.getArtistDao();
+        albumDao = main.dbService.getAlbumDao();
+        genreDao = main.dbService.getGenreDao();
+        moodDao = main.dbService.getMoodDao();
+        playlistDao = main.dbService.getPlaylistDao();
 
         statisticService = new StatisticService(statisticDao);
         albumService = new AlbumService(albumDao, statisticDao, statisticService);

@@ -93,9 +93,7 @@ public class AlbumFragment extends EchoostationFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
-
-        EchooStationDatabase db = DatabaseClient.getInstance(requireContext()).getDatabase();
-        setupDaoAndService(db);
+        setupDaoAndService((MainActivity) getActivity());
 
         executor = Executors.newSingleThreadExecutor();
 
