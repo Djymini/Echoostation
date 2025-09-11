@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "ea2f4ae7a3b00beefccda61028a7595a",
+    "identityHash": "4f4705af8e69b6f4493ea27bfbcb6459",
     "entities": [
       {
         "tableName": "album",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `cover_path` TEXT, `year` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `cover_path` TEXT, `year` INTEGER NOT NULL, `id_artist` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `last_played` INTEGER NOT NULL, FOREIGN KEY(`id_artist`) REFERENCES `artist`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -46,6 +46,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPlayed",
+            "columnName": "last_played",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -112,7 +118,7 @@
       },
       {
         "tableName": "artist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `photo_path` TEXT, `description` TEXT, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `photo_path` TEXT, `description` TEXT, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `last_played` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -145,6 +151,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPlayed",
+            "columnName": "last_played",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -266,7 +278,7 @@
       },
       {
         "tableName": "genre",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `last_played` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -289,6 +301,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPlayed",
+            "columnName": "last_played",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -404,7 +422,7 @@
       },
       {
         "tableName": "music",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT NOT NULL, `title` TEXT NOT NULL, `duration` INTEGER NOT NULL, `track` INTEGER NOT NULL, `is_favorite` INTEGER NOT NULL, `id_album` INTEGER NOT NULL, `id_genre` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_album`) REFERENCES `album`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_genre`) REFERENCES `genre`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT NOT NULL, `title` TEXT NOT NULL, `duration` INTEGER NOT NULL, `track` INTEGER NOT NULL, `is_favorite` INTEGER NOT NULL, `is_good` INTEGER NOT NULL, `is_motived` INTEGER NOT NULL, `is_music_party` INTEGER NOT NULL, `is_chill` INTEGER NOT NULL, `is_night` INTEGER NOT NULL, `is_sad` INTEGER NOT NULL, `is_work_music` INTEGER NOT NULL, `id_album` INTEGER NOT NULL, `id_genre` INTEGER NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `last_played` INTEGER NOT NULL, FOREIGN KEY(`id_album`) REFERENCES `album`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_genre`) REFERENCES `genre`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -443,6 +461,48 @@
             "notNull": true
           },
           {
+            "fieldPath": "isGood",
+            "columnName": "is_good",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMotived",
+            "columnName": "is_motived",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isMusicParty",
+            "columnName": "is_music_party",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isChill",
+            "columnName": "is_chill",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNight",
+            "columnName": "is_night",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isSad",
+            "columnName": "is_sad",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isWorkMusic",
+            "columnName": "is_work_music",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "albumId",
             "columnName": "id_album",
             "affinity": "INTEGER",
@@ -463,6 +523,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPlayed",
+            "columnName": "last_played",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -696,7 +762,7 @@
       },
       {
         "tableName": "playlist",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `id_statistic` INTEGER NOT NULL, `created_at` INTEGER NOT NULL, `last_played` INTEGER NOT NULL, FOREIGN KEY(`id_statistic`) REFERENCES `statistic`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -719,6 +785,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "created_at",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastPlayed",
+            "columnName": "last_played",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -808,7 +880,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ea2f4ae7a3b00beefccda61028a7595a')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '4f4705af8e69b6f4493ea27bfbcb6459')"
     ]
   }
 }

@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#f5fafd</color>
-    <color name="colorSecondary">#f1f8fc</color>
-    <color name="colorThird">#ebf5fb</color>
-    <color name="shadowColor">#000000</color>
-    <color name="colorText">#02070a</color>
-    <color name="disableText">#b0b5b8</color>
     <color name="accentColor">#2892d7</color>
-    <color name="selectedColor">#3cabc3</color>
+
+    <color name="colorPrimary">#F5F9FC</color>
+    <color name="colorSecondary">#E3EFF7</color>
+    <color name="colorThird">#C9E2F2</color>
+
+    <color name="colorText">#0D1B2A</color>
+    <color name="colorTextSecond">#334155</color>
+    <color name="disableText">#a8afb6</color>
+
+    <color name="shadowColor">#000000</color>
+
+    <color name="selectedColor">#1D75B5</color>
+
     <color name="transparenceColor">#0D0D172F</color>
     <color name="trueTransparenceColor">#000D172F</color>
+
+    <color name="good_vibe_color">#FFB400</color>
+    <color name="motivation_color">#00C853</color>
+    <color name="fete_color">#FF4081</color>
+    <color name="detente_color">#26C6DA</color>
+    <color name="nuit_color">#7E57C2</color>
+    <color name="tristesse_color">#1E88E5</color>
+    <color name="gaming_color">#FF6D00</color>
+    <color name="matin_color">#FDD835</color>
+    <color name="marche_color">#43A047</color>
+    <color name="conduite_color">#00897B</color>
+    <color name="travail_color">#546E7A</color>
+    <color name="reflexion_color">#D81B60</color>
 </resources>

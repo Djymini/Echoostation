@@ -2,9 +2,18 @@ plugins {
     id("com.android.application")
 }
 
+val cleLastfm: String = if (project.hasProperty("CLE_LASTFM")) project.property("CLE_LASTFM") as String else ""
+val clientIdSpotify: String = if (project.hasProperty("CLIENT_ID_SPOTIFY")) project.property("CLIENT_ID_SPOTIFY") as String else ""
+val clientSecretSpotify: String = if (project.hasProperty("CLIENT_SECRET_SPOTIFY")) project.property("CLIENT_SECRET_SPOTIFY") as String else ""
+
+
 android {
     namespace = "com.djymini.echoostation"
     compileSdk = 35
+
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.djymini.echoostation"
@@ -20,6 +29,10 @@ android {
                 arguments.put("room.schemaLocation", "$projectDir/schemas")
             }
         }
+
+        buildConfigField("String", "CLE_LASTFM", "\"$cleLastfm\"")
+        buildConfigField("String", "CLIENT_ID_SPOTIFY", "\"$clientIdSpotify\"")
+        buildConfigField("String", "CLIENT_SECRET_SPOTIFY", "\"$clientSecretSpotify\"")
     }
 
     buildTypes {
@@ -36,6 +49,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
+
 
 dependencies {
     implementation(libs.appcompat)
@@ -71,4 +85,16 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.8.0")
     implementation("androidx.media3:media3-ui-compose:1.8.0")
     implementation ("androidx.media3:media3-session:1.8.0")
+
+    // Retrofit pour les appels API
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // OkHttp pour intercepteurs (facultatif mais pratique)
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
+    // Scrollbar
+    implementation("io.github.l4digital:fastscroll:2.1.0")
+
 }

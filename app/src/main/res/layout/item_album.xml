@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:paddingHorizontal="12dp"
+    android:layout_marginBottom="24dp"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp">
+        <ImageView
+            android:id="@+id/album_cover"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/album_cover"
+            android:src="@drawable/echoostation_placeholder_album_3x"/>
+
+        <ImageButton
+            android:id="@+id/item_menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="80dp"
+            android:background="@null"
+            android:src="@drawable/ic_item__menu"
+            app:tint="@color/colorPrimary"/>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/playlist_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:fontFamily="@font/ibm_plex_sans_bold"
+        android:includeFontPadding="false"
+        android:text="@string/album"
+        android:textColor="@color/colorText"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/album_artist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:fontFamily="@font/ibm_plex_sans_regular"
+        android:includeFontPadding="false"
+        android:text="@string/artist"
+        android:textSize="11sp"
+        android:textColor="@color/colorText"/>
+</LinearLayout>

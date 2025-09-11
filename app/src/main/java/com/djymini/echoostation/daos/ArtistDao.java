@@ -7,6 +7,7 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.entities.Artist;
 
 import java.util.List;
@@ -22,6 +23,12 @@ public interface ArtistDao {
     @Update
     void update(Artist artist);
 
+    @Query("UPDATE artist SET photo_path = :photoPath WHERE id = :id;")
+    void modifyPhoto(long id, String photoPath);
+
+    @Query("UPDATE artist SET description = :description WHERE id = :id;")
+    void modifyDescription(long id, String description);
+
     @Query("SELECT EXISTS(SELECT 1 FROM artist WHERE id = :id)")
     boolean existsById(long id);
 
@@ -30,6 +37,25 @@ public interface ArtistDao {
 
     @Query("SELECT * FROM artist")
     LiveData<List<Artist>> getAllLive();
+
+    @Query("SELECT " +
+            "ar.id AS id, ar.name AS name, ar.photo_path AS photoPath, ar.description AS description, ar.created_at AS createdAt, ar.last_played AS lastPlayed, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM artist ar " +
+            "JOIN statistic s ON ar.id_statistic = s.id")
+    LiveData<List<ArtistDto>> getAllDetailLive();
+
+    @Query("SELECT " +
+            "ar.id AS id, ar.name AS name, ar.photo_path AS photoPath, ar.description AS description, ar.created_at AS createdAt, ar.last_played AS lastPlayed, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime " + // <-- pas de virgule
+            "FROM artist ar " +
+            "JOIN statistic s ON ar.id_statistic = s.id " +
+            "ORDER BY s.month_listening_number DESC LIMIT 6")
+    LiveData<List<ArtistDto>> getTopDetailLive();
 
     @Query("SELECT * FROM artist")
     List<Artist> getAll();
@@ -48,4 +74,7 @@ public interface ArtistDao {
 
     @Query("SELECT COUNT(*) FROM artist")
     long count();
+
+    @Query("UPDATE artist SET last_played = :time WHERE id = :id")
+    void updateLastPlay(long id, long time);
 }

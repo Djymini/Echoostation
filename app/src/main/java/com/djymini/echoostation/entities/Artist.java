@@ -1,5 +1,7 @@
 package com.djymini.echoostation.entities;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -44,17 +46,36 @@ public class Artist {
     @ColumnInfo(name = "created_at")
     public  long createdAt;
 
+    @ColumnInfo(name = "last_played")
+    public  long lastPlayed;
+
     public Artist(@NonNull String name, String photoPath, String description, long statisticId) {
         this.name = name;
         this.photoPath = photoPath;
         this.description = description;
         this.statisticId = statisticId;
         this.createdAt = TimeUtilities.currentTimeMillis();
+        this.lastPlayed = 0;
     }
 
     @Ignore
     public Artist(long id, @NonNull String name, String photoPath, String description, long statisticId) {
         this(name, photoPath, description, statisticId);
         this.id = id;
+    }
+
+    @Ignore
+    public Artist(Artist artist, String photoPath, String description) {
+        this.id = artist.id;
+        this.name = artist.name;
+        this.photoPath = photoPath;
+        this.description = description;
+        this.statisticId = artist.statisticId;
+        this.createdAt = artist.createdAt;
+        this.lastPlayed = artist.lastPlayed;
+    }
+
+    public Uri getPhoto(){
+        return Uri.parse(photoPath);
     }
 }

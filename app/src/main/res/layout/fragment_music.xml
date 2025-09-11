@@ -12,6 +12,11 @@
        android:gravity="center_vertical"
        android:paddingHorizontal="8dp"
        android:background="@color/colorSecondary">
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+         android:layout_alignParentTop="true"
+          android:background="@color/colorThird"/>
 
       <Spinner
           android:id="@+id/spinner"
@@ -22,6 +27,7 @@
           android:entries="@array/sort_categories"/>
 
       <ImageButton
+          android:id="@+id/shuffle_button"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
@@ -30,7 +36,10 @@
           app:tint="@color/colorText"
           android:src="@drawable/ic_shuffle_mini"
           android:background="@color/trueTransparenceColor"
-          android:contentDescription="@string/ic_shuffle"/>
+          android:contentDescription="@string/ic_shuffle"
+          android:foreground="?attr/selectableItemBackground"
+          android:clickable="true"
+          android:focusable="true"/>
       <TextView
           android:id="@+id/number_music"
           android:layout_width="wrap_content"
@@ -42,13 +51,12 @@
           android:text="@string/counter_music"/>
    </RelativeLayout>
 
-   <androidx.recyclerview.widget.RecyclerView
+   <com.l4digital.fastscroll.FastScrollRecyclerView
        android:id="@+id/recycler_view_song"
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:layout_below="@id/button_container"
        android:clipToPadding="false"
        android:paddingBottom="82dp"/>
-
 
 </RelativeLayout>

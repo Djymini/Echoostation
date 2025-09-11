@@ -38,10 +38,14 @@ public class Playlist {
     @ColumnInfo(name = "created_at")
     public  long createdAt;
 
+    @ColumnInfo(name = "last_played")
+    public  long lastPlayed;
+
     public Playlist(@NonNull String name, long statisticId) {
         this.name = name;
         this.statisticId = statisticId;
         this.createdAt = TimeUtilities.currentTimeMillis();
+        this.lastPlayed = 0;
     }
 
     @Ignore

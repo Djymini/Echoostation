@@ -1,9 +1,11 @@
 package com.djymini.echoostation.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,14 +23,23 @@ import androidx.media3.common.Player;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bumptech.glide.Glide;
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.CoverCarouselAdapter;
+import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.entities.Album;
+import com.djymini.echoostation.entities.Artist;
+import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.common.base.Stopwatch;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class TrueMusicPlayer {
     private BottomSheetBehavior<View> bottomSheetBehavior;
@@ -48,12 +59,14 @@ public class TrueMusicPlayer {
     private CoverCarouselAdapter adapter;
     private boolean userSwipe = false;
 
+    private ExecutorService executor;
 
+    private MainActivity main;
 
     private final float MINI_SIZE = 64f;   // taille mini player
     private final float FULL_SIZE = 200f;
 
-    public TrueMusicPlayer(View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context) {
+    public TrueMusicPlayer(View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity main) {
         this.context = context;
 
         playerCover = view.findViewById(R.id.player_cover);
@@ -78,10 +91,13 @@ public class TrueMusicPlayer {
         setupClickListeners();
         setupSeekBar();
         handler.post(updateSeekBarRunnable);
+        this.main = (MainActivity)main;
+        executor = Executors.newSingleThreadExecutor();
 
         viewModel.getIsPlaying().observe(lifecycleOwner, isPlaying -> {
-            if(isPlaying)
+            if(isPlaying){
                 mainContent.setVisibility(View.VISIBLE);
+            }
         });
     }
 
@@ -155,7 +171,9 @@ public class TrueMusicPlayer {
                 playPauseButton.setImageResource(isPlaying ? R.drawable.round_pause_24 : R.drawable.round_play_arrow_24)
         );
 
-        viewModel.getCurrentItem().observe(lifecycleOwner, this::updateUI);
+        viewModel.getCurrentItem().observe(lifecycleOwner, item ->{
+            updateUI(item);
+        });
 
         viewModel.getRepeatMode().observe(lifecycleOwner, mode -> {
             switch (mode) {
@@ -178,6 +196,47 @@ public class TrueMusicPlayer {
                 shuffleButon.setColorFilter(ContextCompat.getColor(context,
                         enabled ? R.color.colorText : R.color.disableText))
         );
+
+        viewModel.getMusicChange().observe(lifecycleOwner, change ->{
+            if(change && viewModel.getCurrentItem().getValue() != null){
+                change = false;
+                Log.d("TrueMusicPlayer", "Elapsed enregistré: " + viewModel.getElapsedTime().getValue());
+                executor.execute(() ->{
+                    Music music = main.dbService.getMusicDao().getById(Long.parseLong(viewModel.getCurrentItem().getValue().mediaId));
+                    Album album = main.dbService.getAlbumDao().getById(music.albumId);
+                    List<Artist> artistList = main.dbService.getArtistDao().getAllByMusic(music.id);
+
+                    main.dbService.getMusicService().incrementListeningTimeStatistic(music, viewModel.getElapsedTime().getValue());
+                    main.dbService.getAlbumService().incrementListeningTimeStatistic(album, viewModel.getElapsedTime().getValue());
+                    for(Artist artist : artistList){
+                        main.dbService.getArtistService().incrementListeningTimeStatistic(artist, viewModel.getElapsedTime().getValue());
+                    }
+                });
+            }
+        });
+
+        viewModel.getElapsedTime().observe(lifecycleOwner, elapsed -> {
+            // elapsed = temps en ms
+            Log.d("TrueMusicPlayer", "Elapsed: " + elapsed);
+
+            // Exemple : déclencher un événement toutes les 30 sec
+            if (elapsed > viewModel.getDuration() * 0.25 && viewModel.canIncremente) {
+                viewModel.canIncremente = false;
+                Log.d("TrueMusicPlayer", "👉 30 secondes atteintes !");
+                executor.execute(() ->{
+                    Music music = main.dbService.getMusicDao().getById(Long.parseLong(viewModel.getCurrentItem().getValue().mediaId));
+                    Album album = main.dbService.getAlbumDao().getById(music.albumId);
+                    List<Artist> artistList = main.dbService.getArtistDao().getAllByMusic(music.id);
+
+                    main.dbService.getMusicService().incrementListeningNumberStatistic(music);
+                    main.dbService.getAlbumService().incrementListeningNumberStatistic(album);
+                    for(Artist artist : artistList){
+                        main.dbService.getArtistService().incrementListeningNumberStatistic(artist);
+                    }
+                });
+            }
+        });
+
     }
 
     private void updateUI(MediaItem item) {
@@ -227,7 +286,9 @@ public class TrueMusicPlayer {
 
     private void setupClickListeners() {
         playPauseButton.setOnClickListener(v -> viewModel.playPause(context));
-        nextButton.setOnClickListener(v -> viewModel.next(context));
+        nextButton.setOnClickListener(v -> {
+            viewModel.next(context);
+        });
         prevButton.setOnClickListener(v -> viewModel.prev(context));
         repeatButton.setOnClickListener(v -> viewModel.toggleRepeatMode(context));
         shuffleButon.setOnClickListener(v -> viewModel.toggleShuffle(context));
@@ -287,5 +348,4 @@ public class TrueMusicPlayer {
             }
         });
     }
-
 }
