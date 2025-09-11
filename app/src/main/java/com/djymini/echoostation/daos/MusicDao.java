@@ -254,6 +254,30 @@ public interface MusicDao {
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
             "   GROUP BY am_sorted.id_music " +
             ") AS artist_data ON artist_data.musicId = m.id " +
+            "WHERE m.id_genre = :genreId")
+    List<MusicDto> getMusicDetailByGenre(long genreId);
+
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS genreId, g.name AS genreName, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.artistId, artist_data.artistName " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
+            "          GROUP_CONCAT(a.name, ', ') AS artistName " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id " +
             "WHERE m.id_album = :albumId")
     LiveData<List<MusicDto>> getMusicDetailByAlbumLive(long albumId);
 
@@ -283,6 +307,30 @@ public interface MusicDao {
             ") AS artist_data ON artist_data.musicId = m.id " +
             "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%')")
     LiveData<List<MusicDto>> getMusicDetailByArtistLive(String artistId);
+
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS genreId, g.name AS genreName, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.artistId, artist_data.artistName " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist) AS artistId, " +
+            "          GROUP_CONCAT(a.name, ', ') AS artistName " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id " +
+            "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%')")
+    List<MusicDto> getMusicDetailByArtist(String artistId);
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +

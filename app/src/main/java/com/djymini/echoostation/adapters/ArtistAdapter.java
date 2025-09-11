@@ -17,10 +17,15 @@ import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
+import com.djymini.echoostation.utilities.SortOption;
+import com.djymini.echoostation.utilities.SortOptionArtist;
+import com.djymini.echoostation.utilities.TimeUtilities;
+import com.l4digital.fastscroll.FastScroller;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,18 +33,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder> {
+public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistViewHolder> implements FastScroller.SectionIndexer {
     private final List<ArtistDto> artists = new ArrayList<>();
     private final Set<ArtistDto> selectedItems = new HashSet<>();
+    private SortOptionArtist currentSort = SortOptionArtist.ARTIST_ASC;
     private OnMusicMenuClickListener menuClickListener;
     private OnItemLongClickListener longClickListener;
     private OnItemClickListener clickListener;
 
     public ArtistAdapter(){}
 
-    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
-        this.longClickListener = listener;
-    }
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.clickListener = listener;
     }
@@ -98,14 +101,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
                 .error(R.drawable.echoostation_placeholder_music_3x)
                 .into(holder.artistImage);
 
-
-
-        /*holder.menuButton.setOnClickListener(v -> {
-            if (menuClickListener != null) {
-                menuClickListener.onMenuClick(album, holder.menuButton);
-            }
-        });*/
-
         holder.itemView.setBackgroundColor(
                 selectedItems.contains(artist) ?
                         ContextCompat.getColor(holder.itemView.getContext(), R.color.selectedColor) :
@@ -114,11 +109,6 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
 
         holder.itemView.setOnClickListener(v -> {
             if (clickListener != null) clickListener.onItemClick(position);
-        });
-
-        holder.itemView.setOnLongClickListener(v -> {
-            if (longClickListener != null) longClickListener.onItemLongClick(position);
-            return true;
         });
     }
 
@@ -142,36 +132,21 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         }
     }
 
-    public void setOnMusicMenuClickListener(OnMusicMenuClickListener listener) {
-        this.menuClickListener = listener;
+    public void setSortOption(SortOptionArtist option) {
+        this.currentSort = option;
+        notifyDataSetChanged();
     }
 
-    public void toggleSelection(ArtistDto item) {
-        int index = artists.indexOf(item);
-        if (index == -1) return;
-
-        if (selectedItems.contains(item)) {
-            selectedItems.remove(item);
-        } else {
-            selectedItems.add(item);
+    @NonNull
+    @Override
+    public String getSectionText(int position) {
+        if (artists.isEmpty() || position < 0 || position >= artists.size()) {
+            return "";
         }
-        notifyItemChanged(index);
+
+        ArtistDto artist = artists.get(position);
+        return artist.name != null && !artist.name.isEmpty()
+                ? artist.name.substring(0, 1).toUpperCase()
+                : "#";
     }
-
-    public void clearSelection() {
-        Set<ArtistDto> oldSelection = new HashSet<>(selectedItems);
-        selectedItems.clear();
-
-        for (ArtistDto item : oldSelection) {
-            int index = artists.indexOf(item);
-            if (index != -1) {
-                notifyItemChanged(index);
-            }
-        }
-    }
-
-    public Set<ArtistDto> getSelectedItems() {
-        return selectedItems;
-    }
-
 }

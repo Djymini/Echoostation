@@ -17,10 +17,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.ui.MusicDialogManager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
@@ -69,6 +71,16 @@ public class DeleteManager {
         }
     }
 
+    public void deleteSelectedAlbums(Set<AlbumDto> selected, ExecutorService executor) {
+        executor.execute(() -> {
+            for (AlbumDto album : selected) {
+                Set<MusicDto> musicDeleteList = new HashSet<>(main.dbService.getMusicDao().getMusicDetailByAlbum(album.id));
+                deleteSelectedMusics(musicDeleteList, executor);
+                main.dbService.getAlbumDao().deleteById(album.id);
+            }
+        });
+    }
+
     public void setupDeleteLauncher(ExecutorService executor, Fragment fragment) {
         deleteMultipleLauncher = fragment.registerForActivityResult(
                 new ActivityResultContracts.StartIntentSenderForResult(),
@@ -86,14 +98,24 @@ public class DeleteManager {
         );
     }
 
-    public void confirmAndDeleteSelectedMusics(Set<MusicDto> selected, Context context, Fragment fragment, ExecutorService executor) {
+    public <E> void confirmAndDeleteSelectedMedia(Set<E> selected, Context context, Fragment fragment, ExecutorService executor) {
         if (selected.isEmpty()) return;
+        E first = selected.iterator().next();
 
-        new AlertDialog.Builder(context)
-                .setTitle(fragment.getString(R.string.delete_music))
-                .setMessage(fragment.getString(R.string.delete_request1) + selected.size() + fragment.getString(R.string.delete_request2))
-                .setPositiveButton(fragment.getString(R.string.yes), (dialog, which) -> deleteSelectedMusics(selected, executor))
-                .setNegativeButton(fragment.getString(R.string.no), null)
-                .show();
+        if(first instanceof MusicDto){
+            new AlertDialog.Builder(context)
+                    .setTitle(fragment.getString(R.string.delete_music))
+                    .setMessage(fragment.getString(R.string.delete_request1) + selected.size() + fragment.getString(R.string.delete_request2))
+                    .setPositiveButton(fragment.getString(R.string.yes), (dialog, which) -> deleteSelectedMusics((Set<MusicDto>) selected, executor))
+                    .setNegativeButton(fragment.getString(R.string.no), null)
+                    .show();
+        } else if(first instanceof AlbumDto){
+            new AlertDialog.Builder(context)
+                    .setTitle(fragment.getString(R.string.delete_music))
+                    .setMessage(fragment.getString(R.string.delete_request1) + selected.size() + fragment.getString(R.string.delete_request2))
+                    .setPositiveButton(fragment.getString(R.string.yes), (dialog, which) -> deleteSelectedAlbums((Set<AlbumDto>) selected, executor))
+                    .setNegativeButton(fragment.getString(R.string.no), null)
+                    .show();
+        }
     }
 }

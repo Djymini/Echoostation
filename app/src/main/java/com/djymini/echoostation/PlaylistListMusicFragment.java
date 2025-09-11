@@ -1,8 +1,10 @@
 package com.djymini.echoostation;
 
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
@@ -33,10 +35,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Supplier;
 
 public class PlaylistListMusicFragment extends Fragment {
     private static final String ARG_PLAYLIST = "playlist";
     private static final String ARG_TYPE = "type";
+    private static final String ARG_GENRE_NAME = "genreName";
+    private static final String ARG_GENRE_ID = "genreId";
 
     private MainActivity main;
     private ExecutorService executor;
@@ -54,15 +59,31 @@ public class PlaylistListMusicFragment extends Fragment {
 
     private String playlistName;
     private int playlistType;
+    private String genreName;
+    private long genreId;
+
+    private static class PlaylistParams {
+        int imageRes;
+        Supplier<List<MusicDto>> supplier;
+
+        PlaylistParams(int imageRes, Supplier<List<MusicDto>> supplier) {
+            this.imageRes = imageRes;
+            this.supplier = supplier;
+        }
+    }
+
+    private Map<String, PlaylistParams> mapPlaylist;
 
     public PlaylistListMusicFragment() {
     }
 
-    public static PlaylistListMusicFragment newInstance(String playlistName, int playlistType) {
+    public static PlaylistListMusicFragment newInstance(String playlistName, int playlistType, String genreName, long genreId) {
         PlaylistListMusicFragment fragment = new PlaylistListMusicFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PLAYLIST, playlistName);
         args.putInt(ARG_TYPE, playlistType);
+        args.putString(ARG_GENRE_NAME, genreName);
+        args.putLong(ARG_GENRE_ID, genreId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -73,6 +94,8 @@ public class PlaylistListMusicFragment extends Fragment {
         if (getArguments() != null) {
             playlistName = getArguments().getString(ARG_PLAYLIST);
             playlistType = getArguments().getInt(ARG_TYPE);
+            genreName = getArguments().getString(ARG_GENRE_NAME);
+            genreId = getArguments().getLong(ARG_GENRE_ID);
             main = (MainActivity) getActivity();
         }
 
@@ -80,6 +103,25 @@ public class PlaylistListMusicFragment extends Fragment {
         typeMap.put(1, PlaylistType.USER);
 
         executor = Executors.newSingleThreadExecutor();
+
+        mapPlaylist = Map.ofEntries(
+                Map.entry("Récemment écoutés", new PlaylistParams(R.drawable.round_history_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Favoris", new PlaylistParams(R.drawable.round_favorite_border_24, () -> main.dbService.getMusicDao().getMusicDetailFavorite())),
+                Map.entry("Les plus écoutés", new PlaylistParams(R.drawable.round_trending_up_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Good vibe", new PlaylistParams(R.drawable.round_sentiment_very_satisfied_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Motivation", new PlaylistParams(R.drawable.round_fitness_center_24, () -> main.dbService.getMusicDao().getMusicDetailFavorite())),
+                Map.entry("Fête", new PlaylistParams(R.drawable.outline_celebration_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Détente", new PlaylistParams(R.drawable.outline_spa_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Nuit", new PlaylistParams(R.drawable.outline_bedtime_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Tristesse", new PlaylistParams(R.drawable.round_sentiment_dissatisfied_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Travail", new PlaylistParams(R.drawable.outline_work_outline_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Gaming", new PlaylistParams(R.drawable.outline_sports_esports_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Conduite", new PlaylistParams(R.drawable.outline_drive_eta_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Reflexion", new PlaylistParams(R.drawable.outline_school_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Matin", new PlaylistParams(R.drawable.outline_wb_sunny_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Genre", new PlaylistParams(R.drawable.echoostation_placeholder_album_3x, () -> main.dbService.getMusicDao().getMusicDetailByGenre(genreId)))
+        );
+
         executor.execute(() -> {
             musicList = getMusicList(playlistName, typeMap.get(playlistType));
         });
@@ -98,43 +140,18 @@ public class PlaylistListMusicFragment extends Fragment {
         return view;
     }
 
-    public List<MusicDto> getMusicList(String playlistName, PlaylistType type){
-        if (type == PlaylistType.DEFAULT){
-            switch (playlistName){
-                case "Récemment écoutés":
-                    playlistDefaultImage = R.drawable.round_history_24;
-                    return main.dbService.getMusicDao().getMusicDetailRecentlyLstening();
-                case "Favoris":
-                    playlistDefaultImage = R.drawable.round_favorite_border_24;
-                    return main.dbService.getMusicDao().getMusicDetailFavorite();
-                case "Les plus écoutés":
-                    playlistDefaultImage = R.drawable.round_trending_up_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Good vibe":
-                    playlistDefaultImage = R.drawable.round_sentiment_very_satisfied_24;
-                    return main.dbService.getMusicDao().getMusicDetailRecentlyLstening();
-                case "Motivation":
-                    playlistDefaultImage = R.drawable.round_fitness_center_24;
-                    return main.dbService.getMusicDao().getMusicDetailFavorite();
-                case "Fête":
-                    playlistDefaultImage = R.drawable.outline_celebration_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Détente":
-                    playlistDefaultImage = R.drawable.outline_spa_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Nuit":
-                    playlistDefaultImage = R.drawable.outline_bedtime_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Tristesse":
-                    playlistDefaultImage = R.drawable.round_sentiment_dissatisfied_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
-                case "Travail":
-                    playlistDefaultImage = R.drawable.outline_work_outline_24;
-                    return main.dbService.getMusicDao().getMusicDetailMostListening();
+    public List<MusicDto> getMusicList(String playlistName, PlaylistType type) {
+        if (type == PlaylistType.DEFAULT) {
+            Log.d("PlaylistListMusicFragment", playlistName);
+            PlaylistParams params = mapPlaylist.get(playlistName);
+            if (params != null) {
+                playlistDefaultImage = params.imageRes;
+                return params.supplier.get();
             }
         }
         return musicList;
     }
+
 
     private void bindView(View view){
         iconPlaylist = view.findViewById(R.id.icon_playlist);
@@ -149,11 +166,16 @@ public class PlaylistListMusicFragment extends Fragment {
     private void setupInfoPlaylist(){
         Glide.with(requireContext())
                 .load(playlistDefaultImage)
+                .override(200, 200)
                 .placeholder(R.drawable.echoostation_placeholder_album_3x)
                 .error(R.drawable.echoostation_placeholder_album_3x)
                 .into(iconPlaylist);
 
-        playlistNameView.setText(playlistName);
+        playlistNameView.setText(playlistName.equals("Genre") ? genreName : playlistName);
+        if(!playlistName.equals("Genre")){
+            ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.accentColor));
+            iconPlaylist.setImageTintList(tint);
+        }
 
         String totalMusic = musicList.size() > 1 ? String.valueOf(musicList.size()) + " morceaux" : String.valueOf(musicList.size()) + " morceau";
         String duration = "Durée : " + TimeUtilities.durationTotal(musicList);

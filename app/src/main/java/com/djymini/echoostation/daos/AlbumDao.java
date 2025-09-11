@@ -21,6 +21,9 @@ public interface AlbumDao {
     @Delete
     void delete(Album album);
 
+    @Query("DELETE FROM album WHERE id = :id")
+    void deleteById(long id);
+
     @Update
     void update(Album album);
 

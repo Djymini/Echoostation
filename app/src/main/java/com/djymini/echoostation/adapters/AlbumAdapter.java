@@ -16,18 +16,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.AlbumDto;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.interfaces.OnItemClickListener;
 import com.djymini.echoostation.interfaces.OnItemLongClickListener;
 import com.djymini.echoostation.interfaces.OnMusicMenuClickListener;
+import com.djymini.echoostation.utilities.SortOption;
+import com.djymini.echoostation.utilities.SortOptionAlbum;
+import com.djymini.echoostation.utilities.TimeUtilities;
+import com.l4digital.fastscroll.FastScroller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> implements FastScroller.SectionIndexer {
     private final List<AlbumDto> albums = new ArrayList<>();
     private final Set<AlbumDto> selectedItems = new HashSet<>();
+    private SortOptionAlbum currentSort = SortOptionAlbum.ALBUM_ASC;
     private OnMusicMenuClickListener menuClickListener;
     private OnItemLongClickListener longClickListener;
     private OnItemClickListener clickListener;
@@ -163,7 +169,33 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         }
     }
 
+    public void setSortOption(SortOptionAlbum option) {
+        this.currentSort = option;
+        notifyDataSetChanged();
+    }
+
     public Set<AlbumDto> getSelectedItems() {
         return selectedItems;
+    }
+
+    @NonNull
+    @Override
+    public String getSectionText(int position) {
+        if (albums.isEmpty() || position < 0 || position >= albums.size()) {
+            return "";
+        }
+
+        AlbumDto album = albums.get(position);
+        switch (currentSort) {
+            case ARTIST_ASC:
+            case ARTIST_DESC:
+                return album.artistName != null && !album.artistName.isEmpty()
+                        ? album.artistName.substring(0, 1).toUpperCase()
+                        : "#";
+            default: // TITLE
+                return album.name != null && !album.name.isEmpty()
+                        ? album.name.substring(0, 1).toUpperCase()
+                        : "#";
+        }
     }
 }

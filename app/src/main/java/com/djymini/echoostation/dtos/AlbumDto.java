@@ -94,6 +94,18 @@ public class AlbumDto implements Parcelable {
         }
     };
 
+    public String getName() {
+        return name;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
     public Uri getCover(){
         return Uri.parse(coverPath);
     }

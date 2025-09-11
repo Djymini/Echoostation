@@ -54,7 +54,7 @@ public class HomeImageButtonAdapter extends RecyclerView.Adapter<HomeImageButton
         holder.imageButton.setOnClickListener(v -> {
             FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
 
-            Fragment fragment = PlaylistListMusicFragment.newInstance(homeImageButtonList.get(position).getNameButton(), 0);
+            Fragment fragment = PlaylistListMusicFragment.newInstance(homeImageButtonList.get(position).getNameButton(), 0, "", 0);
 
             if (!fragment.isAdded()) {
                 transaction.add(R.id.frame_layout, fragment);

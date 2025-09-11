@@ -1,19 +1,13 @@
 package com.djymini.echoostation.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.IntentSenderRequest;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.media3.common.MediaItem;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,16 +16,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
+import android.widget.ImageButton;
 
-import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
-import com.djymini.echoostation.dataBase.DatabaseClient;
 import com.djymini.echoostation.dtos.AlbumDto;
-import com.djymini.echoostation.utilities.Constants;
+import com.djymini.echoostation.helpers.MediaItemHelper;
+import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.SortOption;
 import com.djymini.echoostation.utilities.SortOptionAlbum;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
@@ -41,23 +33,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 
 public class AlbumFragment extends EchoostationFragment {
-    private MusicPlayerViewModel playerViewModel;
-    private RecyclerView recyclerView;
     private List<AlbumDto> currentAlbumList = new ArrayList<>();
     private AlbumAdapter adapter;
-    private TextView albumCounterView;
-    private Spinner spinner;
-    private String search;
-    private ActionMode actionMode;
-    private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
-    private List<AlbumDto> albumsPendingDeletion;
-    private ExecutorService executor;
-    private List<MediaItem> playlist;
 
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
@@ -75,7 +55,7 @@ public class AlbumFragment extends EchoostationFragment {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
                 Set<AlbumDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
-                //confirmAndDeleteSelectedMusics(selectedCopy);
+                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), AlbumFragment.this, executor);
                 mode.finish();
                 return true;
             }
@@ -90,37 +70,46 @@ public class AlbumFragment extends EchoostationFragment {
     };
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        main = (MainActivity) getActivity();
+        executor = Executors.newSingleThreadExecutor();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
-        setupDaoAndService((MainActivity) getActivity());
-
+        setupDaoAndService();
         executor = Executors.newSingleThreadExecutor();
 
         setupUI(view);
         setupObservers();
-
-        loadAlbums();
+        loadMedias();
 
         return view;
     }
 
     private void setupUI(View view) {
         recyclerView = view.findViewById(R.id.recycler_view_album);
-        albumCounterView = view.findViewById(R.id.number_album);
+        counterView = view.findViewById(R.id.number_album);
         spinner = view.findViewById(R.id.spinner);
+        ImageButton shuffleButton = view.findViewById(R.id.shuffle_button);
+
+        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleAlbum(currentAlbumList, main, requireContext(), executor));
 
         setupRecyclerView();
         setupSpinner();
-        setupDeleteLauncher();
+        main.deleteManager.setupDeleteLauncher(executor, this);
     }
 
     private void setupRecyclerView() {
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        recyclerView.setClipToPadding(false);
-        recyclerView.setClipChildren(false);
         adapter = new AlbumAdapter();
-        recyclerView.setAdapter(adapter);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerView, getContext(), adapter, 3, true);
+
+        recyclerView.setBubbleColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary));
+        recyclerView.setBubbleTextColor(ContextCompat.getColor(requireContext(), R.color.colorText));
+        recyclerView.setHandleColor(ContextCompat.getColor(requireContext(), R.color.colorThird));
 
         adapter.setOnMusicMenuClickListener((album, anchorView) -> {
             if (getActivity() instanceof MainActivity) {
@@ -169,7 +158,7 @@ public class AlbumFragment extends EchoostationFragment {
 
     private void setupSpinner() {
         List<String> displayNames = new ArrayList<>();
-        for (SortOption option : SortOption.values()) {
+        for (SortOptionAlbum option : SortOptionAlbum.values()) {
             displayNames.add(option.getDisplayName());
         }
 
@@ -184,7 +173,7 @@ public class AlbumFragment extends EchoostationFragment {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                sortAndDisplayAlbums(position);
+                sortAndDisplayMedias(position);
             }
 
             @Override
@@ -194,81 +183,48 @@ public class AlbumFragment extends EchoostationFragment {
 
     private void setupObservers() {
         ShareSearchViewModel searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
-        playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
+        main.playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
 
         searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
             search = query;
-            sortAndDisplayAlbums(spinner.getSelectedItemPosition());
+            sortAndDisplayMedias(spinner.getSelectedItemPosition());
         });
 
-        playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
+        main.playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
             // TODO visuel lecture
         });
 
-        playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
+        main.playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
             if (item != null) {
                 // TODO visuel item sélectionné
             }
         });
     }
 
-    private void setupDeleteLauncher() {
-        deleteMultipleLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartIntentSenderForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK && albumsPendingDeletion != null) {
-                        List<AlbumDto> toDelete = new ArrayList<>(albumsPendingDeletion);
-                        executor.execute(() -> {
-                            for (AlbumDto album : toDelete) {
-                                musicDao.deleteById(album.id);
-                            }
-                        });
-                    }
-                    albumsPendingDeletion = null;
-                }
-        );
-    }
-
-    private void loadAlbums() {
-        if (getActivity() instanceof MainActivity) {
-            MainActivity main = (MainActivity) getActivity();
-            main.navigator.modifyTitle(getString(R.string.library_fragment));
-            main.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(), albums -> {
-                currentAlbumList = new ArrayList<>(albums);
-                sortAndDisplayAlbums(spinner.getSelectedItemPosition());
-                String counterAlbum = albums.size() + getString(R.string.album_fragment);
-                albumCounterView.setText(counterAlbum);
-            });
-        }
-    }
-
-    private void sortAndDisplayAlbums(int position) {
-        if (currentAlbumList == null) return;
-
-        executor.execute(() -> {
-            List<AlbumDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(currentAlbumList, search));
-
-            if (position >= 0 && position < SortOption.values().length) {
-                SortOptionAlbum option = SortOptionAlbum.values()[position];
-                filtered.sort(option.getComparator());
-            }
-
-            //playlist = loadPlaylist(filtered);
-            requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
+    @Override
+    public void loadMedias(){
+        main.navigator.modifyTitle(getString(R.string.library_fragment));
+        main.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(), albums -> {
+            currentAlbumList = new ArrayList<>(albums);
+            sortAndDisplayMedias(spinner.getSelectedItemPosition());
+            String counterAlbum = albums.size() + getString(R.string.album_fragment);
+            counterView.setText(counterAlbum);
         });
     }
 
-    private List<AlbumDto> fullTextSearchByLogicalOr(List<AlbumDto> albumDtoList, String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) return albumDtoList;
+    @Override
+    public void sortAndDisplayMedias(int position) {
+        if (currentAlbumList == null) return;
 
-        return albumDtoList.stream()
-                .filter(albumDto -> containsIgnoreCase(albumDto.name, keyword)
-                        || containsIgnoreCase(albumDto.artistName, keyword))
-                .collect(Collectors.toList());
-    }
-
-    private boolean containsIgnoreCase(String text, String keyword) {
-        return text != null && keyword != null && text.toLowerCase().contains(keyword.toLowerCase());
+        executor.execute(() -> {
+            List<AlbumDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(currentAlbumList, search, List.of(AlbumDto::getName, AlbumDto::getArtistName)));
+            if (position >= 0 && position < SortOption.values().length) {
+                SortOptionAlbum option = SortOptionAlbum.values()[position];
+                filtered.sort(option.getComparator());
+                requireActivity().runOnUiThread(() -> adapter.setSortOption(option));
+            }
+            requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
+        });
     }
 
     private void updateActionModeTitle() {
@@ -279,73 +235,6 @@ public class AlbumFragment extends EchoostationFragment {
             actionMode.setTitle(count + getString(R.string.item_selected));
         }
     }
-
-    /*private void deleteSelectedMusics(Set<MusicDto> selected) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            List<Uri> uris = new ArrayList<>();
-            for (MusicDto music : selected) {
-                long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
-                if (mediaStoreId != -1) {
-                    uris.add(ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId));
-                }
-            }
-
-            if (!uris.isEmpty()) {
-                musicsPendingDeletion = new ArrayList<>(selected);
-                IntentSender sender = MediaStore.createDeleteRequest(
-                        requireActivity().getContentResolver(), uris
-                ).getIntentSender();
-                deleteMultipleLauncher.launch(new IntentSenderRequest.Builder(sender).build());
-            }
-        } else {
-            executor.execute(() -> {
-                for (MusicDto music : selected) {
-                    long mediaStoreId = MusicDialogManager.getMediaStoreIdFromPath(requireActivity(), music.path);
-                    if (mediaStoreId != -1) {
-                        Uri uri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, mediaStoreId);
-                        int deleted = requireActivity().getContentResolver().delete(uri, null, null);
-                        if (deleted > 0) {
-                            musicDao.deleteById(music.id);
-                        }
-                    }
-                }
-            });
-        }
-    }*/
-
-    /*private void confirmAndDeleteSelectedMusics(Set<MusicDto> selected) {
-        if (selected.isEmpty()) return;
-
-        new AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.delete_music))
-                .setMessage(getString(R.string.delete_request1) + selected.size() + getString(R.string.delete_request2))
-                .setPositiveButton(getString(R.string.yes), (dialog, which) -> deleteSelectedMusics(selected))
-                .setNegativeButton(getString(R.string.no), null)
-                .show();
-    }*/
-
-    /*private List<MediaItem> loadPlaylist(List<MusicDto> list) {
-        List<MediaItem> items = new ArrayList<>();
-        for (MusicDto music : list) {
-            MediaMetadata metadata = new MediaMetadata.Builder()
-                    .setTitle(music.title)
-                    .setArtist(music.artistName)
-                    .setAlbumTitle(music.albumName)
-                    .setArtworkUri(music.getCover())
-                    .setDurationMs(music.duration)
-                    .build();
-
-            MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
-                    .setMediaId(String.valueOf(music.id))
-                    .setMediaMetadata(metadata)
-                    .build();
-
-            items.add(mediaItem);
-        }
-
-        return items;
-    }*/
 
     @Override
     public void onDestroyView() {

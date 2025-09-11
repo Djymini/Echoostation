@@ -81,4 +81,8 @@ public class ArtistDto implements Parcelable {
             return new ArtistDto[size];
         }
     };
+
+    public String getName() {
+        return name;
+    }
 }

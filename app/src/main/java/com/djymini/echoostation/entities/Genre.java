@@ -53,4 +53,10 @@ public class Genre {
         this(name, statisticId);
         this.id = id;
     }
+
+    @Ignore
+    @NonNull
+    public String getName() {
+        return name;
+    }
 }

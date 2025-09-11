@@ -19,8 +19,24 @@
             android:gravity="center_vertical"
             android:layout_alignParentStart="true"
             android:entries="@array/sort_categories"/>
+
+        <ImageButton
+            android:id="@+id/shuffle_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/number_genre"
+            android:layout_marginEnd="8dp"
+            app:tint="@color/colorText"
+            android:src="@drawable/ic_shuffle_mini"
+            android:background="@color/trueTransparenceColor"
+            android:contentDescription="@string/ic_shuffle"
+            android:foreground="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"/>
+
         <TextView
-            android:id="@+id/number_artist"
+            android:id="@+id/number_genre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -30,8 +46,8 @@
             android:text="@string/counter_artist"/>
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_artist"
+    <com.l4digital.fastscroll.FastScrollRecyclerView
+        android:id="@+id/recycler_view_genre"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"

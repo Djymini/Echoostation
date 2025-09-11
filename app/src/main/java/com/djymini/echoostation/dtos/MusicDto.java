@@ -128,6 +128,18 @@ public class MusicDto implements Parcelable {
         dest.writeLong(lastPlayed);
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
     @Override
     public int describeContents() {
         return 0;
