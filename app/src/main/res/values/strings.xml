@@ -9,7 +9,7 @@
     <string name="confirm_authorization">AUTORISER</string>
 
     <!-- Fragments -->
-    <string name="library_fragment">Bibliothèque</string>
+    <string name="library_fragment">Librairie</string>
     <string name="settings_fragment">Paramètres</string>
     <string name="equalizer_fragment">Egaliseur</string>
 
@@ -71,7 +71,7 @@
 
     <!-- Bottom Navigation Menu -->
     <string name="bottom_menu_home">ACCUEIL</string>
-    <string name="bottom_menu_library">BIBLIOTHEQUE</string>
+    <string name="bottom_menu_library">LIBRAIRIE</string>
     <string name="bottom_menu_equalizer">EGALISEUR</string>
     <string name="bottom_menu_settings">PARAMETRES</string>
 

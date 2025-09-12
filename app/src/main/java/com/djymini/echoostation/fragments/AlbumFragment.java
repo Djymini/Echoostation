@@ -148,7 +148,6 @@ public class AlbumFragment extends EchoostationFragment {
 
                     transaction.hide(main.navigator.getActiveFragment()).commit();
 
-                    main.navigator.modifyTitle(adapter.getCurrentList().get(position).name);
                     main.navigator.setActiveFragment(fragment);
                     main.navigator.updateToolbarMenu(fragment);
                 }

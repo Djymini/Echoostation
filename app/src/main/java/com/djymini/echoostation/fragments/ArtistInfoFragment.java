@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
@@ -144,8 +145,19 @@ public class ArtistInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary();
+            main.navigator.goBackToLibrary(R.id.library);
         });
+
+        // Gérer le bouton retour physique
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        main.navigator.goBackToLibrary(R.id.library);
+                    }
+                }
+        );
 
         return view;
     }
@@ -364,5 +376,16 @@ public class ArtistInfoFragment extends Fragment {
             //playlist = loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapterAlbumApparition.submitList(filtered));
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        executor.shutdownNow();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            activity.getSupportActionBar().setHomeAsUpIndicator(null);
+        }
     }
 }

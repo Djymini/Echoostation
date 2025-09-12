@@ -14,4 +14,10 @@
         <item name="titleTextAppearance">@style/ToolbarTitleAppearance</item>
         <item name="android:background">@color/colorSecondary</item>
     </style>
+
+    <style name="CustomTabText" parent="TextAppearance.Design.Tab">
+        <item name="fontFamily">@font/ibm_plex_sans_semi_bold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
 </resources>

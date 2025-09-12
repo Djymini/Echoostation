@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
@@ -161,8 +162,19 @@ public class AlbumInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary();
+            main.navigator.goBackToLibrary(R.id.library);
         });
+
+        // Gérer le bouton retour physique
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        main.navigator.goBackToLibrary(R.id.library);
+                    }
+                }
+        );
 
         return view;
     }
@@ -378,5 +390,10 @@ public class AlbumInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         executor.shutdownNow();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            activity.getSupportActionBar().setHomeAsUpIndicator(null);
+        }
     }
 }

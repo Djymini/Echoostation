@@ -38,7 +38,6 @@ public class Navigator {
     private final FragmentInitializer fragmentInitializer;
     private final Toolbar toolbar;
     private final BottomNavigationView bottomNavMenu;
-    //private final FrameLayout miniPlayerContainer;
     private final MusicPlayerViewModel playerViewModel;
     public final TrueMusicPlayer trueMusicPlayer;
     private final Context context;
@@ -46,11 +45,10 @@ public class Navigator {
     private Fragment activeFragment;
 
     public Navigator(FragmentManager fragmentManager, Toolbar toolbar, BottomNavigationView bottomNavMenu,
-                     /*FrameLayout miniPlayerContainer,*/ MusicPlayerViewModel playerViewModel, View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity activity) {
+                     MusicPlayerViewModel playerViewModel, View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity activity) {
         this.fragmentManager = fragmentManager;
         this.toolbar = toolbar;
         this.bottomNavMenu = bottomNavMenu;
-        //this.miniPlayerContainer = miniPlayerContainer;
         this.playerViewModel = playerViewModel;
         this.fragmentInitializer = new FragmentInitializer();
         this.trueMusicPlayer = new TrueMusicPlayer(view, lifecycleOwner, storeOwner, context, activity);
@@ -96,29 +94,28 @@ public class Navigator {
 
         modifyTitle(fragmentInitializer.getTitle(fragment));
         activeFragment = fragment;
-        //updateMiniPlayerVisibility(fragment);
 
         updateToolbarMenu(fragment);
     }
 
-    public void goBackToLibrary() {
-        Fragment libraryFragment = fragmentInitializer.getFragment(R.id.library);
-        if (libraryFragment == null) return;
+    public void goBackToLibrary(int idFragment) {
+        Fragment fragment = fragmentInitializer.getFragment(idFragment);
+        if (fragment == null) return;
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (!libraryFragment.isAdded()) {
-            transaction.add(R.id.frame_layout, libraryFragment);
-        } else {
-            transaction.show(libraryFragment);
+        if (activeFragment != null) {
+            transaction.remove(activeFragment);
         }
 
-        if (activeFragment != null) {
-            transaction.hide(activeFragment);
+        if (!fragment.isAdded()) {
+            transaction.add(R.id.frame_layout, fragment);
+        } else {
+            transaction.show(fragment);
         }
 
         transaction.commit();
-        activeFragment = libraryFragment;
-        updateToolbarMenu(libraryFragment);
+        activeFragment = fragment;
+        updateToolbarMenu(fragment);
     }
 
 
@@ -136,7 +133,6 @@ public class Navigator {
 
         MotionLayout motionLayout = (MotionLayout) playerBottomSheet;
 
-        // 🔥 Ajout du TransitionListener pour gérer le textSize en sp
         motionLayout.setTransitionListener(new MotionLayout.TransitionListener() {
             @Override
             public void onTransitionStarted(MotionLayout motionLayout, int startId, int endId) {}
@@ -147,15 +143,15 @@ public class Navigator {
                 TextView artistView = motionLayout.findViewById(R.id.player_artist);
 
                 if (titleView != null) {
-                    float minSize = 16f; // sp en mode collapsed
-                    float maxSize = 20f; // sp en mode expanded
+                    float minSize = 16f;
+                    float maxSize = 20f;
                     float newSize = minSize + (maxSize - minSize) * progress;
                     titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
                 }
 
                 if (artistView != null) {
-                    float minSize = 14f; // sp collapsed
-                    float maxSize = 18f; // sp expanded (tu peux changer si besoin)
+                    float minSize = 14f;
+                    float maxSize = 18f;
                     float newSize = minSize + (maxSize - minSize) * progress;
                     artistView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
                 }
@@ -170,13 +166,10 @@ public class Navigator {
 
         trueMusicPlayer.getBottomSheetBehavior().addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                // rien de spécial ici
-            }
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {}
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                // on applique la progression du BottomSheet au MotionLayout
                 if (slideOffset >= 0) {
                     motionLayout.setProgress(slideOffset);
 
@@ -185,7 +178,6 @@ public class Navigator {
             }
         });
 
-        // Clique sur le player pour l'ouvrir
         playerBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -219,26 +211,11 @@ public class Navigator {
         toolbar.setTitle(newText);
     }
 
-    /*public void updateMiniPlayerVisibility(Fragment fragment) {
-        if (miniPlayerContainer == null) return;
-
-        boolean isMusicPlayer = fragment instanceof MusicPlayerFragment;
-        toolbar.setVisibility(isMusicPlayer ? View.GONE : View.VISIBLE);
-        bottomNavMenu.setVisibility(isMusicPlayer ? View.GONE : View.VISIBLE);
-
-        if (!isMusicPlayer) {
-            boolean hasCurrentTrack = playerViewModel.getCurrentItem().getValue() != null;
-            miniPlayerContainer.setVisibility(hasCurrentTrack ? View.VISIBLE : View.GONE);
-        } else {
-            miniPlayerContainer.setVisibility(View.GONE);
-        }
-    }*/
-
     public void updateToolbarMenu(Fragment fragment) {
         toolbar.getMenu().clear();
 
         if (fragment instanceof LibraryFragment) {
-            toolbar.inflateMenu(R.menu.action_bar); // ta searchbar
+            toolbar.inflateMenu(R.menu.action_bar);
         }
     }
 

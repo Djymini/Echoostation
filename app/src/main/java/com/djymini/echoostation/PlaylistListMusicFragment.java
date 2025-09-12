@@ -1,9 +1,13 @@
 package com.djymini.echoostation;
 
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
@@ -137,6 +141,42 @@ public class PlaylistListMusicFragment extends Fragment {
         setupRecyclerView();
         sortAndDisplayMusics();
 
+        Toolbar toolbar = main.navigator.getToolbar(); // ou getActivity().findViewById(...)
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+
+        // Affiche le bouton retour
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            boolean nightMode = (getResources().getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+
+            Drawable upArrow = ContextCompat.getDrawable(requireContext(),
+                    nightMode ? R.drawable.round_arrow_back_24_night : R.drawable.round_arrow_back_24_normal);
+
+            if (upArrow != null) {
+                activity.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
+        }
+
+        // Gérer le clic
+        toolbar.setNavigationOnClickListener(v -> {
+            main.navigator.goBackToLibrary(typeMap.get(playlistType) == PlaylistType.DEFAULT ? R.id.home : R.id.library);
+        });
+
+        // Gérer le bouton retour physique
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        main.navigator.goBackToLibrary(typeMap.get(playlistType) == PlaylistType.DEFAULT ? R.id.home : R.id.library);
+                    }
+                }
+        );
+
         return view;
     }
 
@@ -166,7 +206,6 @@ public class PlaylistListMusicFragment extends Fragment {
     private void setupInfoPlaylist(){
         Glide.with(requireContext())
                 .load(playlistDefaultImage)
-                .override(200, 200)
                 .placeholder(R.drawable.echoostation_placeholder_album_3x)
                 .error(R.drawable.echoostation_placeholder_album_3x)
                 .into(iconPlaylist);
@@ -252,5 +291,10 @@ public class PlaylistListMusicFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         executor.shutdownNow();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            activity.getSupportActionBar().setHomeAsUpIndicator(null);
+        }
     }
 }
