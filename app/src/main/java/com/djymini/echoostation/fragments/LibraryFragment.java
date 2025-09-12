@@ -16,7 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
@@ -56,11 +55,6 @@ public class LibraryFragment extends Fragment {
         setupTabs(tabLayout, viewPager2);
         setupPageChangeListener(viewPager2);
 
-        MainActivity mainActivity = getMainActivity();
-        if (mainActivity != null) {
-            //mainActivity.navigator.updateMiniPlayerVisibility(this);
-        }
-
         setupMenu();
 
         return view;
@@ -70,24 +64,13 @@ public class LibraryFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if (!hidden){
-            changeTitle(Constants.LIBRARY_TAB_TITLE[tabIndex]);
         }
     }
 
     private void setupTabs(TabLayout tabLayout, ViewPager2 viewPager2) {
         new TabLayoutMediator(tabLayout, viewPager2,
-                (tab, position) -> tab.setText(Constants.LIBRARY_TAB_TITLE[position].toUpperCase()))
+                (tab, position) -> tab.setText(Constants.LIBRARY_TAB_TITLE[position]))
                 .attach();
-
-        for (int i = 0; i < tabLayout.getTabCount(); i++) {
-            TabLayout.Tab tab = tabLayout.getTabAt(i);
-            if (tab != null) {
-                TextView customTab = (TextView) LayoutInflater.from(requireContext())
-                        .inflate(R.layout.custom_tab, tabLayout, false);
-                customTab.setText(Constants.LIBRARY_TAB_TITLE[i].toUpperCase());
-                tab.setCustomView(customTab);
-            }
-        }
     }
 
     private void setupPageChangeListener(ViewPager2 viewPager2) {
@@ -96,7 +79,6 @@ public class LibraryFragment extends Fragment {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 tabIndex = position;
-                changeTitle(Constants.LIBRARY_TAB_TITLE[position]);
             }
         });
     }
@@ -134,18 +116,11 @@ public class LibraryFragment extends Fragment {
         }, getViewLifecycleOwner());
     }
 
-    private void changeTitle(String newTitle) {
-        MainActivity mainActivity = getMainActivity();
-        if (mainActivity != null) mainActivity.navigator.modifyTitle(newTitle);
-    }
-
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
 
         ViewPager2 viewPager2 = getView() != null ? getView().findViewById(R.id.view_pager) : null;
         if (viewPager2 != null) viewPager2.setCurrentItem(tabIndex, true);
-
-        changeTitle(Constants.LIBRARY_TAB_TITLE[tabIndex]);
     }
 
     private void createArgument() {
