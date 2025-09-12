@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.appcompat.app.AppCompatActivity;
@@ -163,6 +164,17 @@ public class AlbumInfoFragment extends Fragment {
         toolbar.setNavigationOnClickListener(v -> {
             main.navigator.goBackToLibrary(R.id.library);
         });
+
+        // Gérer le bouton retour physique
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        main.navigator.goBackToLibrary(R.id.library);
+                    }
+                }
+        );
 
         return view;
     }

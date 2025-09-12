@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -164,6 +165,17 @@ public class PlaylistListMusicFragment extends Fragment {
         toolbar.setNavigationOnClickListener(v -> {
             main.navigator.goBackToLibrary(typeMap.get(playlistType) == PlaylistType.DEFAULT ? R.id.home : R.id.library);
         });
+
+        // Gérer le bouton retour physique
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        main.navigator.goBackToLibrary(typeMap.get(playlistType) == PlaylistType.DEFAULT ? R.id.home : R.id.library);
+                    }
+                }
+        );
 
         return view;
     }
