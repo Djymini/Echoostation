@@ -161,7 +161,7 @@ public class AlbumInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary();
+            main.navigator.goBackToLibrary(R.id.library);
         });
 
         return view;
@@ -378,5 +378,10 @@ public class AlbumInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         executor.shutdownNow();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            activity.getSupportActionBar().setHomeAsUpIndicator(null);
+        }
     }
 }

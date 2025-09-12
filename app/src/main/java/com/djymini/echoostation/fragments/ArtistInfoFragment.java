@@ -144,7 +144,7 @@ public class ArtistInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary();
+            main.navigator.goBackToLibrary(R.id.library);
         });
 
         return view;
@@ -364,5 +364,16 @@ public class ArtistInfoFragment extends Fragment {
             //playlist = loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapterAlbumApparition.submitList(filtered));
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        executor.shutdownNow();
+        AppCompatActivity activity = (AppCompatActivity) getActivity();
+        if (activity != null && activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+            activity.getSupportActionBar().setHomeAsUpIndicator(null);
+        }
     }
 }

@@ -98,24 +98,24 @@ public class Navigator {
         updateToolbarMenu(fragment);
     }
 
-    public void goBackToLibrary() {
-        Fragment libraryFragment = fragmentInitializer.getFragment(R.id.library);
-        if (libraryFragment == null) return;
+    public void goBackToLibrary(int idFragment) {
+        Fragment fragment = fragmentInitializer.getFragment(idFragment);
+        if (fragment == null) return;
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (!libraryFragment.isAdded()) {
-            transaction.add(R.id.frame_layout, libraryFragment);
-        } else {
-            transaction.show(libraryFragment);
+        if (activeFragment != null) {
+            transaction.remove(activeFragment);
         }
 
-        if (activeFragment != null) {
-            transaction.hide(activeFragment);
+        if (!fragment.isAdded()) {
+            transaction.add(R.id.frame_layout, fragment);
+        } else {
+            transaction.show(fragment);
         }
 
         transaction.commit();
-        activeFragment = libraryFragment;
-        updateToolbarMenu(libraryFragment);
+        activeFragment = fragment;
+        updateToolbarMenu(fragment);
     }
 
 
