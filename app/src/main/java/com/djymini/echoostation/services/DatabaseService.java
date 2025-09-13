@@ -6,7 +6,7 @@ import com.djymini.echoostation.EchooStationDatabase;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
-import com.djymini.echoostation.daos.MoodDao;
+import com.djymini.echoostation.daos.MusicTagDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.PlaylistDao;
 import com.djymini.echoostation.daos.StatisticDao;
@@ -16,7 +16,7 @@ public class DatabaseService {
     private final AlbumDao albumDao;
     private final ArtistDao artistDao;
     private final GenreDao genreDao;
-    private final MoodDao moodDao;
+    private final MusicTagDao musicTagDao;
     private final MusicDao musicDao;
     private final PlaylistDao playlistDao;
     private final StatisticDao statisticDao;
@@ -33,16 +33,16 @@ public class DatabaseService {
         this.albumDao = database.albumDao();
         this.artistDao = database.artistDao();
         this.genreDao = database. genreDao();
-        this.moodDao = database.moodDao();
         this.musicDao = database.musicDao();
         this.playlistDao = database.playlistDao();
+        this.musicTagDao = database.musicTagDao();
         this.statisticDao = database.statisticDao();
 
         this.statisticService = new StatisticService(this.statisticDao);
         this.albumService = new AlbumService(this.albumDao, this.statisticDao, this.statisticService);
         this.artistService = new ArtistService(this.artistDao, this.statisticDao, this.statisticService, context);
         this.genreService = new GenreService(this.genreDao, this.statisticDao, this.statisticService, context);
-        this.musicService = new MusicService(this.musicDao, this.statisticDao, this.statisticService);
+        this.musicService = new MusicService(this.musicDao, this.musicTagDao, this.statisticDao, this.statisticService);
     }
 
     public AlbumDao getAlbumDao() {
@@ -57,16 +57,16 @@ public class DatabaseService {
         return genreDao;
     }
 
-    public MoodDao getMoodDao() {
-        return moodDao;
-    }
-
     public MusicDao getMusicDao() {
         return musicDao;
     }
 
     public PlaylistDao getPlaylistDao() {
         return playlistDao;
+    }
+
+    public MusicTagDao getMusicTagDao() {
+        return musicTagDao;
     }
 
     public StatisticDao getStatisticDao() {

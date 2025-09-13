@@ -16,7 +16,7 @@ import androidx.room.Index;
                         onDelete = ForeignKey.CASCADE
                 ),
                 @ForeignKey(
-                        entity = Mood.class,
+                        entity = MusicTag.class,
                         parentColumns = "id",
                         childColumns = "id_mood",
                         onDelete = ForeignKey.CASCADE

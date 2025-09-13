@@ -44,7 +44,7 @@ public class Constants {
     };
 
     // -------- API Keys --------
-    public static final String TA_CLE_LASTFM = BuildConfig.CLE_LASTFM;
+    public static final String CLE_LASTFM = BuildConfig.CLE_LASTFM;
     public static final String CLIENT_ID = BuildConfig.CLIENT_ID_SPOTIFY;
     public static final String CLIENT_SECRET = BuildConfig.CLIENT_SECRET_SPOTIFY;
 

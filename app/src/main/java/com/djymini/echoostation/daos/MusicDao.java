@@ -49,9 +49,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -59,6 +60,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -75,9 +77,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -85,6 +88,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -101,9 +105,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -111,6 +116,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -211,9 +217,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -221,6 +228,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -235,9 +243,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -245,6 +254,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -259,9 +269,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -269,6 +280,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -286,9 +298,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -296,10 +309,11 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
-            "          GROUP_CONCAT(am_sorted.id_artist) AS artistId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
             "          GROUP_CONCAT(a.name, ', ') AS artistName " +
             "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
@@ -310,9 +324,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -320,10 +335,11 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
-            "          GROUP_CONCAT(am_sorted.id_artist) AS artistId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
             "          GROUP_CONCAT(a.name, ', ') AS artistName " +
             "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
@@ -334,9 +350,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -344,6 +361,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -360,9 +378,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -370,6 +389,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -384,9 +404,10 @@ public interface MusicDao {
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -394,6 +415,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +
@@ -403,14 +425,22 @@ public interface MusicDao {
             "   JOIN artist a ON a.id = am_sorted.id_artist " +
             "   GROUP BY am_sorted.id_music " +
             ") AS artist_data ON artist_data.musicId = m.id " +
-            "WHERE m.is_favorite = 1")
-    List<MusicDto> getMusicDetailFavorite();
+            "WHERE " +
+            "(:favorite IS NULL OR mt.favorite_music = :favorite) AND (:goodVibe IS NULL OR mt.good_vibe_music = :goodVibe) AND " +
+            "(:motivation IS NULL OR mt.motivation_music = :motivation) AND (:party IS NULL OR mt.party_music = :party) AND " +
+            "(:chill IS NULL OR mt.chill_music = :chill) AND (:night IS NULL OR mt.night_music = :night) AND " +
+            "(:sad IS NULL OR mt.sad_music = :sad) AND (:gaming IS NULL OR mt.gaming_music = :gaming) AND " +
+            "(:morning IS NULL OR mt.morning_music = :morning) AND (:walk IS NULL OR mt.walk_music = :walk) AND " +
+            "(:drive IS NULL OR mt.drive_music = :drive) AND (:work IS NULL OR mt.work_music = :work) AND " +
+            "(:mind IS NULL OR mt.mind_music = :mind)")
+    List<MusicDto> getMusicByTags(Boolean favorite, Boolean goodVibe, Boolean motivation, Boolean party, Boolean chill, Boolean night, Boolean sad, Boolean gaming, Boolean morning, Boolean walk, Boolean drive, Boolean work, Boolean mind);
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
-            "m.duration AS duration, m.track AS track, m.is_favorite AS isFavorite, m.is_good AS isGood, m.is_motived AS isMotived, m.is_music_party AS isMusicParty, m.is_chill AS isChill, m.is_night AS isNight, m.is_sad AS isSad, m.is_work_music AS isWorkMusic, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
             "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
             "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
             "s.id AS statisticId, s.listening_number AS listeningNumber, " +
             "s.month_listening_number AS monthListeningNumber, " +
             "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
@@ -418,6 +448,7 @@ public interface MusicDao {
             "FROM music m " +
             "JOIN album al ON m.id_album = al.id " +
             "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
             "JOIN statistic s ON m.id_statistic = s.id " +
             "LEFT JOIN ( " +
             "   SELECT am_sorted.id_music AS musicId, " +

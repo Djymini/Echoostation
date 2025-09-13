@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
-import com.bumptech.glide.Glide;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.apiResponse.LastFmArtistResponse;
 import com.djymini.echoostation.apiResponse.SpotifySearchResponse;
@@ -192,7 +191,7 @@ public class ArtistService {
                                         .addConverterFactory(GsonConverterFactory.create())
                                         .build();
                                 LastFmApi lastFmApi = lastFmRetrofit.create(LastFmApi.class);
-                                lastFmApi.getArtistInfo("artist.getinfo", nameArtist, Constants.TA_CLE_LASTFM, "json", "fr")
+                                lastFmApi.getArtistInfo("artist.getinfo", nameArtist, Constants.CLE_LASTFM, "json", "fr")
                                         .enqueue(new Callback<LastFmArtistResponse>() {
                                             @Override
                                             public void onResponse(Call<LastFmArtistResponse> call, Response<LastFmArtistResponse> response) {

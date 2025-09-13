@@ -13,9 +13,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.DeleteManager;
 import com.djymini.echoostation.helpers.MusicScanner;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public Navigator navigator;
     private boolean hasPermission = false;
     private final Executor executor = Executors.newSingleThreadExecutor();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
         dbService = new DatabaseService(this);
         MusicScanner scanner = new MusicScanner(this, dbService.getMusicDao(), dbService.getAlbumService(), dbService.getArtistService(), dbService.getGenreService(), dbService.getMusicService(), dbService.getStatisticService(), executor);
         PermissionManager permission = new PermissionManager(this, null, this::scanDeviceMusic, null);
+        permission.registerPermissionLauncher();
         MusicDialogManager dialogManager = new MusicDialogManager(this, dbService.getMusicDao(), dbService.getAlbumDao(), dbService.getArtistDao(), dbService.getMusicService(), dbService.getAlbumService(), dbService.getArtistService(), dbService.getGenreService(), dbService.getStatisticService(), executor);
         appInitializer = new AppInitializer(scanner, permission, dialogManager);
     }

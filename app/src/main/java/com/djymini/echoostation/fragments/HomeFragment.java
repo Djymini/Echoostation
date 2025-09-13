@@ -24,6 +24,7 @@ import com.djymini.echoostation.adapters.ArtistAdapter;
 import com.djymini.echoostation.adapters.HomeImageButtonAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.FragmentHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.ListMediaUtilities;
@@ -43,6 +44,7 @@ public class HomeFragment extends EchoostationFragment {
 
     private ArtistAdapter artistAdapter;
     private AlbumAdapter albumAdapter, recentAlbumAdapter;
+    private List<MusicDto> mainMusicList;
 
     private List<ArtistDto> topArtistList = new ArrayList<>();
     private List<AlbumDto> topAlbumList = new ArrayList<>();
@@ -63,6 +65,7 @@ public class HomeFragment extends EchoostationFragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         bindView(view);
 
+        setupLoaderMedia();
         setupRecyclerViewButton();
         setupRecyclerViewRecentAlbum();
         setupRecyclerViewTopArtist();
@@ -70,10 +73,6 @@ public class HomeFragment extends EchoostationFragment {
         loadArtistAndAlbum();
 
         updateStats();
-
-        FragmentActivity activity = requireActivity();
-        if (!(activity instanceof MainActivity)) return view;
-        MainActivity mainActivity = (MainActivity) activity;
 
         sections.forEach((index, section) -> {
             ViewHomeData sectionView = view.findViewById(section.viewId);
@@ -83,19 +82,22 @@ public class HomeFragment extends EchoostationFragment {
 
             switch (index) {
                 case 0:
-                    mainActivity.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(),
-                            musics -> sectionView.setData(String.valueOf(musics.size())));
+                    loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
+                        sectionView.setData(String.valueOf(musics.size()));
+                        mainMusicList = new ArrayList<>(musics);
+                    });
+
                     break;
                 case 1:
-                    mainActivity.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(),
+                    loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(),
                             albums -> sectionView.setData(String.valueOf(albums.size())));
                     break;
                 case 2:
-                    mainActivity.loaderMediaViewModel.loadArtists().observe(getViewLifecycleOwner(),
+                    loaderMediaViewModel.loadArtists().observe(getViewLifecycleOwner(),
                             artists -> sectionView.setData(String.valueOf(artists.size())));
                     break;
                 case 3:
-                    mainActivity.loaderMediaViewModel.loadGenres().observe(getViewLifecycleOwner(),
+                    loaderMediaViewModel.loadGenres().observe(getViewLifecycleOwner(),
                             genres -> sectionView.setData(String.valueOf(genres.size())));
                     break;
             }
@@ -168,16 +170,16 @@ public class HomeFragment extends EchoostationFragment {
                 stat -> neverPlayed.setText(String.valueOf(stat)));
 
         main.dbService.getMusicDao().countMonthMusicPlayed().observe(getViewLifecycleOwner(),
-                stat -> listeningMonth.setText(String.valueOf(stat)));
+                stat -> listeningMonth.setText(String.valueOf(stat != null ? stat : 0)));
 
         main.dbService.getMusicDao().countMonthMusicPlayedTime().observe(getViewLifecycleOwner(),
-                stat -> timeListeningMonth.setText(TimeUtilities.formatDurationWithHour(stat)));
+                stat -> timeListeningMonth.setText(TimeUtilities.formatDurationWithHour(stat != null ? stat : 0)));
 
         main.dbService.getMusicDao().countMusicPlayed().observe(getViewLifecycleOwner(),
-                stat -> listeningTotal.setText(String.valueOf(stat)));
+                stat -> listeningTotal.setText(String.valueOf(stat != null ? stat : 0)));
 
         main.dbService.getMusicDao().countMusicPlayedTime().observe(getViewLifecycleOwner(),
-                stat -> timeListeningTotal.setText(TimeUtilities.formatDurationWithHour(stat)));
+                stat -> timeListeningTotal.setText(TimeUtilities.formatDurationWithHour(stat != null ? stat : 0)));
     }
 
     private void loadArtistAndAlbum() {

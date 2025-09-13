@@ -3,6 +3,7 @@ package com.djymini.echoostation.viewModels.loaderMediaViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
@@ -14,13 +15,15 @@ import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Genre;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoaderMediaViewModel extends ViewModel {
-    private final MusicDao musicDao;
-    private final ArtistDao artistDao;
-    private final AlbumDao albumDao;
-    private final GenreDao genreDao;
+    private MusicDao musicDao;
+    private ArtistDao artistDao;
+    private AlbumDao albumDao;
+    private GenreDao genreDao;
+
 
     public LoaderMediaViewModel(MusicDao musicDao, ArtistDao artistDao, AlbumDao albumDao, GenreDao genreDao) {
         this.musicDao = musicDao;

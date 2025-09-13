@@ -5,12 +5,13 @@ import android.widget.TextView;
 
 import androidx.appcompat.view.ActionMode;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
-import com.djymini.echoostation.daos.MoodDao;
+import com.djymini.echoostation.daos.MusicTagDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.PlaylistDao;
 import com.djymini.echoostation.daos.StatisticDao;
@@ -19,6 +20,7 @@ import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
+import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMediaViewModel;
 import com.l4digital.fastscroll.FastScrollRecyclerView;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class EchoostationFragment extends Fragment{
     public AlbumDao albumDao;
     public ArtistDao artistDao;
     public GenreDao genreDao;
-    public MoodDao moodDao;
+    public MusicTagDao musicTagDao;
     public MusicDao musicDao;
     public PlaylistDao playlistDao;
     public StatisticDao statisticDao;
@@ -48,6 +50,7 @@ public class EchoostationFragment extends Fragment{
     public String search;
     public ActionMode actionMode;
     public ExecutorService executor;
+    public LoaderMediaViewModel loaderMediaViewModel;
 
     public void setupDaoAndService(){
         musicDao = main.dbService.getMusicDao();
@@ -55,14 +58,18 @@ public class EchoostationFragment extends Fragment{
         artistDao = main.dbService.getArtistDao();
         albumDao = main.dbService.getAlbumDao();
         genreDao = main.dbService.getGenreDao();
-        moodDao = main.dbService.getMoodDao();
+        musicTagDao = main.dbService.getMusicTagDao();
         playlistDao = main.dbService.getPlaylistDao();
 
         statisticService = new StatisticService(statisticDao);
         albumService = new AlbumService(albumDao, statisticDao, statisticService);
         artistService = new ArtistService(artistDao, statisticDao, statisticService, requireContext());
         genreService = new GenreService(genreDao, statisticDao, statisticService, requireContext());
-        musicService = new MusicService(musicDao, statisticDao, statisticService);
+        musicService = new MusicService(musicDao, musicTagDao, statisticDao, statisticService);
+    }
+
+    public void setupLoaderMedia(){
+        loaderMediaViewModel = new ViewModelProvider(requireActivity()).get(LoaderMediaViewModel.class);
     }
 
     public void loadMedias() {}

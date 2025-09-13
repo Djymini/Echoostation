@@ -304,6 +304,7 @@
                     android:id="@+id/position_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
                     android:fontFamily="@font/ibm_plex_sans_regular"
                     android:text="99/99"/>
                 <LinearLayout
@@ -312,6 +313,7 @@
                     android:layout_marginTop="16dp"
                     android:orientation="horizontal">
                     <ImageButton
+                        android:id="@+id/lyrics_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/round_comment_24"
@@ -320,15 +322,17 @@
                         app:tint="@color/colorText"/>
 
                     <ImageButton
+                        android:id="@+id/favorite_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginHorizontal="16dp"
                         android:src="@drawable/round_favorite_border_24"
                         android:background="@null"
                         android:scaleType="fitCenter"
                         app:tint="@color/colorText"/>
 
                     <ImageButton
+                        android:id="@+id/add_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/round_add_circle_outline_24"
@@ -336,14 +340,16 @@
                         android:scaleType="fitCenter"
                         app:tint="@color/colorText"/>
                     <ImageButton
+                        android:id="@+id/current_list_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:layout_marginHorizontal="12dp"
+                        android:layout_marginHorizontal="16dp"
                         android:src="@drawable/round_playlist_play_24"
                         android:background="@null"
                         android:scaleType="fitCenter"
                         app:tint="@color/colorText"/>
                     <ImageButton
+                        android:id="@+id/more_button"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:src="@drawable/round_more_horiz_24"

@@ -151,7 +151,7 @@ public class Navigator {
 
                 if (artistView != null) {
                     float minSize = 14f;
-                    float maxSize = 18f;
+                    float maxSize = 16f;
                     float newSize = minSize + (maxSize - minSize) * progress;
                     artistView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
                 }

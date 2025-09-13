@@ -3,20 +3,28 @@ package com.djymini.echoostation.services;
 import android.util.Log;
 
 import com.djymini.echoostation.daos.MusicDao;
+import com.djymini.echoostation.daos.MusicTagDao;
 import com.djymini.echoostation.daos.StatisticDao;
+import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.entities.MusicTag;
+import com.djymini.echoostation.entities.Statistic;
 import com.djymini.echoostation.helpers.StatisticHelper;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MusicService {
     private static final String TAG = "MusicService";
     private final MusicDao musicDao;
+    private final MusicTagDao musicTagDao;
     private final StatisticHelper<Music> statisticHelper;
 
-    public MusicService(MusicDao musicDao, StatisticDao statisticDao, StatisticService statisticService) {
+    public MusicService(MusicDao musicDao, MusicTagDao musicTagDao, StatisticDao statisticDao, StatisticService statisticService) {
         this.musicDao = musicDao;
+        this.musicTagDao = musicTagDao;
         this.statisticHelper = new StatisticHelper<>(
                 statisticDao,
                 statisticService,
@@ -35,7 +43,9 @@ public class MusicService {
 
             if(!musicDao.existsByPath(musicPath)){
                 long statisticId = statisticService.createStatistic();
-                Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, albumId, genreId, statisticId);
+                MusicTag musicTag = new MusicTag();
+                long musicTagId = musicTagDao.insert(musicTag);
+                Music musicForAddInDb = new Music(musicPath, musicTitle, musicDuration, musicTrack, albumId, genreId, musicTagId, statisticId);
                 long musicId = musicDao.insert(musicForAddInDb);
                 linkArtistWithMusic(artistIds, musicId);
 

@@ -31,6 +31,19 @@ public class PermissionManager {
         this.permissionLauncher = permissionLauncher;
         this.onPermissionGranted = onPermissionGranted;
         this.onPermissionDenied = onPermissionDenied;
+
+        this.permissionLauncher = ((MainActivity) activity)
+                .registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    PermissionViewModel vm = new ViewModelProvider((MainActivity) activity)
+                            .get(PermissionViewModel.class);
+                    vm.setPermissionGranted(isGranted);
+
+                    if (isGranted) {
+                        onPermissionGranted.run();
+                    } else {
+                        if (onPermissionDenied != null) onPermissionDenied.run();
+                    }
+                });
     }
 
     public ActivityResultLauncher<String> getPermissionLauncher() {
