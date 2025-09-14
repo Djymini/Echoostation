@@ -75,7 +75,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
             music.morningMusic = !music.morningMusic;
             this.main.dbService.getMusicTagDao().updateMorningTag(music.id, music.morningMusic);
         }));
-        tagMap.put("Marche", new Tag("Marche", musicDto.walkMusic, music -> {
+        tagMap.put("Ménage", new Tag("Ménage", musicDto.walkMusic, music -> {
             music.walkMusic = !music.walkMusic;
             this.main.dbService.getMusicTagDao().updateWalkTag(music.id, music.walkMusic);
         }));

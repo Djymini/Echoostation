@@ -144,6 +144,10 @@ public class MainActivity extends AppCompatActivity {
 
             hasPermission = granted;
             ViewCompat.requestApplyInsets(findViewById(R.id.main));
+
+            if (granted) {
+                scanDeviceMusic();
+            }
         });
 
         permissionViewModel.checkPermission(this);

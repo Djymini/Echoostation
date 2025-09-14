@@ -123,7 +123,7 @@ public class PlaylistListMusicFragment extends Fragment {
                 Map.entry("Conduite", new PlaylistParams(R.drawable.outline_drive_eta_24, () -> main.dbService.getMusicService().makeDriveeMix())),
                 Map.entry("Reflexion", new PlaylistParams(R.drawable.outline_school_24, () -> main.dbService.getMusicService().makeMindMix())),
                 Map.entry("Matin", new PlaylistParams(R.drawable.outline_wb_sunny_24, () -> main.dbService.getMusicService().makeMorningMix())),
-                Map.entry("Marche", new PlaylistParams(R.drawable.outline_directions_walk_24, () -> main.dbService.getMusicService().makeWalkMix())),
+                Map.entry("Ménage", new PlaylistParams(R.drawable.outline_cleaning_services_24, () -> main.dbService.getMusicService().makeWalkMix())),
                 Map.entry("Genre", new PlaylistParams(R.drawable.echoostation_placeholder_album_3x, () -> main.dbService.getMusicDao().getMusicDetailByGenre(genreId)))
         );
 
