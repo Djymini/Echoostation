@@ -30,6 +30,7 @@ import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.ui.MusicPlayerDialogManager;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -64,6 +65,7 @@ public class TrueMusicPlayer {
     private MainActivity main;
 
     private MusicDto currentMusicDto;
+    private MusicPlayerDialogManager musicPlayerDialogManager;
 
     public TrueMusicPlayer(View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity main) {
         this.context = context;
@@ -114,6 +116,12 @@ public class TrueMusicPlayer {
                     updateFavorite(currentMusicDto);
                 });
             });
+        });
+
+        musicPlayerDialogManager = new MusicPlayerDialogManager(main, this.main, executor, context);
+
+        addButton.setOnClickListener(v -> {
+            musicPlayerDialogManager.showBottomDialog(currentMusicDto,this.main);
         });
     }
 
