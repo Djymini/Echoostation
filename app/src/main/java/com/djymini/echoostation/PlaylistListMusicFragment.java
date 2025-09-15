@@ -3,6 +3,7 @@ package com.djymini.echoostation;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -31,6 +32,7 @@ import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.fragments.AlbumInfoFragment;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -267,8 +269,9 @@ public class PlaylistListMusicFragment extends Fragment {
                     .setDurationMs(music.duration)
                     .build();
 
+            Uri uri = Uri.fromFile(new File(music.path));
             MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
+                    .setUri(uri)
                     .setMediaId(String.valueOf(music.id))
                     .setMediaMetadata(metadata)
                     .build();

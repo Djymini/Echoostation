@@ -1,6 +1,7 @@
 package com.djymini.echoostation.helpers;
 
 import android.content.Context;
+import android.net.Uri;
 
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
@@ -11,6 +12,7 @@ import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Genre;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -27,8 +29,9 @@ public class MediaItemHelper {
                     .setDurationMs(music.duration)
                     .build();
 
+            Uri uri = Uri.fromFile(new File(music.path));
             MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
+                    .setUri(uri)
                     .setMediaId(String.valueOf(music.id))
                     .setMediaMetadata(metadata)
                     .build();

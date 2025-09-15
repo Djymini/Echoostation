@@ -365,8 +365,9 @@ public class AlbumInfoFragment extends Fragment {
                     .setDurationMs(music.duration)
                     .build();
 
+            Uri uri = Uri.fromFile(new File(music.path));
             MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
+                    .setUri(uri)
                     .setMediaId(String.valueOf(music.id))
                     .setMediaMetadata(metadata)
                     .build();

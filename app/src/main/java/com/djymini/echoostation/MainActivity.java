@@ -13,11 +13,9 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.DeleteManager;
 import com.djymini.echoostation.helpers.MusicScanner;
