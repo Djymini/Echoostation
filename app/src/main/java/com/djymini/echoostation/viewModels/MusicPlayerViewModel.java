@@ -7,11 +7,13 @@ import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
+import androidx.media3.common.util.UnstableApi;
 import androidx.media3.session.MediaController;
 import androidx.media3.session.SessionToken;
 
@@ -68,6 +70,7 @@ public class MusicPlayerViewModel extends ViewModel {
     }
 
 
+    @OptIn(markerClass = UnstableApi.class)
     private void ensureConnected(Context context, Runnable onReady) {
         if (controller != null) {
             if (onReady != null) onReady.run();
@@ -229,6 +232,10 @@ public class MusicPlayerViewModel extends ViewModel {
     public void seekTo(Context context, long position) {
         ensureConnected(context, () -> controller.seekTo(position));
     }
+
+    public int getPlaylistSize(){return (controller != null) ? controller.getMediaItemCount() : 0;}
+
+    public int getIndexCurrentItem(){return (controller != null) ? controller.getCurrentMediaItemIndex() : 0;}
 
     public long getCurrentPosition() {
         return (controller != null) ? controller.getCurrentPosition() : 0;

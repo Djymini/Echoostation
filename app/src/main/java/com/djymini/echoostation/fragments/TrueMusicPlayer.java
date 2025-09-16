@@ -295,12 +295,13 @@ public class TrueMusicPlayer {
 
         // UI textuel
         if (current != null) {
-            playerTitle.setText(current.mediaMetadata.title != null ? current.mediaMetadata.title : "Inconnus");
-            playerArtist.setText(current.mediaMetadata.artist != null ? current.mediaMetadata.artist : "Inconnus");
-            playerAlbum.setText(current.mediaMetadata.albumTitle != null ? current.mediaMetadata.albumTitle : "Inconnus");
-            durationView.setText(current.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(current.mediaMetadata.durationMs) : "Inconnus");
+            playerTitle.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : "Inconnus");
+            playerArtist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : "Inconnus");
+            playerAlbum.setText(item.mediaMetadata.albumTitle != null ? item.mediaMetadata.albumTitle : "Inconnus");
+            durationView.setText(item.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(item.mediaMetadata.durationMs) : "Inconnus");
+            positionItemView.setText(String.valueOf(main.playerViewModel.getIndexCurrentItem() + 1) + "/" + String.valueOf(main.playerViewModel.getPlaylistSize()));
 
-            Uri artworkUri = current.mediaMetadata.artworkUri;
+            Uri artworkUri = item.mediaMetadata.artworkUri;
             Glide.with(context)
                     .load(artworkUri)
                     .placeholder(R.drawable.echoostation_placeholder_album_3x)
