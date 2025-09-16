@@ -1,9 +1,7 @@
 package com.djymini.echoostation.fragments;
 
-import android.content.ContentUris;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -17,16 +15,12 @@ import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.media3.common.MediaItem;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.MediaStore;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -40,21 +34,17 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
 import com.djymini.echoostation.adapters.MusicAdapter;
-import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.dtos.MusicDto;
-import com.djymini.echoostation.entities.Artist;
-import com.djymini.echoostation.ui.MusicDialogManager;
+import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -71,7 +61,6 @@ public class ArtistInfoFragment extends Fragment {
     private Button playButton, shuffleButton;
     private LinearLayout bestSongContainer, albumContainer, albumApparitionContainer, biographieContainer;
 
-    private MusicPlayerViewModel playerViewModel;
     private RecyclerView recyclerViewBestSongs, recyclerViewAlbum, recyclerViewAlbumApparition;
     private List<MusicDto> currentMusicList = new ArrayList<>();
     private List<MusicDto> bestListeningSong = new ArrayList<>();
@@ -85,7 +74,7 @@ public class ArtistInfoFragment extends Fragment {
     private ActionMode actionMode;
     private ActivityResultLauncher<IntentSenderRequest> deleteMultipleLauncher;
     private List<MusicDto> musicsPendingDeletion;
-    private List<MediaItem> playlist;
+    private List<MediaItem> bestListeningMusicPlaylist;
 
     private MainActivity main;
     private ExecutorService executor;
@@ -214,7 +203,7 @@ public class ArtistInfoFragment extends Fragment {
         main.dbService.getMusicDao().getMusicDetailByArtistLiveBest5(String.valueOf(artist.id)).observe(getViewLifecycleOwner(), musics -> {
             bestListeningSong = new ArrayList<>(musics);
             sortAndDisplayBestMusics();
-
+            bestListeningMusicPlaylist = MediaItemHelper.loadPlaylist(bestListeningSong);
         });
 
         main.dbService.getAlbumDao().getAllByArtistDetailLive(artist.id).observe(getViewLifecycleOwner(), albums -> {
@@ -264,7 +253,7 @@ public class ArtistInfoFragment extends Fragment {
         });
 
         adapterMusic.setOnItemClickListener(position -> {
-            playerViewModel.playPlaylist(requireContext(), playlist, position);
+            main.playerViewModel.playPlaylist(requireContext(), bestListeningMusicPlaylist, position);
         });
     }
 

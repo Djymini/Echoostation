@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasPermission = false;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         setupPermissionViewModel();
         setupMusicScanViewModel();
         deleteManager = new DeleteManager(this, this);
-
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
@@ -119,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
     }
 
-
-
     // -------- Buttons --------
     private void setupButtons() {
         Button grantPermissionButton = findViewById(R.id.confirm_button);
@@ -147,7 +143,6 @@ public class MainActivity extends AppCompatActivity {
                 scanDeviceMusic();
             }
         });
-
         permissionViewModel.checkPermission(this);
     }
 

@@ -22,7 +22,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginVertical="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
                 android:clipToPadding="false"/>
 
             <View
@@ -34,7 +35,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginVertical="32dp">
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -63,7 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginVertical="32dp">
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="44dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -92,7 +95,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginVertical="32dp">
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="44dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -121,7 +125,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginVertical="32dp">
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="44dp">
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -18,15 +18,28 @@
     <color name="trueTransparenceColor">#000D172F</color>
 
     <color name="good_vibe_color">#FFB400</color>
-    <color name="motivation_color">#00C853</color>
+    <color name="motivation_color">#00FF6A</color>
     <color name="party_color">#FF4081</color>
-    <color name="cleaning_color">#26C6DA</color>
-    <color name="night_color">#7E57C2</color>
-    <color name="sad_color">#1E88E5</color>
+    <color name="cleaning_color">#2DE8FF</color>
+    <color name="night_color">#A673FF</color>
+    <color name="sad_color">#2097FF</color>
     <color name="gaming_color">#FF6D00</color>
-    <color name="morning_color">#FDD835</color>
-    <color name="wash_color">#43A047</color>
-    <color name="drive_color">#00897B</color>
-    <color name="work_color">#546E7A</color>
-    <color name="mind_color">#D81B60</color>
+    <color name="morning_color">#FDFD6E</color>
+    <color name="wash_color">#72FF6D</color>
+    <color name="drive_color">#FFAA00</color>
+    <color name="work_color">#FF1F4C</color>
+    <color name="mind_color">#EF4EFB</color>
+
+    <color name="good_vibe_background">#d5d7ba</color>
+    <color name="motivation_background">#9be9d3</color>
+    <color name="party_background">#d5bdd8</color>
+    <color name="cleaning_background">#a5e3f5</color>
+    <color name="night_background">#c1c8f5</color>
+    <color name="sad_background">#a2d1f5</color>
+    <color name="gaming_background">#d5c7ba</color>
+    <color name="morning_background">#d5e8d4</color>
+    <color name="wash_background">#b5e9d3</color>
+    <color name="drive_background">#d5d5ba</color>
+    <color name="work_background">#d5b5cc</color>
+    <color name="mind_background">#d2c0f4</color>
 </resources>
