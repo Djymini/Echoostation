@@ -23,7 +23,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:contentDescription="@string/album_cover"
-            android:src="@drawable/echoostation_placeholder_album_3x"/>
+            android:src="@drawable/echoostation_placeholder_artist_3x"/>
     </androidx.cardview.widget.CardView>
 
     <TextView

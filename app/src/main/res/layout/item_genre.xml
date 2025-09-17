@@ -15,7 +15,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/echoostation_placeholder_album_3x"/>
+            android:src="@drawable/echoostation_placeholder_genre_3x"/>
 
         <TextView
             android:id="@+id/genre_name"

@@ -211,8 +211,8 @@ public class AlbumInfoFragment extends Fragment {
     private void setAlbumImage(ImageView imageView){
         Glide.with(requireContext())
                 .load(album.getCover())
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
+                .placeholder(R.drawable.echoostation_placeholder_album_3x)
+                .error(R.drawable.echoostation_placeholder_album_3x)
                 .into(imageView);
     }
 

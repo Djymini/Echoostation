@@ -17,12 +17,11 @@
         android:focusable="true">
         <ImageButton
             android:id="@+id/image_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@null"
-            android:contentDescription="@string/image_button_home"
-            android:scaleType="fitCenter"/>
+            android:contentDescription="@string/image_button_home"/>
     </androidx.cardview.widget.CardView>
     <TextView
         android:id="@+id/name_button"

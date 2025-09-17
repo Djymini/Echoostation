@@ -182,9 +182,9 @@ public class ArtistInfoFragment extends Fragment {
             if (!file.exists()) file = null; // fallback si fichier supprimé
         }
         Glide.with(requireContext())
-                .load(file != null ? file : R.drawable.echoostation_placeholder_music_3x)
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
+                .load(file != null ? file : R.drawable.echoostation_placeholder_artist_3x)
+                .placeholder(R.drawable.echoostation_placeholder_artist_3x)
+                .error(R.drawable.echoostation_placeholder_artist_3x)
                 .into(backgroundImage);
     }
 

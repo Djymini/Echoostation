@@ -304,13 +304,13 @@
                     android:id="@+id/position_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="8dp"
+                    android:layout_marginVertical="16dp"
                     android:fontFamily="@font/ibm_plex_sans_regular"
                     android:text="99/99"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="24dp"
                     android:orientation="horizontal">
                     <ImageButton
                         android:id="@+id/lyrics_button"

@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="410dp"
                 android:alpha="0.4"
-                android:src="@drawable/echoostation_placeholder_album_3x"/>
+                android:src="@drawable/echoostation_placeholder_playlist_3x"/>
 
             <View
                 android:layout_width="match_parent"
@@ -33,19 +33,114 @@
                 android:layout_marginTop="40dp"
                 app:cardCornerRadius="12dp"
                 android:backgroundTint="@color/trueTransparenceColor">
-                <ImageView
-                    android:id="@+id/icon_playlist"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/round_history_24"/>
-
-                <ImageView
-                    android:id="@+id/playlist_image"
+               <ImageView
+                    android:id="@+id/playlist_illustration_default"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/echoostation_placeholder_album_3x"
+                    android:src="@drawable/echoostation_placeholder_playlist_3x"
                     android:visibility="gone"/>
+
+                <RelativeLayout
+                    android:id="@+id/playlist_illustration_trend"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/echoostation_cover_trend_3x"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="4dp"
+                        android:fontFamily="@font/ibm_plex_sans_bold"
+                        android:text="LES PLUS ECOUTEES"
+                        android:textSize="17dp"
+                        android:textColor="#778EA2"/>
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/album_image_third_container"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginEnd="12dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        app:cardCornerRadius="100dp">
+                        <ImageView
+                            android:id="@+id/album_image_third"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/echoostation_placeholder_album_3x"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/album_image_second_container"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerInParent="true"
+                        android:layout_marginStart="12dp"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        app:cardCornerRadius="100dp">
+                        <ImageView
+                            android:id="@+id/album_image_second"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/echoostation_placeholder_album_3x"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/album_image_first_container"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        app:cardCornerRadius="100dp"
+                        android:layout_centerInParent="true"
+                        app:cardBackgroundColor="#243B53">
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="68dp"
+                            android:layout_height="68dp"
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="100dp">
+                            <ImageView
+                                android:id="@+id/album_image_first"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:src="@drawable/echoostation_placeholder_album_3x"/>
+                        </androidx.cardview.widget.CardView>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/playlist_illustration_mix_and_genre_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+                    <ImageView
+                        android:id="@+id/playlist_illustration_mix_and_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/echoostation_placeholder_playlist_3x" />
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/playlist_illustration_text_container"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentBottom="true"
+                        app:cardBackgroundColor="@color/cleaning_background">
+                        <TextView
+                            android:id="@+id/playlist_illustration_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="4dp"
+                            android:fontFamily="@font/ibm_plex_sans_bold"
+                            android:text="MIX GOOD VIBE"
+                            android:textSize="16dp"
+                            android:textColor="@color/colorText"/>
+                    </androidx.cardview.widget.CardView>
+                </RelativeLayout>
+
+
             </androidx.cardview.widget.CardView>
 
             <TextView

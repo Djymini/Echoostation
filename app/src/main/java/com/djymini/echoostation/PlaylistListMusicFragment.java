@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.media3.common.MediaItem;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -30,6 +32,8 @@ import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.fragments.AlbumInfoFragment;
+import com.djymini.echoostation.ui.HomeImageButton;
+import com.djymini.echoostation.utilities.HomeFragmentContants;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
 import java.io.File;
@@ -39,6 +43,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Supplier;
@@ -54,9 +59,12 @@ public class PlaylistListMusicFragment extends Fragment {
     private Map<Integer, PlaylistType> typeMap = new HashMap<>();
     private List<MusicDto> musicList;
 
-    private ImageView iconPlaylist;
-    private TextView playlistNameView, playlistNumberTrack, playlistDurationTotal;
+    private ImageView iconPlaylist, playlistDefaultIllustration, albumFirstImage, albumSecondImage, albumThirdImage, playlistMixGenreIllustration;
+    private TextView playlistNameView, playlistNumberTrack, playlistDurationTotal, playlistMixGenreText;
     private Button playButton, shuffleButton;
+    private RelativeLayout playlistTrendIllustration, playlistMixGenreContainer;
+    private CardView playlistMixGenreTextContainer;
+
     private int playlistDefaultImage;
 
     private RecyclerView recyclerView;
@@ -111,22 +119,22 @@ public class PlaylistListMusicFragment extends Fragment {
         executor = Executors.newSingleThreadExecutor();
 
         mapPlaylist = Map.ofEntries(
-                Map.entry("Récemment écoutés", new PlaylistParams(R.drawable.round_history_24, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
-                Map.entry("Favoris", new PlaylistParams(R.drawable.round_favorite_border_24, () -> main.dbService.getMusicDao().getMusicByTags(true, null, null, null, null, null, null, null, null, null, null, null, null))),
-                Map.entry("Les plus écoutés", new PlaylistParams(R.drawable.round_trending_up_24, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
-                Map.entry("Good vibe", new PlaylistParams(R.drawable.round_sentiment_very_satisfied_24, () -> main.dbService.getMusicService().makeGoodVibeMix())),
-                Map.entry("Motivation", new PlaylistParams(R.drawable.round_fitness_center_24, () -> main.dbService.getMusicService().makeMotivationMix())),
-                Map.entry("Fête", new PlaylistParams(R.drawable.outline_celebration_24, () -> main.dbService.getMusicService().makePartyMix())),
-                Map.entry("Détente", new PlaylistParams(R.drawable.outline_spa_24, () -> main.dbService.getMusicService().makeChillMix())),
-                Map.entry("Nuit", new PlaylistParams(R.drawable.outline_bedtime_24, () -> main.dbService.getMusicService().makeNightMix())),
-                Map.entry("Tristesse", new PlaylistParams(R.drawable.round_sentiment_dissatisfied_24, () -> main.dbService.getMusicService().makeSadMix())),
-                Map.entry("Travail", new PlaylistParams(R.drawable.outline_work_outline_24, () -> main.dbService.getMusicService().makeWorkMix())),
-                Map.entry("Gaming", new PlaylistParams(R.drawable.outline_sports_esports_24, () -> main.dbService.getMusicService().makeGamingMix())),
-                Map.entry("Conduite", new PlaylistParams(R.drawable.outline_drive_eta_24, () -> main.dbService.getMusicService().makeDriveeMix())),
-                Map.entry("Reflexion", new PlaylistParams(R.drawable.outline_school_24, () -> main.dbService.getMusicService().makeMindMix())),
-                Map.entry("Matin", new PlaylistParams(R.drawable.outline_wb_sunny_24, () -> main.dbService.getMusicService().makeMorningMix())),
-                Map.entry("Ménage", new PlaylistParams(R.drawable.outline_cleaning_services_24, () -> main.dbService.getMusicService().makeWalkMix())),
-                Map.entry("Genre", new PlaylistParams(R.drawable.echoostation_placeholder_album_3x, () -> main.dbService.getMusicDao().getMusicDetailByGenre(genreId)))
+                Map.entry("Récemment écoutés", new PlaylistParams(R.drawable.echoostation_cover_recently_3x, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
+                Map.entry("Favoris", new PlaylistParams(R.drawable.echoostation_cover_favorite_3x, () -> main.dbService.getMusicDao().getMusicByTags(true, null, null, null, null, null, null, null, null, null, null, null, null))),
+                Map.entry("Les plus écoutés", new PlaylistParams(R.drawable.echoostation_cover_trend_3x, () -> main.dbService.getMusicDao().getMusicDetailMostListening())),
+                Map.entry("Good vibe", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeGoodVibeMix())),
+                Map.entry("Motivation", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMotivationMix())),
+                Map.entry("Fête", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makePartyMix())),
+                Map.entry("Détente", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeChillMix())),
+                Map.entry("Nuit", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeNightMix())),
+                Map.entry("Tristesse", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeSadMix())),
+                Map.entry("Travail", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeWorkMix())),
+                Map.entry("Gaming", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeGamingMix())),
+                Map.entry("Conduite", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeDriveeMix())),
+                Map.entry("Reflexion", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMindMix())),
+                Map.entry("Matin", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMorningMix())),
+                Map.entry("Ménage", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeWalkMix())),
+                Map.entry("Genre", new PlaylistParams(R.drawable.echoostation_placeholder_genre_3x, () -> main.dbService.getMusicDao().getMusicDetailByGenre(genreId)))
         );
 
         executor.execute(() -> {
@@ -139,7 +147,7 @@ public class PlaylistListMusicFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list_music, container, false);
         bindView(view);
-        setupInfoPlaylist();
+        setupInfoPlaylist(typeMap.get(playlistType));
         setupButton();
         setupRecyclerView();
         sortAndDisplayMusics();
@@ -185,7 +193,6 @@ public class PlaylistListMusicFragment extends Fragment {
 
     public List<MusicDto> getMusicList(String playlistName, PlaylistType type) {
         if (type == PlaylistType.DEFAULT) {
-            Log.d("PlaylistListMusicFragment", playlistName);
             PlaylistParams params = mapPlaylist.get(playlistName);
             if (params != null) {
                 playlistDefaultImage = params.imageRes;
@@ -197,32 +204,91 @@ public class PlaylistListMusicFragment extends Fragment {
 
 
     private void bindView(View view){
-        iconPlaylist = view.findViewById(R.id.icon_playlist);
         playlistNameView = view.findViewById(R.id.playlist_name);
         playlistNumberTrack = view.findViewById(R.id.number_tracks);
         playlistDurationTotal = view.findViewById(R.id.duration_total);
         playButton = view.findViewById(R.id.play_button);
         shuffleButton = view.findViewById(R.id.shuffle_button);
         recyclerView = view.findViewById(R.id.recycler_view_song_playlist);
+
+        playlistDefaultIllustration = view.findViewById(R.id.playlist_illustration_default);
+
+        playlistTrendIllustration = view.findViewById(R.id.playlist_illustration_trend);
+        albumFirstImage = view.findViewById(R.id.album_image_first);
+        albumSecondImage = view.findViewById(R.id.album_image_second);
+        albumThirdImage = view.findViewById(R.id.album_image_third);
+
+        playlistMixGenreContainer = view.findViewById(R.id.playlist_illustration_mix_and_genre_container);
+        playlistMixGenreIllustration = view.findViewById(R.id.playlist_illustration_mix_and_genre);
+        playlistMixGenreTextContainer = view.findViewById(R.id.playlist_illustration_text_container);
+        playlistMixGenreText = view.findViewById(R.id.playlist_illustration_text);
     }
 
-    private void setupInfoPlaylist(){
-        Glide.with(requireContext())
-                .load(playlistDefaultImage)
-                .placeholder(R.drawable.echoostation_placeholder_album_3x)
-                .error(R.drawable.echoostation_placeholder_album_3x)
-                .into(iconPlaylist);
+    private void setupInfoPlaylist(PlaylistType type){
+        if (type == PlaylistType.DEFAULT && !playlistName.equals("Récemment écoutés") && !playlistName.equals("Favoris") && !playlistName.equals("Les plus écoutés")) {
+            playlistDefaultIllustration.setVisibility(View.GONE);
+            playlistTrendIllustration.setVisibility(View.GONE);
+            playlistMixGenreContainer.setVisibility(View.VISIBLE);
 
-        playlistNameView.setText(playlistName.equals("Genre") ? genreName : playlistName);
-        if(!playlistName.equals("Genre")){
-            ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(getContext(), R.color.accentColor));
-            iconPlaylist.setImageTintList(tint);
+            if(playlistName.equals("Genre")){
+                displayImageWithGlide(playlistDefaultImage, R.drawable.echoostation_placeholder_genre_3x, playlistMixGenreIllustration);
+                playlistNameView.setText(genreName);
+                playlistMixGenreText.setText(genreName.toUpperCase());
+            }else{
+                Map<String, HomeImageButton> tag = new HashMap<>();
+                for (HomeImageButton imageButton : HomeFragmentContants.homeImageButtonListMix){
+                    tag.put(imageButton.getNameButton(), imageButton);
+                }
+
+                String mixName = "Mix " + playlistName;
+                displayImageWithGlide(musicList.get(0).getCover(), R.drawable.echoostation_placeholder_playlist_3x, playlistMixGenreIllustration);
+                playlistNameView.setText(mixName);
+
+                ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), tag.get(playlistName).getBackgroundColor()));
+                playlistMixGenreTextContainer.setCardBackgroundColor(tint);
+                playlistMixGenreText.setText(mixName.toUpperCase());
+
+                shuffleButton.setVisibility(View.GONE);
+            }
+
+        }else if (playlistName.equals("Les plus écoutés")){
+            playlistDefaultIllustration.setVisibility(View.GONE);
+            playlistTrendIllustration.setVisibility(View.VISIBLE);
+            playlistMixGenreContainer.setVisibility(View.GONE);
+            playlistNameView.setText(playlistName);
+
+            displayImageWithGlide(musicList.get(0).getCover(), R.drawable.echoostation_placeholder_album_3x, albumFirstImage);
+            displayImageWithGlide(musicList.get(1).getCover(), R.drawable.echoostation_placeholder_album_3x, albumSecondImage);
+            displayImageWithGlide(musicList.get(2).getCover(), R.drawable.echoostation_placeholder_album_3x, albumThirdImage);
+
+        }else{
+            playlistDefaultIllustration.setVisibility(View.VISIBLE);
+            playlistTrendIllustration.setVisibility(View.GONE);
+            playlistMixGenreContainer.setVisibility(View.GONE);
+            playlistNameView.setText(playlistName);
+            displayImageWithGlide(playlistDefaultImage, playlistDefaultImage, playlistDefaultIllustration);
         }
 
         String totalMusic = musicList.size() > 1 ? String.valueOf(musicList.size()) + " morceaux" : String.valueOf(musicList.size()) + " morceau";
         String duration = "Durée : " + TimeUtilities.durationTotal(musicList);
         playlistNumberTrack.setText(totalMusic);
         playlistDurationTotal.setText(duration);
+    }
+
+    private void displayImageWithGlide(int image, int placeholder, ImageView view){
+        Glide.with(requireContext())
+                .load(image)
+                .placeholder(placeholder)
+                .error(placeholder)
+                .into(view);
+    }
+
+    private void displayImageWithGlide(Uri image, int placeholder, ImageView view){
+        Glide.with(requireContext())
+                .load(image)
+                .placeholder(placeholder)
+                .error(placeholder)
+                .into(view);
     }
 
     private void setupButton(){

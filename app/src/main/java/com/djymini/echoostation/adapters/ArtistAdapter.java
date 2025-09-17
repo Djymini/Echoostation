@@ -96,9 +96,9 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistView
         }
 
         Glide.with(holder.itemView.getContext())
-                .load(file != null ? file : R.drawable.echoostation_placeholder_music_3x)
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
+                .load(file != null ? file : R.drawable.echoostation_placeholder_artist_3x)
+                .placeholder(R.drawable.echoostation_placeholder_artist_3x)
+                .error(R.drawable.echoostation_placeholder_artist_3x)
                 .into(holder.artistImage);
 
         holder.itemView.setBackgroundColor(
