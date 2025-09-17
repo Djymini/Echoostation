@@ -15,10 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 
 import com.djymini.echoostation.MainActivity;
-import com.djymini.echoostation.PlaylistListMusicFragment;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.GenreAdapter;
 import com.djymini.echoostation.entities.Genre;
+import com.djymini.echoostation.fragments.playlistMusicFragment.GenrePlaylistFragment;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.SortOption;
@@ -77,7 +77,7 @@ public class GenreFragment extends EchoostationFragment {
 
         adapter.setOnItemClickListener(position -> {
             FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
-            Fragment fragment = PlaylistListMusicFragment.newInstance("Genre", 0, adapter.getCurrentList().get(position).name, adapter.getCurrentList().get(position).id);
+            Fragment fragment = GenrePlaylistFragment.newInstance("Genre", adapter.getCurrentList().get(position).name, adapter.getCurrentList().get(position).id);
 
             if (!fragment.isAdded()) {
                 transaction.add(R.id.frame_layout, fragment);

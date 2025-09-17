@@ -16,8 +16,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.djymini.echoostation.MainActivity;
-import com.djymini.echoostation.PlaylistListMusicFragment;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.fragments.playlistMusicFragment.DefaultPlaylistFragment;
+import com.djymini.echoostation.fragments.playlistMusicFragment.MixPlaylistFragment;
+import com.djymini.echoostation.fragments.playlistMusicFragment.TrendPlaylistFragment;
 import com.djymini.echoostation.ui.HomeImageButton;
 
 import java.util.List;
@@ -54,8 +56,20 @@ public class HomeImageButtonAdapter extends RecyclerView.Adapter<HomeImageButton
 
         holder.imageButton.setOnClickListener(v -> {
             FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
+            Fragment fragment;
 
-            Fragment fragment = PlaylistListMusicFragment.newInstance(homeImageButtonList.get(position).getNameButton(), 0, "", 0);
+            switch (homeImageButtonList.get(position).getNameButton()){
+                case "Favoris" :
+                case "Récemment écoutés" :
+                    fragment = DefaultPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());
+                    break;
+                case "Les plus écoutés" :
+                    fragment = TrendPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());
+                    break;
+                default:
+                    fragment = MixPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());
+                    break;
+            }
 
             if (!fragment.isAdded()) {
                 transaction.add(R.id.frame_layout, fragment);
