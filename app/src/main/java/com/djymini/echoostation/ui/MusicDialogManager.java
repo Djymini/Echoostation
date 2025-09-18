@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
@@ -28,6 +29,7 @@ import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.entities.Playlist;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
 import com.djymini.echoostation.services.GenreService;
@@ -220,6 +222,42 @@ public class MusicDialogManager {
             window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         }
 
+    }
+
+    public void showAddPlaylistDialog() {
+        Dialog dialog = new Dialog(activity);
+        dialog.setContentView(R.layout.dialog_create_playlist);
+
+        TextView dialogTitle = dialog.findViewById(R.id.dialog_title);
+        EditText editName = dialog.findViewById(R.id.edit_name);
+        Button cancelButton = dialog.findViewById(R.id.btn_cancel);
+        Button createButton = dialog.findViewById(R.id.btn_save);
+
+        dialogTitle.setText("Créer une playlist");
+
+        createButton.setOnClickListener(v -> {
+            String newName = editName.getText().toString().trim();
+
+            executor.execute(() -> {
+                MainActivity mainActivity = (MainActivity)activity;
+                long statisticId = statisticService.createStatistic();
+                Playlist newPlaylist = new Playlist(newName, statisticId);
+                mainActivity.dbService.getPlaylistDao().insertAll(newPlaylist);
+
+                activity.runOnUiThread(() -> {
+                    Toast.makeText(activity, "Playlist crée", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                });
+            });
+        });
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
     }
 
     public long getLastMusicDeletedId() {

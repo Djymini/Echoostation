@@ -23,12 +23,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.HomeImageButtonAdapter;
+import com.djymini.echoostation.adapters.PlaylistAdapter2;
 import com.djymini.echoostation.adapters.TagAdapter;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.MusicTagDao;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.dtos.PlaylistDto;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.services.AlbumService;
 import com.djymini.echoostation.services.ArtistService;
@@ -36,6 +38,7 @@ import com.djymini.echoostation.services.GenreService;
 import com.djymini.echoostation.services.MusicService;
 import com.djymini.echoostation.services.StatisticService;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 
@@ -56,18 +59,20 @@ public class MusicPlayerDialogManager {
         this.context = context;
     }
 
-    public void showBottomDialog(MusicDto musicDto, MainActivity mainActivity) {
+    public void showBottomDialog(MusicDto musicDto, List<PlaylistDto> playlistDtoList, MainActivity mainActivity) {
         final Dialog dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_sheet_layout_tag_playlist);
 
         TextView title = dialog.findViewById(R.id.title_dialog);
         RecyclerView recyclerView = dialog.findViewById(R.id.recycler_view_tag);
+        RecyclerView recyclerView2 = dialog.findViewById(R.id.recycler_view_playlist);
 
         title.setText(musicDto.title);
 
         Log.d("MusicDialogManager", musicDto.toString());
         setupRecyclerTag(recyclerView, musicDto, mainActivity);
+        setupRecyclerPlaylist(playlistDtoList, recyclerView2, musicDto, mainActivity);
 
         dialog.show();
         Window window = dialog.getWindow();
@@ -83,5 +88,10 @@ public class MusicPlayerDialogManager {
     private void setupRecyclerTag(RecyclerView recyclerView, MusicDto musicDto, MainActivity mainActivity){
         TagAdapter tagAdapter = new TagAdapter(homeImageButtonListMix, musicDto, executor, mainActivity);
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerView, context, tagAdapter, 4, false);
+    }
+
+    private void setupRecyclerPlaylist(List<PlaylistDto> playlistDtoList, RecyclerView recyclerView, MusicDto musicDto, MainActivity mainActivity){
+        PlaylistAdapter2 playlistAdapter2 = new PlaylistAdapter2(playlistDtoList, musicDto, mainActivity, executor);
+        RecyclerViewHelper.setupRecyclerViewGrid(recyclerView, context, playlistAdapter2, 4, false);
     }
 }

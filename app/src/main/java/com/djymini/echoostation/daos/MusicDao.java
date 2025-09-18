@@ -20,6 +20,9 @@ public interface MusicDao {
     @Query("INSERT INTO artist_music (id_artist, id_music, position) VALUES (:artistId, :musicId, :position)")
     void insertArtistMusic(long artistId, long musicId, int position);
 
+    @Query("INSERT INTO music_playlist (id_playlist, id_music) VALUES (:playlistId, :musicId)")
+    void insertMusicPlaylist(long playlistId, long musicId);
+
     @Delete
     void delete(Music music);
 
@@ -321,6 +324,33 @@ public interface MusicDao {
             ") AS artist_data ON artist_data.musicId = m.id " +
             "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%')")
     LiveData<List<MusicDto>> getMusicDetailByArtistLive(String artistId);
+
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.good_vibe_music AS goodVibeMusic, mt.motivation_music AS motivationMusic, mt.party_music AS partyMusic, mt.chill_music AS chillMusic, mt.night_music AS nightMusic, mt.sad_music AS sadMusic, mt.gaming_music AS gamingMusic, mt.morning_music AS morningMusic, mt.walk_music AS walkMusic, mt.drive_music AS driveMusic, mt.work_music AS workMusic, mt.mind_music AS mindMusic, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.artistId, artist_data.artistName " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "JOIN music_playlist mp ON m.id = mp.id_music JOIN playlist p ON mp.id_playlist = p.id " +
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
+            "          GROUP_CONCAT(a.name, ', ') AS artistName " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id " +
+            "WHERE p.id = :idPlaylist")
+    List<MusicDto> getMusicDetailByPlaylist(long idPlaylist);
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +
