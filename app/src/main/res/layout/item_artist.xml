@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    android:paddingHorizontal="12dp"
+    android:paddingHorizontal="8dp"
     android:layout_marginBottom="24dp"
     android:foreground="?attr/selectableItemBackground"
     android:clickable="true"
@@ -23,7 +23,7 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:contentDescription="@string/album_cover"
-            android:src="@drawable/echoostation_placeholder_album_3x"/>
+            android:src="@drawable/echoostation_placeholder_artist_3x"/>
     </androidx.cardview.widget.CardView>
 
     <TextView

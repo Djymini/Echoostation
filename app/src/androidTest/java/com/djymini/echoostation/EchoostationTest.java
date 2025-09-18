@@ -10,7 +10,7 @@ import androidx.test.core.app.ApplicationProvider;
 import com.djymini.echoostation.daos.AlbumDao;
 import com.djymini.echoostation.daos.ArtistDao;
 import com.djymini.echoostation.daos.GenreDao;
-import com.djymini.echoostation.daos.MoodDao;
+import com.djymini.echoostation.daos.MusicTagDao;
 import com.djymini.echoostation.daos.MusicDao;
 import com.djymini.echoostation.daos.PlaylistDao;
 import com.djymini.echoostation.daos.StatisticDao;
@@ -29,7 +29,7 @@ public class EchoostationTest {
     public AlbumDao albumDao;
     public ArtistDao artistDao;
     public GenreDao genreDao;
-    public MoodDao moodDao;
+    public MusicTagDao musicTagDao;
     public MusicDao musicDao;
     public PlaylistDao playlistDao;
     public StatisticDao statisticDao;
@@ -55,11 +55,11 @@ public class EchoostationTest {
         artistDao = db.artistDao();
         genreDao = db.genreDao();
         statisticDao = db.statisticDao();
-        moodDao = db.moodDao();
+        musicTagDao = db.musicTagDao();
         playlistDao = db.playlistDao();
 
         statisticService = new StatisticService(statisticDao);
-        musicService = new MusicService(musicDao, statisticDao, statisticService);
+        musicService = new MusicService(musicDao, musicTagDao, statisticDao, statisticService);
         albumService = new AlbumService(albumDao, statisticDao, statisticService);
         genreService = new GenreService(genreDao, statisticDao, statisticService, ApplicationProvider.getApplicationContext());
         artistService = new ArtistService(artistDao, statisticDao, statisticService, ApplicationProvider.getApplicationContext());

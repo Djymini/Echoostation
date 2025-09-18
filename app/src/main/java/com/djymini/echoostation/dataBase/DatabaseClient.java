@@ -15,7 +15,7 @@ public class DatabaseClient {
                 context.getApplicationContext(),
                 EchooStationDatabase.class,
                 "echoo_station_db"
-        ).build();
+        ).fallbackToDestructiveMigration().build();
     }
 
     public static synchronized DatabaseClient getInstance(Context context) {

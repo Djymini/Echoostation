@@ -26,7 +26,6 @@ import androidx.lifecycle.ViewModelStoreOwner;
 
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.fragments.LibraryFragment;
-import com.djymini.echoostation.fragments.MusicPlayerFragment;
 import com.djymini.echoostation.fragments.TrueMusicPlayer;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
@@ -151,7 +150,7 @@ public class Navigator {
 
                 if (artistView != null) {
                     float minSize = 14f;
-                    float maxSize = 18f;
+                    float maxSize = 16f;
                     float newSize = minSize + (maxSize - minSize) * progress;
                     artistView.setTextSize(TypedValue.COMPLEX_UNIT_SP, newSize);
                 }

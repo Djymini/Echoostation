@@ -82,6 +82,7 @@ public class MusicFragment extends EchoostationFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         setupDaoAndService();
+        setupLoaderMedia();
         executor = Executors.newSingleThreadExecutor();
 
         setupUI(view);
@@ -187,7 +188,7 @@ public class MusicFragment extends EchoostationFragment {
     @Override
     public void loadMedias() {
         main.navigator.modifyTitle(getString(R.string.library_fragment));
-        main.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
+        loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
             currentMusicList = new ArrayList<>(musics);
             sortAndDisplayMedias(spinner.getSelectedItemPosition());
             String counterMusic = musics.size() + getString(R.string.music_fragment);

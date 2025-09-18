@@ -30,6 +30,7 @@ import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Music;
+import com.djymini.echoostation.ui.MusicPlayerDialogManager;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -44,10 +45,10 @@ import java.util.concurrent.TimeUnit;
 public class TrueMusicPlayer {
     private BottomSheetBehavior<View> bottomSheetBehavior;
     private ImageView playerCover;
-    private TextView playerTitle, playerArtist, playerAlbum, currentTimeView, durationView;
+    private TextView playerTitle, playerArtist, playerAlbum, currentTimeView, durationView, positionItemView;
     private LinearLayout fullContent;
     private MotionLayout mainContent;
-    private ImageButton repeatButton, shuffleButon, playPauseButton, nextButton, prevButton;
+    private ImageButton repeatButton, shuffleButon, playPauseButton, nextButton, prevButton, lyricsButton, favoriteButton, addButton, currentListButton, moreButton;
 
     private MusicPlayerViewModel viewModel;
     private SeekBar seekBar;
@@ -63,8 +64,8 @@ public class TrueMusicPlayer {
 
     private MainActivity main;
 
-    private final float MINI_SIZE = 64f;   // taille mini player
-    private final float FULL_SIZE = 200f;
+    private MusicDto currentMusicDto;
+    private MusicPlayerDialogManager musicPlayerDialogManager;
 
     public TrueMusicPlayer(View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity main) {
         this.context = context;
@@ -85,6 +86,13 @@ public class TrueMusicPlayer {
         fullContent = view.findViewById(R.id.full_content);
         playerCarousel = view.findViewById(R.id.player_carousel);
 
+        positionItemView = view.findViewById(R.id.position_item);
+        lyricsButton = view.findViewById(R.id.lyrics_button);
+        favoriteButton = view.findViewById(R.id.favorite_button);
+        addButton = view.findViewById(R.id.add_button);
+        currentListButton = view.findViewById(R.id.current_list_button);
+        moreButton = view.findViewById(R.id.more_button);
+
         setupCarousel();
 
         setupViewModel(lifecycleOwner, storeOwner);
@@ -98,6 +106,22 @@ public class TrueMusicPlayer {
             if(isPlaying){
                 mainContent.setVisibility(View.VISIBLE);
             }
+        });
+
+        favoriteButton.setOnClickListener(v -> {
+            executor.execute(() -> {
+                currentMusicDto.favoriteMusic = !currentMusicDto.favoriteMusic;
+                this.main.dbService.getMusicTagDao().updateFavoriteTag(currentMusicDto.musicTagId, currentMusicDto.favoriteMusic);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    updateFavorite(currentMusicDto);
+                });
+            });
+        });
+
+        musicPlayerDialogManager = new MusicPlayerDialogManager(main, this.main, executor, context);
+
+        addButton.setOnClickListener(v -> {
+            musicPlayerDialogManager.showBottomDialog(currentMusicDto,this.main);
         });
     }
 
@@ -172,7 +196,12 @@ public class TrueMusicPlayer {
         );
 
         viewModel.getCurrentItem().observe(lifecycleOwner, item ->{
-            updateUI(item);
+            executor.execute(() -> {
+                currentMusicDto = main.dbService.getMusicDao().getMusicDetailById(Long.parseLong(item.mediaId));
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    updateUI(item, currentMusicDto);
+                });
+            });
         });
 
         viewModel.getRepeatMode().observe(lifecycleOwner, mode -> {
@@ -236,10 +265,9 @@ public class TrueMusicPlayer {
                 });
             }
         });
-
     }
 
-    private void updateUI(MediaItem item) {
+    private void updateUI(MediaItem item, MusicDto currentMusicDto) {
         if (viewModel.getController() == null) return;
 
         Player player = viewModel.getController();
@@ -267,12 +295,13 @@ public class TrueMusicPlayer {
 
         // UI textuel
         if (current != null) {
-            playerTitle.setText(current.mediaMetadata.title != null ? current.mediaMetadata.title : "Inconnus");
-            playerArtist.setText(current.mediaMetadata.artist != null ? current.mediaMetadata.artist : "Inconnus");
-            playerAlbum.setText(current.mediaMetadata.albumTitle != null ? current.mediaMetadata.albumTitle : "Inconnus");
-            durationView.setText(current.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(current.mediaMetadata.durationMs) : "Inconnus");
+            playerTitle.setText(item.mediaMetadata.title != null ? item.mediaMetadata.title : "Inconnus");
+            playerArtist.setText(item.mediaMetadata.artist != null ? item.mediaMetadata.artist : "Inconnus");
+            playerAlbum.setText(item.mediaMetadata.albumTitle != null ? item.mediaMetadata.albumTitle : "Inconnus");
+            durationView.setText(item.mediaMetadata.durationMs != null ? TimeUtilities.formatDuration(item.mediaMetadata.durationMs) : "Inconnus");
+            positionItemView.setText(String.valueOf(main.playerViewModel.getIndexCurrentItem() + 1) + "/" + String.valueOf(main.playerViewModel.getPlaylistSize()));
 
-            Uri artworkUri = current.mediaMetadata.artworkUri;
+            Uri artworkUri = item.mediaMetadata.artworkUri;
             Glide.with(context)
                     .load(artworkUri)
                     .placeholder(R.drawable.echoostation_placeholder_album_3x)
@@ -280,9 +309,16 @@ public class TrueMusicPlayer {
                     .error(R.drawable.echoostation_placeholder_album_3x)
                     .into(playerCover);
         }
+
+        executor.execute(() -> {
+            MusicDto dto = main.dbService.getMusicDao().getMusicDetailById(Long.parseLong(item.mediaId));
+            updateFavorite(currentMusicDto);
+        });
     }
 
-
+    private void updateFavorite(MusicDto currentMusicDto){
+        favoriteButton.setImageResource(currentMusicDto.favoriteMusic ? R.drawable.round_favorite_24 : R.drawable.round_favorite_border_24);
+    }
 
     private void setupClickListeners() {
         playPauseButton.setOnClickListener(v -> viewModel.playPause(context));

@@ -211,8 +211,8 @@ public class AlbumInfoFragment extends Fragment {
     private void setAlbumImage(ImageView imageView){
         Glide.with(requireContext())
                 .load(album.getCover())
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
+                .placeholder(R.drawable.echoostation_placeholder_album_3x)
+                .error(R.drawable.echoostation_placeholder_album_3x)
                 .into(imageView);
     }
 
@@ -365,8 +365,9 @@ public class AlbumInfoFragment extends Fragment {
                     .setDurationMs(music.duration)
                     .build();
 
+            Uri uri = Uri.fromFile(new File(music.path));
             MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(music.path)
+                    .setUri(uri)
                     .setMediaId(String.valueOf(music.id))
                     .setMediaMetadata(metadata)
                     .build();

@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
         setupPermissionViewModel();
         setupMusicScanViewModel();
         deleteManager = new DeleteManager(this, this);
-
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
@@ -103,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         dbService = new DatabaseService(this);
         MusicScanner scanner = new MusicScanner(this, dbService.getMusicDao(), dbService.getAlbumService(), dbService.getArtistService(), dbService.getGenreService(), dbService.getMusicService(), dbService.getStatisticService(), executor);
         PermissionManager permission = new PermissionManager(this, null, this::scanDeviceMusic, null);
+        permission.registerPermissionLauncher();
         MusicDialogManager dialogManager = new MusicDialogManager(this, dbService.getMusicDao(), dbService.getAlbumDao(), dbService.getArtistDao(), dbService.getMusicService(), dbService.getAlbumService(), dbService.getArtistService(), dbService.getGenreService(), dbService.getStatisticService(), executor);
         appInitializer = new AppInitializer(scanner, permission, dialogManager);
     }
@@ -116,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         );
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
     }
-
-
 
     // -------- Buttons --------
     private void setupButtons() {
@@ -140,8 +138,11 @@ public class MainActivity extends AppCompatActivity {
 
             hasPermission = granted;
             ViewCompat.requestApplyInsets(findViewById(R.id.main));
-        });
 
+            if (granted) {
+                scanDeviceMusic();
+            }
+        });
         permissionViewModel.checkPermission(this);
     }
 

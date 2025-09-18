@@ -30,9 +30,9 @@ public class ItemArtist extends ConstraintLayout {
 
     public void setImage(Context context, File file){
         Glide.with(context)
-                .load(file != null ? file : R.drawable.echoostation_placeholder_music_3x)
-                .placeholder(R.drawable.echoostation_placeholder_music_3x)
-                .error(R.drawable.echoostation_placeholder_music_3x)
+                .load(file != null ? file : R.drawable.echoostation_placeholder_artist_3x)
+                .placeholder(R.drawable.echoostation_placeholder_artist_3x)
+                .error(R.drawable.echoostation_placeholder_artist_3x)
                 .into(artistImage);
     }
 
