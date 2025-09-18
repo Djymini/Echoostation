@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 dbService.getMusicDao(),
                 dbService.getArtistDao(),
                 dbService.getAlbumDao(),
-                dbService.getGenreDao()
+                dbService.getGenreDao(),
+                dbService.getPlaylistDao()
         );
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
     }

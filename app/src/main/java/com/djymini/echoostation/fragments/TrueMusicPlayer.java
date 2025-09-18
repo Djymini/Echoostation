@@ -27,6 +27,7 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.CoverCarouselAdapter;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.dtos.PlaylistDto;
 import com.djymini.echoostation.entities.Album;
 import com.djymini.echoostation.entities.Artist;
 import com.djymini.echoostation.entities.Music;
@@ -65,6 +66,7 @@ public class TrueMusicPlayer {
     private MainActivity main;
 
     private MusicDto currentMusicDto;
+    private List<PlaylistDto> playlistDtoList;
     private MusicPlayerDialogManager musicPlayerDialogManager;
 
     public TrueMusicPlayer(View view, LifecycleOwner lifecycleOwner, ViewModelStoreOwner storeOwner, Context context, Activity main) {
@@ -121,7 +123,7 @@ public class TrueMusicPlayer {
         musicPlayerDialogManager = new MusicPlayerDialogManager(main, this.main, executor, context);
 
         addButton.setOnClickListener(v -> {
-            musicPlayerDialogManager.showBottomDialog(currentMusicDto,this.main);
+            musicPlayerDialogManager.showBottomDialog(currentMusicDto, playlistDtoList, this.main);
         });
     }
 
@@ -198,6 +200,7 @@ public class TrueMusicPlayer {
         viewModel.getCurrentItem().observe(lifecycleOwner, item ->{
             executor.execute(() -> {
                 currentMusicDto = main.dbService.getMusicDao().getMusicDetailById(Long.parseLong(item.mediaId));
+                playlistDtoList = main.dbService.getPlaylistDao().getAllDto();
                 new Handler(Looper.getMainLooper()).post(() -> {
                     updateUI(item, currentMusicDto);
                 });

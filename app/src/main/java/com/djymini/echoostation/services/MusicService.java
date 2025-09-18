@@ -97,6 +97,10 @@ public class MusicService {
         }
     }
 
+    public void linkPlaylistWithMusic(long playlistId, long musicId){
+        musicDao.insertMusicPlaylist(playlistId, musicId);
+    }
+
     public void incrementListeningNumberStatistic(Music music){
         statisticHelper.incrementListeningNumber(music, music.id);
         musicDao.updateLastPlay(music.id, TimeUtilities.currentTimeMillis());

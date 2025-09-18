@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@color/colorSecondary">
+    <TextView
+        android:id="@+id/dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ibm_plex_sans_bold"
+        android:text="Dialogue Title"
+        android:textSize="24sp"
+        android:textColor="@color/colorText"/>
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:autofillHints=""
+        android:inputType="text"
+        android:textColor="@color/colorText"
+        android:hint="Nom de la playlist"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/ibm_plex_sans_bold"
+            android:text="Annuler"
+            android:textSize="15sp"
+            android:backgroundTint="@color/disableText"
+            android:textColor="@color/tab_text_color"/>
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_margin="8dp"
+            android:fontFamily="@font/ibm_plex_sans_bold"
+            android:text="Creer"
+            android:textSize="15sp"
+            android:backgroundTint="@color/accentColor"
+            android:textColor="@color/tab_text_color"/>
+    </LinearLayout>
+
+</LinearLayout>
