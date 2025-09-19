@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mediaFragments;
 
 import android.os.Bundle;
 
@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import androidx.appcompat.view.ActionMode;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
@@ -33,11 +31,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 
-public class MusicFragment extends EchoostationFragment {
-    private List<MusicDto> currentMusicList = new ArrayList<>();
-    private MusicAdapter adapter;
+public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
     private List<MediaItem> playlist;
 
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
@@ -73,17 +68,13 @@ public class MusicFragment extends EchoostationFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main = (MainActivity) getActivity();
-        executor = Executors.newSingleThreadExecutor();
+        initializeFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
-        setupDaoAndService();
-        setupLoaderMedia();
-        executor = Executors.newSingleThreadExecutor();
 
         setupUI(view);
         setupObservers();
@@ -92,20 +83,18 @@ public class MusicFragment extends EchoostationFragment {
         return view;
     }
 
-    private void setupUI(View view) {
-        recyclerView = view.findViewById(R.id.recycler_view_song);
-        counterView = view.findViewById(R.id.number_music);
-        spinner = view.findViewById(R.id.spinner);
-        ImageButton shuffleButton = view.findViewById(R.id.shuffle_button);
-
-        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleMusic(currentMusicList, playlist, main, requireContext()));
+    @Override
+    public void setupUI(View view) {
+        super.setupUI(view);
+        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleMusic(mediaList, playlist, main, requireContext()));
 
         setupRecyclerView();
         setupSpinner();
         main.deleteManager.setupDeleteLauncher(executor, this);
     }
 
-    private void setupRecyclerView() {
+    @Override
+    public void setupRecyclerView() {
         adapter = new MusicAdapter();
         RecyclerViewHelper.setupRecyclerViewLinear(recyclerView, getContext(), adapter, LinearLayoutManager.VERTICAL, true);
 
@@ -127,14 +116,14 @@ public class MusicFragment extends EchoostationFragment {
             }
             MusicDto music = adapter.getCurrentList().get(position);
             adapter.toggleSelection(music);
-            updateActionModeTitle();
+            updateActionModeTitle(adapter.getSelectedItems().size());
         });
 
         adapter.setOnItemClickListener(position -> {
             if (actionMode != null) {
                 MusicDto music = adapter.getCurrentList().get(position);
                 adapter.toggleSelection(music);
-                updateActionModeTitle();
+                updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
                 main.playerViewModel.playPlaylist(requireContext(), playlist, position);
             }
@@ -175,21 +164,21 @@ public class MusicFragment extends EchoostationFragment {
         });
 
         main.playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
-            // TODO visuel lecture
+            // TODO: visuel lecture
         });
 
         main.playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
             if (item != null) {
-                // TODO visuel item sélectionné
+                //TODO: visuel item sélectionné
             }
         });
     }
 
     @Override
     public void loadMedias() {
-        main.navigator.modifyTitle(getString(R.string.library_fragment));
-        loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
-            currentMusicList = new ArrayList<>(musics);
+        super.loadMedias();
+        main.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
+            mediaList = new ArrayList<>(musics);
             sortAndDisplayMedias(spinner.getSelectedItemPosition());
             String counterMusic = musics.size() + getString(R.string.music_fragment);
             counterView.setText(counterMusic);
@@ -198,10 +187,10 @@ public class MusicFragment extends EchoostationFragment {
 
     @Override
     public void sortAndDisplayMedias(int position) {
-        if (currentMusicList == null) return;
+        if (mediaList == null) return;
 
         executor.execute(() -> {
-            List<MusicDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(currentMusicList, search, List.of(MusicDto::getTitle, MusicDto::getAlbumName, MusicDto::getArtistName)));
+            List<MusicDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(mediaList, search, List.of(MusicDto::getTitle, MusicDto::getAlbumName, MusicDto::getArtistName)));
             if (position >= 0 && position < SortOption.values().length) {
                 SortOption option = SortOption.values()[position];
                 filtered.sort(option.getComparator());
@@ -210,15 +199,6 @@ public class MusicFragment extends EchoostationFragment {
             playlist = MediaItemHelper.loadPlaylist(filtered);
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });
-    }
-
-    private void updateActionModeTitle() {
-        int count = adapter.getSelectedItems().size();
-        if (count == 0) {
-            actionMode.finish();
-        } else {
-            actionMode.setTitle(count + getString(R.string.item_selected));
-        }
     }
 
     @Override

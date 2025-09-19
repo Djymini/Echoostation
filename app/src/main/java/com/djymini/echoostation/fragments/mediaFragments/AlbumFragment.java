@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mediaFragments;
 
 import android.os.Bundle;
 
@@ -14,31 +14,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
-import com.djymini.echoostation.adapters.PlaylistAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
-import com.djymini.echoostation.dtos.PlaylistDto;
-import com.djymini.echoostation.fragments.playlistMusicFragment.PlaylistPersoFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumInfoFragment;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
-import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
+import com.djymini.echoostation.utilities.SortOption;
+import com.djymini.echoostation.utilities.SortOptionAlbum;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
 
-public class PlaylistFragment extends EchoostationFragment {
-    private List<PlaylistDto> currentPlaylistList = new ArrayList<>();
-    private PlaylistAdapter adapter;
-    private ImageButton addButton;
-
+public class AlbumFragment extends MediaFragment<AlbumDto, AlbumAdapter> {
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -54,8 +49,8 @@ public class PlaylistFragment extends EchoostationFragment {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
-                Set<PlaylistDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
-                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), PlaylistFragment.this, executor);
+                Set<AlbumDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
+                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), AlbumFragment.this, executor);
                 mode.finish();
                 return true;
             }
@@ -65,24 +60,20 @@ public class PlaylistFragment extends EchoostationFragment {
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             adapter.clearSelection();
-            PlaylistFragment.this.actionMode = null;
+            AlbumFragment.this.actionMode = null;
         }
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        main = (MainActivity) getActivity();
-        executor = Executors.newSingleThreadExecutor();
+        initializeFragment();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_playlist, container, false);
-        setupDaoAndService();
-        setupLoaderMedia();
-        executor = Executors.newSingleThreadExecutor();
+        View view = inflater.inflate(R.layout.fragment_album, container, false);
 
         setupUI(view);
         setupObservers();
@@ -91,21 +82,19 @@ public class PlaylistFragment extends EchoostationFragment {
         return view;
     }
 
-    private void setupUI(View view) {
-        recyclerView = view.findViewById(R.id.recycler_view_playlist);
-        addButton = view.findViewById(R.id.add_button);
-
-        addButton.setOnClickListener(v -> {
-            main.appInitializer.getMusicDialogManager().showAddPlaylistDialog();
-        });
-
+    @Override
+    public void setupUI(View view) {
+        super.setupUI(view);
+        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleAlbum(mediaList, main, requireContext(), executor));
 
         setupRecyclerView();
+        setupSpinner();
         main.deleteManager.setupDeleteLauncher(executor, this);
     }
 
-    private void setupRecyclerView() {
-        adapter = new PlaylistAdapter();
+    @Override
+    public void setupRecyclerView() {
+        adapter = new AlbumAdapter();
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerView, getContext(), adapter, 3, true);
 
         recyclerView.setBubbleColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary));
@@ -124,22 +113,23 @@ public class PlaylistFragment extends EchoostationFragment {
                 actionMode = ((AppCompatActivity) requireActivity())
                         .startSupportActionMode(actionModeCallback);
             }
-            PlaylistDto playlist = adapter.getCurrentList().get(position);
-            adapter.toggleSelection(playlist);
-            updateActionModeTitle();
+            AlbumDto album = adapter.getCurrentList().get(position);
+            adapter.toggleSelection(album);
+            updateActionModeTitle(adapter.getSelectedItems().size());
         });
 
         adapter.setOnItemClickListener(position -> {
-            PlaylistDto playlist = adapter.getCurrentList().get(position);
             if (actionMode != null) {
-                adapter.toggleSelection(playlist);
-                updateActionModeTitle();
+                AlbumDto album = adapter.getCurrentList().get(position);
+                adapter.toggleSelection(album);
+                updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
+                main.navigator.showFragment(AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position)), changeTheTitle);
                 if(getActivity() instanceof MainActivity){
                     MainActivity main = (MainActivity) getActivity();
                     FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
 
-                    Fragment fragment = PlaylistPersoFragment.newInstance("playlist", playlist.name, playlist.id);
+                    Fragment fragment = AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position));
 
                     if (!fragment.isAdded()) {
                         transaction.add(R.id.frame_layout, fragment);
@@ -156,37 +146,64 @@ public class PlaylistFragment extends EchoostationFragment {
         });
     }
 
+    private void setupSpinner() {
+        List<String> displayNames = new ArrayList<>();
+        for (SortOptionAlbum option : SortOptionAlbum.values()) {
+            displayNames.add(option.getDisplayName());
+        }
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
+                requireContext(),
+                R.layout.spinner_item,
+                displayNames
+        );
+        arrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+
+        spinner.setAdapter(arrayAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sortAndDisplayMedias(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
     private void setupObservers() {
         ShareSearchViewModel searchViewModel = new ViewModelProvider(requireActivity()).get(ShareSearchViewModel.class);
-        main.playerViewModel = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
 
-        main.playerViewModel.getIsPlaying().observe(getViewLifecycleOwner(), isPlaying -> {
-            // TODO visuel lecture
-        });
-
-        main.playerViewModel.getCurrentItem().observe(getViewLifecycleOwner(), item -> {
-            if (item != null) {
-                // TODO visuel item sélectionné
-            }
+        searchViewModel.getQuery().observe(getViewLifecycleOwner(), query -> {
+            search = query;
+            sortAndDisplayMedias(spinner.getSelectedItemPosition());
         });
     }
 
     @Override
     public void loadMedias(){
-        main.navigator.modifyTitle(getString(R.string.library_fragment));
-        loaderMediaViewModel.loadPlaylistss().observe(getViewLifecycleOwner(), playlists -> {
-            currentPlaylistList = new ArrayList<>(playlists);
-            requireActivity().runOnUiThread(() -> adapter.submitList(currentPlaylistList));
+        super.loadMedias();
+        main.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(), albums -> {
+            mediaList = new ArrayList<>(albums);
+            sortAndDisplayMedias(spinner.getSelectedItemPosition());
+            String counterAlbum = albums.size() + getString(R.string.album_fragment);
+            counterView.setText(counterAlbum);
         });
     }
 
-    private void updateActionModeTitle() {
-        int count = adapter.getSelectedItems().size();
-        if (count == 0) {
-            actionMode.finish();
-        } else {
-            actionMode.setTitle(count + getString(R.string.item_selected));
-        }
+    @Override
+    public void sortAndDisplayMedias(int position) {
+        if (mediaList == null) return;
+
+        executor.execute(() -> {
+            List<AlbumDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(mediaList, search, List.of(AlbumDto::getName, AlbumDto::getArtistName)));
+            if (position >= 0 && position < SortOption.values().length) {
+                SortOptionAlbum option = SortOptionAlbum.values()[position];
+                filtered.sort(option.getComparator());
+                requireActivity().runOnUiThread(() -> adapter.setSortOption(option));
+            }
+            requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
+        });
     }
 
     @Override

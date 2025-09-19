@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mediaDetailFragment;
 
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,6 @@ import com.djymini.echoostation.dtos.ArtistDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.TimeUtilities;
-import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 
 import java.io.File;
 import java.util.ArrayList;

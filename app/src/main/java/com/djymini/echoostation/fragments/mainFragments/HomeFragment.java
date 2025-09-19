@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mainFragments;
 
 import static com.djymini.echoostation.utilities.HomeFragmentContants.homeImageButtonListMix;
 import static com.djymini.echoostation.utilities.HomeFragmentContants.homeImageButtonListPrimary;
@@ -8,7 +8,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +23,8 @@ import com.djymini.echoostation.adapters.ArtistAdapter;
 import com.djymini.echoostation.adapters.HomeImageButtonAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
-import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumInfoFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.ArtistInfoFragment;
 import com.djymini.echoostation.helpers.FragmentHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.ListMediaUtilities;
@@ -36,15 +36,15 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class HomeFragment extends EchoostationFragment {
+public class HomeFragment extends Fragment {
     private MainActivity main;
     private ExecutorService executor;
 
-    private RecyclerView recyclerViewButtonPrimary, recyclerViewButtonMix, recyclerViewTopArtist, recyclerViewTopAlbum, recyclerViewAlbumRecentlyAdded;
+    private RecyclerView recyclerViewButtonPrimary, recyclerViewButtonMix,
+            recyclerViewTopArtist, recyclerViewTopAlbum, recyclerViewAlbumRecentlyAdded;
 
     private ArtistAdapter artistAdapter;
     private AlbumAdapter albumAdapter, recentAlbumAdapter;
-    private List<MusicDto> mainMusicList;
 
     private List<ArtistDto> topArtistList = new ArrayList<>();
     private List<AlbumDto> topAlbumList = new ArrayList<>();
@@ -65,7 +65,6 @@ public class HomeFragment extends EchoostationFragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         bindView(view);
 
-        setupLoaderMedia();
         setupRecyclerViewButton();
         setupRecyclerViewRecentAlbum();
         setupRecyclerViewTopArtist();
@@ -73,44 +72,13 @@ public class HomeFragment extends EchoostationFragment {
         loadArtistAndAlbum();
 
         updateStats();
-
-        sections.forEach((index, section) -> {
-            ViewHomeData sectionView = view.findViewById(section.viewId);
-            sectionView.setTitle(section.title);
-
-            sectionView.setOnClickListener(v -> openLibraryTab(index));
-
-            switch (index) {
-                case 0:
-                    loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
-                        sectionView.setData(String.valueOf(musics.size()));
-                        mainMusicList = new ArrayList<>(musics);
-                    });
-
-                    break;
-                case 1:
-                    loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(),
-                            albums -> sectionView.setData(String.valueOf(albums.size())));
-                    break;
-                case 2:
-                    loaderMediaViewModel.loadArtists().observe(getViewLifecycleOwner(),
-                            artists -> sectionView.setData(String.valueOf(artists.size())));
-                    break;
-                case 3:
-                    loaderMediaViewModel.loadGenres().observe(getViewLifecycleOwner(),
-                            genres -> sectionView.setData(String.valueOf(genres.size())));
-                    break;
-            }
-        });
+        manageSections(view);
 
         return view;
     }
 
     private void openLibraryTab(int tabIndex) {
-        FragmentActivity activity = requireActivity();
-        if (activity instanceof MainActivity) {
-            ((MainActivity) activity).openLibraryTab(tabIndex);
-        }
+        main.openLibraryTab(tabIndex);
     }
 
     private void bindView(View view){
@@ -129,10 +97,14 @@ public class HomeFragment extends EchoostationFragment {
 
     private void setupRecyclerViewButton(){
         HomeImageButtonAdapter homeImageButtonAdapterMix = new HomeImageButtonAdapter(homeImageButtonListMix, main);
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewButtonMix, getContext(), homeImageButtonAdapterMix, 4, false);
+        RecyclerViewHelper.setupRecyclerViewGrid(
+                recyclerViewButtonMix, getContext(), homeImageButtonAdapterMix, 4, false
+        );
 
         HomeImageButtonAdapter homeImageButtonAdapterPrimary = new HomeImageButtonAdapter(homeImageButtonListPrimary, main);
-        RecyclerViewHelper.setupRecyclerViewLinear(recyclerViewButtonPrimary, getContext(), homeImageButtonAdapterPrimary, LinearLayoutManager.HORIZONTAL, false);
+        RecyclerViewHelper.setupRecyclerViewLinear(
+                recyclerViewButtonPrimary, getContext(), homeImageButtonAdapterPrimary, LinearLayoutManager.HORIZONTAL, false
+        );
     }
 
     private void setupRecyclerViewTopArtist() {
@@ -157,7 +129,9 @@ public class HomeFragment extends EchoostationFragment {
 
     private void setupRecyclerViewRecentAlbum() {
         recentAlbumAdapter = new AlbumAdapter();
-        RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewAlbumRecentlyAdded, getContext(), recentAlbumAdapter, 3, false);
+        RecyclerViewHelper.setupRecyclerViewGrid(
+                recyclerViewAlbumRecentlyAdded, getContext(), recentAlbumAdapter, 3, false
+        );
 
         recentAlbumAdapter.setOnItemClickListener(position -> {
             Fragment fragment = AlbumInfoFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position));
@@ -194,7 +168,37 @@ public class HomeFragment extends EchoostationFragment {
         });
         main.dbService.getAlbumDao().getRecentAlbumsDetail().observe(getViewLifecycleOwner(), albums -> {
             recentAlbumList = new ArrayList<>(albums);
-            ListMediaUtilities.displayList(recentAlbumList, executor, requireActivity(), () -> recentAlbumAdapter.submitList(recentAlbumList));
+            ListMediaUtilities.displayList(
+                    recentAlbumList, executor, requireActivity(), () -> recentAlbumAdapter.submitList(recentAlbumList)
+            );
+        });
+    }
+
+    private void manageSections(View view) {
+        sections.forEach((index, section) -> {
+            ViewHomeData sectionView = view.findViewById(section.viewId);
+            sectionView.setTitle(section.title);
+
+            sectionView.setOnClickListener(v -> openLibraryTab(index));
+
+            switch (index) {
+                case 0:
+                    main.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(),
+                            musics -> sectionView.setData(String.valueOf(musics.size())));
+                    break;
+                case 1:
+                    main.loaderMediaViewModel.loadAlbums().observe(getViewLifecycleOwner(),
+                            albums -> sectionView.setData(String.valueOf(albums.size())));
+                    break;
+                case 2:
+                    main.loaderMediaViewModel.loadArtists().observe(getViewLifecycleOwner(),
+                            artists -> sectionView.setData(String.valueOf(artists.size())));
+                    break;
+                case 3:
+                    main.loaderMediaViewModel.loadGenres().observe(getViewLifecycleOwner(),
+                            genres -> sectionView.setData(String.valueOf(genres.size())));
+                    break;
+            }
         });
     }
 }

@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mainFragments;
 
 import android.os.Bundle;
 
@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ViewPagerAdapter;
 import com.djymini.echoostation.utilities.Constants;
@@ -37,8 +36,7 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
         TabLayout tabLayout = view.findViewById(R.id.tablayout);
@@ -54,17 +52,9 @@ public class LibraryFragment extends Fragment {
 
         setupTabs(tabLayout, viewPager2);
         setupPageChangeListener(viewPager2);
-
         setupMenu();
 
         return view;
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if (!hidden){
-        }
     }
 
     private void setupTabs(TabLayout tabLayout, ViewPager2 viewPager2) {
@@ -106,7 +96,6 @@ public class LibraryFragment extends Fragment {
                         }
                     });
                 }
-
             }
 
             @Override
@@ -118,7 +107,6 @@ public class LibraryFragment extends Fragment {
 
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
-
         ViewPager2 viewPager2 = getView() != null ? getView().findViewById(R.id.view_pager) : null;
         if (viewPager2 != null) viewPager2.setCurrentItem(tabIndex, true);
     }
@@ -127,9 +115,5 @@ public class LibraryFragment extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_TAB_INDEX, tabIndex);
         setArguments(args);
-    }
-
-    private MainActivity getMainActivity() {
-        return getActivity() instanceof MainActivity ? (MainActivity) getActivity() : null;
     }
 }

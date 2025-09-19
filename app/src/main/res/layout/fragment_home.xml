@@ -9,7 +9,7 @@
     android:paddingHorizontal="8dp"
     android:clipToPadding="false"
     android:paddingBottom="94dp"
-    tools:context=".fragments.HomeFragment">
+    tools:context=".fragments.mainFragments.HomeFragment">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

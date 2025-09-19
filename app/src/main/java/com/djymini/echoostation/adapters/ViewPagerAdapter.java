@@ -5,11 +5,11 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.djymini.echoostation.fragments.AlbumFragment;
-import com.djymini.echoostation.fragments.ArtistFragment;
-import com.djymini.echoostation.fragments.GenreFragment;
-import com.djymini.echoostation.fragments.MusicFragment;
-import com.djymini.echoostation.fragments.PlaylistFragment;
+import com.djymini.echoostation.fragments.mediaFragments.AlbumFragment;
+import com.djymini.echoostation.fragments.mediaFragments.ArtistFragment;
+import com.djymini.echoostation.fragments.mediaFragments.GenreFragment;
+import com.djymini.echoostation.fragments.mediaFragments.MusicFragment;
+import com.djymini.echoostation.fragments.mediaFragments.PlaylistFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
     public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.GenreFragment">
+    tools:context=".fragments.mediaFragments.GenreFragment">
     <RelativeLayout
         android:id="@+id/button_container"
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/number_genre"
+            android:layout_toStartOf="@id/number_media"
             android:layout_marginEnd="8dp"
             app:tint="@color/colorText"
             android:src="@drawable/ic_shuffle_mini"
@@ -36,7 +36,7 @@
             android:focusable="true"/>
 
         <TextView
-            android:id="@+id/number_genre"
+            android:id="@+id/number_media"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -47,7 +47,7 @@
     </RelativeLayout>
 
     <com.l4digital.fastscroll.FastScrollRecyclerView
-        android:id="@+id/recycler_view_genre"
+        android:id="@+id/recycler_view_media"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"

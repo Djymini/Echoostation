@@ -1,4 +1,4 @@
-package com.djymini.echoostation.fragments;
+package com.djymini.echoostation.fragments.mediaDetailFragment;
 
 import android.app.AlertDialog;
 import android.content.ContentUris;

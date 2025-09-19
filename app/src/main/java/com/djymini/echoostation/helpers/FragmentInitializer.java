@@ -5,10 +5,10 @@ import static com.djymini.echoostation.utilities.Constants.FRAGMENTS_NAMES;
 import androidx.fragment.app.Fragment;
 
 import com.djymini.echoostation.R;
-import com.djymini.echoostation.fragments.EqualizerFragment;
-import com.djymini.echoostation.fragments.HomeFragment;
-import com.djymini.echoostation.fragments.LibraryFragment;
-import com.djymini.echoostation.fragments.SettingsFragment;
+import com.djymini.echoostation.fragments.mainFragments.EqualizerFragment;
+import com.djymini.echoostation.fragments.mainFragments.HomeFragment;
+import com.djymini.echoostation.fragments.mainFragments.LibraryFragment;
+import com.djymini.echoostation.fragments.mainFragments.SettingsFragment;
 
 import java.util.HashMap;
 import java.util.Map;

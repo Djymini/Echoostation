@@ -80,4 +80,8 @@ public class PlaylistDto implements Parcelable {
         dest.writeLong(createdAt);
         dest.writeLong(lastPlayed);
     }
+
+    public String getName() {
+        return name;
+    }
 }

@@ -4,12 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,9 +18,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
-import com.djymini.echoostation.fragments.LibraryFragment;
+import com.djymini.echoostation.fragments.mainFragments.LibraryFragment;
 import com.djymini.echoostation.fragments.TrueMusicPlayer;
+import com.djymini.echoostation.fragments.playlistMusicFragment.PlaylistPersoFragment;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -78,7 +74,7 @@ public class Navigator {
         }
     }
 
-    public void showFragment(Fragment fragment) {
+    public void showFragment(Fragment fragment, boolean changeTheTitle) {
         if (fragment == activeFragment) return;
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -90,10 +86,9 @@ public class Navigator {
         }
 
         transaction.hide(activeFragment).commit();
-
-        modifyTitle(fragmentInitializer.getTitle(fragment));
-        activeFragment = fragment;
-
+        if(changeTheTitle)
+            modifyTitle(fragmentInitializer.getTitle(fragment));
+        setActiveFragment(fragment);
         updateToolbarMenu(fragment);
     }
 
@@ -190,7 +185,7 @@ public class Navigator {
             Fragment fragmentForLoad = fragmentInitializer.getFragment(item.getItemId());
             String tag = String.valueOf(item.getItemId());
             if (fragmentForLoad != null) {
-                showFragment(fragmentForLoad);
+                showFragment(fragmentForLoad, true);
                 return true;
             }
             return false;
@@ -203,7 +198,7 @@ public class Navigator {
         LibraryFragment libraryFragment1 = (LibraryFragment)libraryFragment;
 
         libraryFragment1.setTabIndex(tabIndex);
-        showFragment(libraryFragment);
+        showFragment(libraryFragment, true);
     }
 
     public void modifyTitle(String newText) {

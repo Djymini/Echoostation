@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
-    // -------- System / DB / Insets --------
     private void applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -118,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
     }
 
-    // -------- Buttons --------
     private void setupButtons() {
         Button grantPermissionButton = findViewById(R.id.confirm_button);
         Button exitAppButton = findViewById(R.id.quit_button);
@@ -127,10 +125,8 @@ public class MainActivity extends AppCompatActivity {
         exitAppButton.setOnClickListener(v -> finishAffinity());
     }
 
-    // -------- ViewModels --------
     private void setupPermissionViewModel() {
-        PermissionViewModelFactory factory =
-                new PermissionViewModelFactory(appInitializer.getPermissionManager());
+        PermissionViewModelFactory factory = new PermissionViewModelFactory(appInitializer.getPermissionManager());
         permissionViewModel = new ViewModelProvider(this, factory).get(PermissionViewModel.class);
 
         permissionViewModel.getIsPermissionGranted().observe(this, granted -> {
@@ -164,10 +160,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // -------- Helpers --------
     private void scanDeviceMusic() {
         musicScannerViewModel.startScan();
     }
+
     public void openLibraryTab(int tabIndex) {
         navigator.openLibraryTab(tabIndex);
     }
