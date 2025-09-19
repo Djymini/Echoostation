@@ -33,8 +33,6 @@ import java.util.List;
 import java.util.Set;
 
 public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
-    private List<MediaItem> playlist;
-
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -72,8 +70,7 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music, container, false);
 
         setupUI(view);
@@ -86,7 +83,7 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
     @Override
     public void setupUI(View view) {
         super.setupUI(view);
-        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleMusic(mediaList, playlist, main, requireContext()));
+        shuffleButton.setOnClickListener(v -> MediaItemHelper.shuffleMusic(mediaList, main, requireContext()));
 
         setupRecyclerView();
         setupSpinner();
@@ -125,9 +122,13 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
                 adapter.toggleSelection(music);
                 updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
-                main.playerViewModel.playPlaylist(requireContext(), playlist, position);
+                MusicDto music = adapter.getCurrentList().get(position);
+                MediaItem item = MediaItemHelper.toMediaItem(music);
+
+                main.playerViewModel.playPlaylist(requireContext(), item);
             }
         });
+
     }
 
     private void setupSpinner() {
@@ -179,7 +180,12 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
         super.loadMedias();
         main.loaderMediaViewModel.loadMusics().observe(getViewLifecycleOwner(), musics -> {
             mediaList = new ArrayList<>(musics);
+
+            List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(mediaList);
+            main.playerViewModel.setPlaylist(globalPlaylist);
+
             sortAndDisplayMedias(spinner.getSelectedItemPosition());
+
             String counterMusic = musics.size() + getString(R.string.music_fragment);
             counterView.setText(counterMusic);
         });
@@ -190,16 +196,21 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
         if (mediaList == null) return;
 
         executor.execute(() -> {
-            List<MusicDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(mediaList, search, List.of(MusicDto::getTitle, MusicDto::getAlbumName, MusicDto::getArtistName)));
+            List<MusicDto> filtered = new ArrayList<>(fullTextSearchByLogicalOr(
+                    mediaList, search,
+                    List.of(MusicDto::getTitle, MusicDto::getAlbumName, MusicDto::getArtistName)
+            ));
+
             if (position >= 0 && position < SortOption.values().length) {
                 SortOption option = SortOption.values()[position];
                 filtered.sort(option.getComparator());
                 requireActivity().runOnUiThread(() -> adapter.setSortOption(option));
             }
-            playlist = MediaItemHelper.loadPlaylist(filtered);
+
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });
     }
+
 
     @Override
     public void onDestroyView() {

@@ -1,8 +1,11 @@
 package com.djymini.echoostation.fragments.mainFragments;
 
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuHost;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
@@ -81,6 +84,11 @@ public class LibraryFragment extends Fragment {
                 menuInflater.inflate(R.menu.action_bar, menu);
 
                 MenuItem menuItem = menu.findItem(R.id.search);
+                ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.colorText));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    menuItem.setIconTintList(tint);
+                }
+
                 if (menuItem != null && menuItem.getActionView() instanceof SearchView) {
                     SearchView searchView = (SearchView) menuItem.getActionView();
                     searchView.setQueryHint(getString(R.string.search_bar_text));

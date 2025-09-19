@@ -39,6 +39,7 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
@@ -200,11 +201,12 @@ public class AlbumInfoFragment extends Fragment {
         setArtistImage();
 
         playButton.setOnClickListener(v -> {
-            playAlbum();
+            MediaItemHelper.playPlaylist(adapter.getCurrentList().get(0), main, requireContext());
         });
 
         shuffleButton.setOnClickListener(v -> {
-            shuffleAlbum();
+            int musicPosition = (int) ( Math.random() * musicList.size()-1 );
+            MediaItemHelper.shufflePlaylist(adapter.getCurrentList().get(musicPosition), main, requireContext());
         });
     }
 
@@ -280,7 +282,10 @@ public class AlbumInfoFragment extends Fragment {
                 adapter.toggleSelection(music);
                 updateActionModeTitle();
             } else {
-                main.playerViewModel.playPlaylist(requireContext(), playlist, position);
+                MusicDto music = adapter.getCurrentList().get(position);
+                MediaItem item = MediaItemHelper.toMediaItem(music);
+
+                main.playerViewModel.playPlaylist(requireContext(), item);
             }
         });
     }
@@ -345,46 +350,15 @@ public class AlbumInfoFragment extends Fragment {
             List<MusicDto> filtered = musicList;
             Collections.sort(filtered, (music1, music2) -> music1.track - music2.track);
 
-            playlist = loadPlaylist(filtered);
+            List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(filtered);
+            main.playerViewModel.setPlaylist(globalPlaylist);
+
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });
     }
 
     private void loadMusics() {
         sortAndDisplayMusics();
-    }
-
-    private List<MediaItem> loadPlaylist(List<MusicDto> list) {
-        List<MediaItem> items = new ArrayList<>();
-        for (MusicDto music : list) {
-            MediaMetadata metadata = new MediaMetadata.Builder()
-                    .setTitle(music.title)
-                    .setArtist(music.artistName)
-                    .setAlbumTitle(music.albumName)
-                    .setArtworkUri(music.getCover())
-                    .setDurationMs(music.duration)
-                    .build();
-
-            Uri uri = Uri.fromFile(new File(music.path));
-            MediaItem mediaItem = new MediaItem.Builder()
-                    .setUri(uri)
-                    .setMediaId(String.valueOf(music.id))
-                    .setMediaMetadata(metadata)
-                    .build();
-
-            items.add(mediaItem);
-        }
-        return items;
-    }
-
-    private void playAlbum(){
-        main.playerViewModel.playPlaylist(requireContext(), playlist, 0);
-    }
-
-    private void shuffleAlbum(){
-        int musicPosition = (int) ( Math.random() * musicList.size()-1 );
-        main.playerViewModel.playPlaylist(requireContext(), playlist, musicPosition);
-        main.playerViewModel.toggleShuffle(requireContext());
     }
 
     @Override

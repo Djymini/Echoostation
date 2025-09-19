@@ -19,6 +19,7 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
 import com.djymini.echoostation.dtos.MusicDto;
+import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.MusicPlayerUtilities;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
@@ -71,8 +72,14 @@ public class PlaylistMusicFragment extends Fragment {
     }
 
     public void setupButton(){
-        playButton.setOnClickListener(v -> MusicPlayerUtilities.playMusicList(playlist, main, requireContext()));
-        shuffleButton.setOnClickListener(v -> MusicPlayerUtilities.shuffleMusicList(playlist, musicList, main, requireContext()));
+        playButton.setOnClickListener(v -> {
+            MediaItemHelper.playPlaylist(adapter.getCurrentList().get(0), main, requireContext());
+        });
+
+        shuffleButton.setOnClickListener(v -> {
+            int musicPosition = (int) ( Math.random() * musicList.size()-1 );
+            MediaItemHelper.shufflePlaylist(adapter.getCurrentList().get(musicPosition), main, requireContext());
+        });
     }
 
     public void sortAndDisplayMusics() {
@@ -80,6 +87,9 @@ public class PlaylistMusicFragment extends Fragment {
 
         executor.execute(() -> {
             playlist = MusicPlayerUtilities.loadPlaylist(musicList);
+            List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(musicList);
+            main.playerViewModel.setPlaylist(globalPlaylist);
+
             requireActivity().runOnUiThread(() -> adapter.submitList(musicList));
         });
     }
@@ -132,6 +142,11 @@ public class PlaylistMusicFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         adapter.setOnMusicMenuClickListener((music, anchorView) -> main.appInitializer.getMusicDialogManager().showBottomDialog(music));
-        adapter.setOnItemClickListener(position -> main.playerViewModel.playPlaylist(requireContext(), playlist, position));
+        adapter.setOnItemClickListener(position -> {
+            MusicDto music = adapter.getCurrentList().get(position);
+            MediaItem item = MediaItemHelper.toMediaItem(music);
+
+            main.playerViewModel.playPlaylist(requireContext(), item);
+        });
     }
 }

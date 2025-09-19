@@ -15,15 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlayerUtilities {
-    public static void playMusicList(List<MediaItem> playlist, MainActivity mainActivity, Context context){
+    /*public static void playMusicList(List<MediaItem> playlist, MainActivity mainActivity, Context context){
         mainActivity.playerViewModel.playPlaylist(context, playlist, 0);
-    }
+    }*/
 
-    public static void shuffleMusicList(List<MediaItem> playlist, List<MusicDto> musicList, MainActivity mainActivity, Context context){
+    /*public static void shuffleMusicList(List<MediaItem> playlist, List<MusicDto> musicList, MainActivity mainActivity, Context context){
         int musicPosition = (int) ( Math.random() * musicList.size()-1 );
         mainActivity.playerViewModel.playPlaylist(context, playlist, musicPosition);
         mainActivity.playerViewModel.toggleShuffle(context);
-    }
+    }*/
 
     public static List<MediaItem> loadPlaylist(List<MusicDto> list) {
         List<MediaItem> items = new ArrayList<>();

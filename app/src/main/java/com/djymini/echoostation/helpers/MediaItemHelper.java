@@ -2,6 +2,8 @@ package com.djymini.echoostation.helpers;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.MediaMetadata;
@@ -41,9 +43,12 @@ public class MediaItemHelper {
         return items;
     }
 
-    public static void shuffleMusic(List<MusicDto> musicDtoList, List<MediaItem> playlist, MainActivity main, Context context){
+    public static void shuffleMusic(List<MusicDto> musicDtoList, MainActivity main, Context context){
         int musicPosition = (int) ( Math.random() * musicDtoList.size()-1 );
-        main.playerViewModel.playPlaylist(context, playlist, musicPosition);
+        MusicDto music = musicDtoList.get(musicPosition);
+        MediaItem item = MediaItemHelper.toMediaItem(music);
+
+        main.playerViewModel.playPlaylist(context, item);
         main.playerViewModel.toggleShuffle(context);
     }
 
@@ -55,10 +60,16 @@ public class MediaItemHelper {
         executor.execute(() -> {
             List<MusicDto> musicDtoList = main.dbService.getMusicDao().getMusicDetailByAlbum(shuffleAlbum.id);
             playlist.addAll(loadPlaylist(musicDtoList));
-        });
+            main.playerViewModel.setPlaylist(playlist);
 
-        main.playerViewModel.playPlaylist(context, playlist, 0);
-        main.playerViewModel.toggleShuffle(context);
+            MusicDto music = musicDtoList.get(0);
+            MediaItem item = MediaItemHelper.toMediaItem(music);
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                main.playerViewModel.playPlaylist(context, item);
+                main.playerViewModel.toggleShuffle(context);
+            });
+        });
     }
 
     public static void shuffleArtist(List<ArtistDto> artistDtoList, MainActivity main, Context context, ExecutorService executor){
@@ -69,10 +80,16 @@ public class MediaItemHelper {
         executor.execute(() -> {
             List<MusicDto> musicDtoList = main.dbService.getMusicDao().getMusicDetailByArtist(shuffleArtist.name);
             playlist.addAll(loadPlaylist(musicDtoList));
-        });
+            main.playerViewModel.setPlaylist(playlist);
 
-        main.playerViewModel.playPlaylist(context, playlist, 0);
-        main.playerViewModel.toggleShuffle(context);
+            MusicDto music = musicDtoList.get(0);
+            MediaItem item = MediaItemHelper.toMediaItem(music);
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                main.playerViewModel.playPlaylist(context, item);
+                main.playerViewModel.toggleShuffle(context);
+            });
+        });
     }
 
     public static void shuffleGenre(List<Genre> genreList, MainActivity main, Context context, ExecutorService executor){
@@ -83,9 +100,47 @@ public class MediaItemHelper {
         executor.execute(() -> {
             List<MusicDto> musicDtoList = main.dbService.getMusicDao().getMusicDetailByGenre(shuffleGenre.id);
             playlist.addAll(loadPlaylist(musicDtoList));
-        });
+            main.playerViewModel.setPlaylist(playlist);
 
-        main.playerViewModel.playPlaylist(context, playlist, 0);
+            MusicDto music = musicDtoList.get(0);
+            MediaItem item = MediaItemHelper.toMediaItem(music);
+
+            new Handler(Looper.getMainLooper()).post(() -> {
+                main.playerViewModel.playPlaylist(context, item);
+                main.playerViewModel.toggleShuffle(context);
+            });
+        });
+    }
+
+    public static MediaItem toMediaItem(MusicDto music) {
+        if (music == null) return null;
+
+        MediaMetadata metadata = new MediaMetadata.Builder()
+                .setTitle(music.title)
+                .setArtist(music.artistName)
+                .setAlbumTitle(music.albumName)
+                .setArtworkUri(music.getCover())
+                .setDurationMs(music.duration)
+                .build();
+
+        Uri uri = Uri.fromFile(new File(music.path));
+        MediaItem mediaItem = new MediaItem.Builder()
+                .setUri(uri)
+                .setMediaId(String.valueOf(music.id))
+                .setMediaMetadata(metadata)
+                .build();
+
+        return mediaItem;
+    }
+
+    public static void playPlaylist(MusicDto music, MainActivity main, Context context){
+        MediaItem item = MediaItemHelper.toMediaItem(music);
+        main.playerViewModel.playPlaylist(context, item);
+    }
+
+    public static void shufflePlaylist(MusicDto music, MainActivity main, Context context){
+        MediaItem item = MediaItemHelper.toMediaItem(music);
+        main.playerViewModel.playPlaylist(context, item);
         main.playerViewModel.toggleShuffle(context);
     }
 }

@@ -11,6 +11,7 @@ import androidx.annotation.OptIn;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
 import androidx.media3.common.util.UnstableApi;
@@ -24,6 +25,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.common.util.concurrent.MoreExecutors;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -33,6 +35,17 @@ public class MusicPlayerViewModel extends ViewModel {
 
     private MediaController controller;
     private ListenableFuture<MediaController> controllerFuture;
+    // ✅ Playlist complète (source de vérité)
+    private final List<MediaItem> fullPlaylist = new ArrayList<>();
+
+    public void setPlaylist(List<MediaItem> items) {
+        fullPlaylist.clear();
+        fullPlaylist.addAll(items);
+    }
+
+    public List<MediaItem> getPlaylist() {
+        return new ArrayList<>(fullPlaylist);
+    }
 
     private final MutableLiveData<Integer> repeatMode = new MutableLiveData<>(Player.REPEAT_MODE_OFF);
     private final MutableLiveData<Boolean> shuffleEnabled = new MutableLiveData<>(false);
@@ -185,9 +198,13 @@ public class MusicPlayerViewModel extends ViewModel {
     }
 
 
-    public void playPlaylist(Context context, List<MediaItem> items, int startIndex) {
+    @OptIn(markerClass = UnstableApi.class)
+    public void playPlaylist(Context context, MediaItem itemToPlay) {
         ensureConnected(context, () -> {
-            controller.setMediaItems(items, startIndex, Constants.TIME_UNSET);
+            int index = fullPlaylist.indexOf(itemToPlay);
+            if (index < 0) index = 0; // sécurité
+
+            controller.setMediaItems(fullPlaylist, index, C.TIME_UNSET);
             controller.prepare();
             controller.play();
         });

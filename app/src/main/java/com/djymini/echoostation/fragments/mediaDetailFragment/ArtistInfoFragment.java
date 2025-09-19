@@ -251,7 +251,13 @@ public class ArtistInfoFragment extends Fragment {
         });
 
         adapterMusic.setOnItemClickListener(position -> {
-            main.playerViewModel.playPlaylist(requireContext(), bestListeningMusicPlaylist, position);
+            List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(bestListeningSong);
+            main.playerViewModel.setPlaylist(globalPlaylist);
+
+            MusicDto music = adapterMusic.getCurrentList().get(position);
+            MediaItem item = MediaItemHelper.toMediaItem(music);
+
+            main.playerViewModel.playPlaylist(requireContext(), item);
         });
     }
 
