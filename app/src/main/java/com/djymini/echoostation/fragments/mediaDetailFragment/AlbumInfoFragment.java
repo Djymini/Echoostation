@@ -54,8 +54,10 @@ import java.util.concurrent.Executors;
 
 public class AlbumInfoFragment extends Fragment {
     private static final String ARG_ALBUM = "album";
+    private static final String ARG_FRAGEMENT_BACK = "fragment back id";
     private AlbumDto album;
     private List<MusicDto> musicList;
+    private int fragmentId;
 
     private ImageView backgroundImage, albumImage, artistImage;
     private TextView albumName, albumDate, artistName, numberTrack, durationTotal;
@@ -78,10 +80,11 @@ public class AlbumInfoFragment extends Fragment {
     public AlbumInfoFragment() {
     }
 
-    public static AlbumInfoFragment newInstance(AlbumDto newAlbum) {
+    public static AlbumInfoFragment newInstance(AlbumDto newAlbum, int fragmentId) {
         AlbumInfoFragment fragment = new AlbumInfoFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_ALBUM, newAlbum);
+        args.putInt(ARG_FRAGEMENT_BACK, fragmentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -121,6 +124,7 @@ public class AlbumInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             album = getArguments().getParcelable(ARG_ALBUM);
+            fragmentId = getArguments().getInt(ARG_FRAGEMENT_BACK);
             main = (MainActivity) getActivity();
         }
         executor = Executors.newSingleThreadExecutor();
@@ -131,8 +135,7 @@ public class AlbumInfoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_album_info, container, false);
 
         bindView(view);
@@ -163,7 +166,7 @@ public class AlbumInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary(R.id.library);
+            main.navigator.goBackToLibrary(fragmentId);
         });
 
         // Gérer le bouton retour physique
@@ -172,7 +175,7 @@ public class AlbumInfoFragment extends Fragment {
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        main.navigator.goBackToLibrary(R.id.library);
+                        main.navigator.goBackToLibrary(fragmentId);
                     }
                 }
         );

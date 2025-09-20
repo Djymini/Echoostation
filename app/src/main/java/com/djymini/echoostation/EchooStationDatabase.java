@@ -23,7 +23,7 @@ import com.djymini.echoostation.entities.Statistic;
 
 @Database(
         entities = {Album.class, Artist.class, ArtistMusic.class, Genre.class, MusicTag.class, Music.class, MusicPlaylist.class, Playlist.class, Statistic.class},
-        version = 3
+        version = 4
 )
 public abstract class EchooStationDatabase extends RoomDatabase {
     public abstract AlbumDao albumDao();

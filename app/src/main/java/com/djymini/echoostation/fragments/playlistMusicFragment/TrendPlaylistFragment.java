@@ -40,11 +40,7 @@ public class TrendPlaylistFragment extends PlaylistMusicFragment{
         }
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
-
-        mapPlaylist = Map.ofEntries(
-                Map.entry("Les plus écoutés", new PlaylistParams(R.drawable.echoostation_cover_trend_3x, () -> main.dbService.getMusicDao().getMusicDetailMostListening()))
-        );
-        executor.execute(() -> musicList = getMusicList(playlistName));
+        musicList = main.mixManager.mostListening;
     }
 
     @Override

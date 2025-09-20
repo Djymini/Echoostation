@@ -61,7 +61,7 @@ public class ArtistFragment extends MediaFragment<ArtistDto, ArtistAdapter> {
         recyclerView.setBubbleTextColor(ContextCompat.getColor(requireContext(), R.color.colorText));
         recyclerView.setHandleColor(ContextCompat.getColor(requireContext(), R.color.colorThird));
 
-        adapter.setOnItemClickListener(position -> main.navigator.showFragment(ArtistInfoFragment.newInstance(adapter.getCurrentList().get(position)), changeTheTitle));
+        adapter.setOnItemClickListener(position -> main.navigator.showFragment(ArtistInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle));
     }
 
     private void setupSpinner() {

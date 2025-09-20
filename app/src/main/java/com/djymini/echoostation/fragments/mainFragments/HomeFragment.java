@@ -60,8 +60,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         bindView(view);
 
@@ -112,7 +111,7 @@ public class HomeFragment extends Fragment {
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopArtist, getContext(), artistAdapter, 3, false);
 
         artistAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = ArtistInfoFragment.newInstance(artistAdapter.getCurrentList().get(position));
+            Fragment fragment = ArtistInfoFragment.newInstance(artistAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, artistAdapter.getCurrentList().get(position).name);
         });
     }
@@ -122,7 +121,7 @@ public class HomeFragment extends Fragment {
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopAlbum, getContext(), albumAdapter, 3, false);
 
         albumAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = AlbumInfoFragment.newInstance(albumAdapter.getCurrentList().get(position));
+            Fragment fragment = AlbumInfoFragment.newInstance(albumAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, albumAdapter.getCurrentList().get(position).name);
         });
     }
@@ -134,7 +133,7 @@ public class HomeFragment extends Fragment {
         );
 
         recentAlbumAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = AlbumInfoFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position));
+            Fragment fragment = AlbumInfoFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, recentAlbumAdapter.getCurrentList().get(position).name);
         });
     }

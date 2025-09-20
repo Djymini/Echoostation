@@ -35,12 +35,11 @@ public class PlaylistMusicFragment extends Fragment {
     public List<MediaItem> playlist;
 
     public TextView playlistNameView, playlistNumberTrack, playlistDurationTotal;
-    public Button playButton, shuffleButton;
+    public Button playButton, shuffleButton, reloadButton;
     public RecyclerView recyclerView;
     public MusicAdapter adapter;
 
     public String playlistName;
-    public int playlistType;
     public int playlistDefaultImage;
     public Map<String, PlaylistParams> mapPlaylist;
 
@@ -60,6 +59,7 @@ public class PlaylistMusicFragment extends Fragment {
         playlistDurationTotal = view.findViewById(R.id.duration_total);
         playButton = view.findViewById(R.id.play_button);
         shuffleButton = view.findViewById(R.id.shuffle_button);
+        reloadButton = view.findViewById(R.id.reload_button);
         recyclerView = view.findViewById(R.id.recycler_view_song_playlist);
     }
 

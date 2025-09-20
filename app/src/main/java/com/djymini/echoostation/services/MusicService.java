@@ -8,18 +8,13 @@ import com.djymini.echoostation.daos.StatisticDao;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.entities.Music;
 import com.djymini.echoostation.entities.MusicTag;
-import com.djymini.echoostation.entities.Statistic;
 import com.djymini.echoostation.helpers.StatisticHelper;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 public class MusicService {
@@ -157,7 +152,7 @@ public class MusicService {
         return result;
     }
 
-    public List<MusicDto> makeGoodVibeMix(){
+    public List<MusicDto> makeHappyMix(){
         List<MusicDto> goodVibeList = musicDao.getMusicByTags(null, true, null, null, null, null, null, null, null, null, null, null, null);
 
         if(goodVibeList.size() <= 30){
@@ -168,7 +163,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeMotivationMix(){
+    public List<MusicDto> makeMotivatedMix(){
         List<MusicDto> motivationList = musicDao.getMusicByTags(null, null, true, null, null, null, null, null, null, null, null, null, null);
 
         if(motivationList.size() <= 30){
@@ -179,7 +174,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makePartyMix(){
+    public List<MusicDto> makeSadMix(){
         List<MusicDto> partyList = musicDao.getMusicByTags(null, null, null, true, null, null, null, null, null, null, null, null, null);
 
         if(partyList.size() <= 30){
@@ -190,7 +185,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeChillMix(){
+    public List<MusicDto> makeRelaxingMix(){
         List<MusicDto> chillList = musicDao.getMusicByTags(null, null, null, null, true, null, null, null, null, null, null, null, null);
 
         if(chillList.size() <= 30){
@@ -201,7 +196,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeNightMix(){
+    public List<MusicDto> makeIntrospectiveMix(){
         List<MusicDto> nightList = musicDao.getMusicByTags(null, null, null, null, null, true, null, null, null, null, null, null, null);
 
         if(nightList.size() <= 30){
@@ -212,7 +207,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeSadMix(){
+    public List<MusicDto> makeEpicMix(){
         List<MusicDto> sadList = musicDao.getMusicByTags(null, null, null, null, null, null, true, null, null, null, null, null, null);
 
         if(sadList.size() <= 30){
@@ -223,7 +218,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeGamingMix(){
+    public List<MusicDto> makeWorkMix(){
         List<MusicDto> gamingList = musicDao.getMusicByTags(null, null, null, null, null, null, null, true, null, null, null, null, null);
 
         if(gamingList.size() <= 30){
@@ -234,7 +229,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeMorningMix(){
+    public List<MusicDto> makePartyMix(){
         List<MusicDto> morningList = musicDao.getMusicByTags(null, null, null, null, null, null, null, null, true, null, null, null, null);
 
         if(morningList.size() <= 30){
@@ -245,7 +240,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeWalkMix(){
+    public List<MusicDto> makeRideMix(){
         List<MusicDto> walkList = musicDao.getMusicByTags(null, null, null, null, null, null, null, null, null, true, null, null, null);
 
         if(walkList.size() <= 30){
@@ -256,7 +251,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeDriveeMix(){
+    public List<MusicDto> makeWakeMix(){
         List<MusicDto> driveList = musicDao.getMusicByTags(null, null, null, null, null, null, null, null, null, null, true, null, null);
 
         if(driveList.size() <= 30){
@@ -267,7 +262,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeWorkMix(){
+    public List<MusicDto> makeSleepMix(){
         List<MusicDto> workList = musicDao.getMusicByTags(null, null, null, null, null, null, null, null, null, null, null, true, null);
 
         if(workList.size() <= 30){
@@ -278,7 +273,7 @@ public class MusicService {
         }
     }
 
-    public List<MusicDto> makeMindMix(){
+    public List<MusicDto> makeWashMix(){
         List<MusicDto> mindList = musicDao.getMusicByTags(null, null, null, null, null, null, null, null, null, null, null, null, true);
 
         if(mindList.size() <= 30){

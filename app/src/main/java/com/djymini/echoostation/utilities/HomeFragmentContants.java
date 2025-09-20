@@ -8,24 +8,24 @@ import java.util.Map;
 
 public class HomeFragmentContants {
     public static final List<HomeImageButton> homeImageButtonListPrimary = List.of(
-            new HomeImageButton("Récemment écoutés", R.color.accentColor, R.color.colorThird, R.drawable.round_history_24),
-            new HomeImageButton("Favoris", R.color.accentColor, R.color.colorThird, R.drawable.round_favorite_border_24),
-            new HomeImageButton("Les plus écoutés", R.color.accentColor, R.color.colorThird, R.drawable.round_trending_up_24)
+            new HomeImageButton(Constants.RECENTLY_LISTENING, R.color.accentColor, R.color.colorThird, R.drawable.ic_echoostation_recent_listening),
+            new HomeImageButton(Constants.FAVORITE, R.color.accentColor, R.color.colorThird, R.drawable.ic_echoostation_favorite),
+            new HomeImageButton(Constants.MOST_LISTENING, R.color.accentColor, R.color.colorThird, R.drawable.ic_echoostation_most_listening)
     );
 
     public static final List<HomeImageButton> homeImageButtonListMix = List.of(
-            new HomeImageButton("Good vibe", R.color.good_vibe_color, R.color.good_vibe_background, R.drawable.round_sentiment_very_satisfied_24),
-            new HomeImageButton("Motivation", R.color.motivation_color, R.color.motivation_background, R.drawable.round_fitness_center_24),
-            new HomeImageButton("Fête", R.color.party_color, R.color.party_background, R.drawable.outline_celebration_24),
-            new HomeImageButton("Détente", R.color.cleaning_color, R.color.cleaning_background, R.drawable.outline_spa_24),
-            new HomeImageButton("Nuit", R.color.night_color, R.color.night_background, R.drawable.outline_bedtime_24),
-            new HomeImageButton("Tristesse", R.color.sad_color, R.color.sad_background, R.drawable.round_sentiment_dissatisfied_24),
-            new HomeImageButton("Gaming", R.color.gaming_color, R.color.gaming_background, R.drawable.outline_sports_esports_24),
-            new HomeImageButton("Matin", R.color.morning_color, R.color.morning_background, R.drawable.outline_wb_sunny_24),
-            new HomeImageButton("Ménage", R.color.wash_color, R.color.wash_background, R.drawable.outline_cleaning_services_24),
-            new HomeImageButton("Conduite", R.color.drive_color, R.color.drive_background, R.drawable.outline_drive_eta_24),
-            new HomeImageButton("Travail", R.color.work_color, R.color.work_background, R.drawable.outline_work_outline_24),
-            new HomeImageButton("Réflexion", R.color.mind_color, R.color.mind_background, R.drawable.outline_school_24)
+            new HomeImageButton(Constants.HAPPY, R.color.happy_color, R.color.happy_background, R.drawable.ic_echoostation_happy),
+            new HomeImageButton(Constants.MOTIVATED, R.color.motivated_color, R.color.motivated_background, R.drawable.ic_echoostation_motivated),
+            new HomeImageButton(Constants.SAD, R.color.sad_color, R.color.sad_background, R.drawable.ic_echoostation_sad),
+            new HomeImageButton(Constants.RELAXING, R.color.relaxing_color, R.color.relaxing_background, R.drawable.ic_echoostation_relaxing),
+            new HomeImageButton(Constants.INTROSPECTIVE, R.color.introspective_color, R.color.introspective_background, R.drawable.ic_echoostation_introspective),
+            new HomeImageButton(Constants.EPIC, R.color.epic_color, R.color.epic_background, R.drawable.ic_echoostation_epic),
+            new HomeImageButton(Constants.WORK, R.color.work_color, R.color.work_background, R.drawable.ic_echoostation_work),
+            new HomeImageButton(Constants.PARTY, R.color.party_color, R.color.party_background, R.drawable.ic_echoostation_party),
+            new HomeImageButton(Constants.RIDE, R.color.ride_color, R.color.ride_background, R.drawable.ic_echoostation_ride),
+            new HomeImageButton(Constants.WAKE, R.color.wake_color, R.color.wake_background, R.drawable.ic_echoostation_wake),
+            new HomeImageButton(Constants.SLEEP, R.color.sleep_color, R.color.sleep_background, R.drawable.ic_echoostation_sleep),
+            new HomeImageButton(Constants.WASH, R.color.wash_color, R.color.wash_background, R.drawable.ic_echoostation_wash)
     );
 
     public static final Map<Integer, SectionLibrary> sections = Map.of(

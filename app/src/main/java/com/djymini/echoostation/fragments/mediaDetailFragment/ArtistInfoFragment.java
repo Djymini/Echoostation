@@ -48,7 +48,9 @@ import java.util.concurrent.Executors;
 
 public class ArtistInfoFragment extends Fragment {
     private static final String ARG_ARTIST = "artist";
+    private static final String ARG_FRAGEMENT_BACK = "fragment back id";
     private ArtistDto artist;
+    private int fragmentId;
 
     private List<MusicDto> musicList;
     private List<AlbumDto> albumList;
@@ -80,10 +82,11 @@ public class ArtistInfoFragment extends Fragment {
     public ArtistInfoFragment() {
     }
 
-    public static ArtistInfoFragment newInstance(ArtistDto newArtist) {
+    public static ArtistInfoFragment newInstance(ArtistDto newArtist, int fragmentId) {
         ArtistInfoFragment fragment = new ArtistInfoFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_ARTIST, newArtist);
+        args.putInt(ARG_FRAGEMENT_BACK, fragmentId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -93,6 +96,7 @@ public class ArtistInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             artist = getArguments().getParcelable(ARG_ARTIST);
+            fragmentId = getArguments().getInt(ARG_FRAGEMENT_BACK);
             main = (MainActivity) getActivity();
         }
     }
@@ -132,7 +136,7 @@ public class ArtistInfoFragment extends Fragment {
 
         // Gérer le clic
         toolbar.setNavigationOnClickListener(v -> {
-            main.navigator.goBackToLibrary(R.id.library);
+            main.navigator.goBackToLibrary(fragmentId);
         });
 
         // Gérer le bouton retour physique
@@ -141,7 +145,7 @@ public class ArtistInfoFragment extends Fragment {
                 new OnBackPressedCallback(true) {
                     @Override
                     public void handleOnBackPressed() {
-                        main.navigator.goBackToLibrary(R.id.library);
+                        main.navigator.goBackToLibrary(fragmentId);
                     }
                 }
         );
@@ -276,7 +280,7 @@ public class ArtistInfoFragment extends Fragment {
         adapterAlbum.setOnItemClickListener(position -> {
             FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
 
-            Fragment fragment = AlbumInfoFragment.newInstance(adapterAlbum.getCurrentList().get(position));
+            Fragment fragment = AlbumInfoFragment.newInstance(adapterAlbum.getCurrentList().get(position), fragmentId);
 
             if (!fragment.isAdded()) {
                 transaction.add(R.id.frame_layout, fragment);
@@ -306,7 +310,7 @@ public class ArtistInfoFragment extends Fragment {
         adapterAlbumApparition.setOnItemClickListener(position -> {
             FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
 
-            Fragment fragment = AlbumInfoFragment.newInstance(adapterAlbumApparition.getCurrentList().get(position));
+            Fragment fragment = AlbumInfoFragment.newInstance(adapterAlbumApparition.getCurrentList().get(position), fragmentId);
 
             if (!fragment.isAdded()) {
                 transaction.add(R.id.frame_layout, fragment);

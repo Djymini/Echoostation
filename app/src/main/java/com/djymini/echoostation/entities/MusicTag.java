@@ -19,60 +19,60 @@ public class MusicTag {
     @ColumnInfo(name = "favorite_music")
     public  boolean favoriteMusic;
 
-    @ColumnInfo(name = "good_vibe_music")
-    public  boolean goodVibeMusic;
+    @ColumnInfo(name = "happy_music")
+    public  boolean happyMusic;
 
-    @ColumnInfo(name = "motivation_music")
-    public  boolean motivationMusic;
-
-    @ColumnInfo(name = "party_music")
-    public  boolean partyMusic;
-
-    @ColumnInfo(name = "chill_music")
-    public  boolean chillMusic;
-
-    @ColumnInfo(name = "night_music")
-    public  boolean nightMusic;
+    @ColumnInfo(name = "motivated_music")
+    public  boolean motivatedMusic;
 
     @ColumnInfo(name = "sad_music")
     public  boolean sadMusic;
 
-    @ColumnInfo(name = "gaming_music")
-    public  boolean gamingMusic;
+    @ColumnInfo(name = "relaxing_music")
+    public  boolean relaxingMusic;
 
-    @ColumnInfo(name = "morning_music")
-    public  boolean morningMusic;
+    @ColumnInfo(name = "introspective_music")
+    public  boolean instropectiveMusic;
 
-    @ColumnInfo(name = "walk_music")
-    public  boolean walkMusic;
-
-    @ColumnInfo(name = "drive_music")
-    public  boolean driveMusic;
+    @ColumnInfo(name = "epic_music")
+    public  boolean epicMusic;
 
     @ColumnInfo(name = "work_music")
     public  boolean workMusic;
 
-    @ColumnInfo(name = "mind_music")
-    public  boolean mindMusic;
+    @ColumnInfo(name = "party_music")
+    public  boolean partyMusic;
+
+    @ColumnInfo(name = "ride_music")
+    public  boolean rideMusic;
+
+    @ColumnInfo(name = "wake_music")
+    public  boolean wakeMusic;
+
+    @ColumnInfo(name = "sleep_music")
+    public  boolean sleepMusic;
+
+    @ColumnInfo(name = "wash_music")
+    public  boolean washMusic;
 
     public MusicTag() {
         this.favoriteMusic = false;
-        this.goodVibeMusic = false;
-        this.motivationMusic = false;
-        this.partyMusic = false;
-        this.chillMusic = false;
-        this.nightMusic = false;
+        this.happyMusic = false;
+        this.motivatedMusic = false;
         this.sadMusic = false;
-        this.gamingMusic = false;
-        this.morningMusic = false;
-        this.walkMusic = false;
-        this.driveMusic = false;
+        this.relaxingMusic = false;
+        this.instropectiveMusic = false;
+        this.epicMusic = false;
         this.workMusic = false;
-        this.mindMusic = false;
+        this.partyMusic = false;
+        this.rideMusic = false;
+        this.wakeMusic = false;
+        this.sleepMusic = false;
+        this.washMusic = false;
     }
 
     @Ignore
-    public MusicTag(long id, boolean favoriteMusic, boolean goodVibeMusic, boolean motivationMusic, boolean partyMusic, boolean chillMusic, boolean nightMusic, boolean sadMusic, boolean gamingMusic, boolean morningMusic, boolean walkMusic, boolean driveMusic, boolean workMusic, boolean mindMusic) {
+    public MusicTag(long id, boolean favoriteMusic, boolean happyMusic, boolean motivatedMusic, boolean sadMusic, boolean relaxingMusic, boolean instropectiveMusic, boolean epicMusic, boolean workMusic, boolean partyMusic, boolean rideMusic, boolean wakeMusic, boolean sleepMusic, boolean washMusic) {
         this();
         this.id = id;
 

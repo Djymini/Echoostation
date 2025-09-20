@@ -124,12 +124,12 @@ public class AlbumFragment extends MediaFragment<AlbumDto, AlbumAdapter> {
                 adapter.toggleSelection(album);
                 updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
-                main.navigator.showFragment(AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position)), changeTheTitle);
+                main.navigator.showFragment(AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle);
                 if(getActivity() instanceof MainActivity){
                     MainActivity main = (MainActivity) getActivity();
                     FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
 
-                    Fragment fragment = AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position));
+                    Fragment fragment = AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library);
 
                     if (!fragment.isAdded()) {
                         transaction.add(R.id.frame_layout, fragment);

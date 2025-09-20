@@ -38,13 +38,16 @@ public class DefaultPlaylistFragment extends PlaylistMusicFragment {
         }
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
-
-        mapPlaylist = Map.ofEntries(
-                Map.entry("Récemment écoutés", new PlaylistParams(R.drawable.echoostation_cover_recently_3x, () -> main.dbService.getMusicDao().getMusicDetailRecentlyLstening())),
-                Map.entry("Favoris", new PlaylistParams(R.drawable.echoostation_cover_favorite_3x, () -> main.dbService.getMusicDao().getMusicByTags(true, null, null, null, null, null, null, null, null, null, null, null, null)))
-        );
-
-        executor.execute(() -> musicList = getMusicList(playlistName));
+        switch (playlistName){
+            case "Récemment écoutés":
+                musicList = main.mixManager.recentlyList;
+                playlistDefaultImage = R.drawable.echoostation_cover_recently_3x;
+                break;
+            default:
+                musicList = main.mixManager.favorite;
+                playlistDefaultImage = R.drawable.echoostation_cover_favorite_3x;
+                break;
+        }
     }
 
     @Override

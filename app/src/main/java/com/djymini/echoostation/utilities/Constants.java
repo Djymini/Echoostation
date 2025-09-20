@@ -3,6 +3,7 @@ package com.djymini.echoostation.utilities;
 import android.Manifest;
 import android.net.Uri;
 import com.djymini.echoostation.BuildConfig;
+import com.djymini.echoostation.R;
 
 
 public class Constants {
@@ -50,4 +51,21 @@ public class Constants {
 
     // -------- Misc --------
     public static final long TIME_UNSET = 0;
+
+    public static final String RECENTLY_LISTENING = "Récemment écoutés";
+    public static final String FAVORITE = "Favoris";
+    public static final String MOST_LISTENING = "Les plus écoutés";
+
+    public static final String HAPPY = "Joyeux";
+    public static final String MOTIVATED ="Motivant";
+    public static final String SAD ="Triste";
+    public static final String RELAXING ="Relaxant";
+    public static final String INTROSPECTIVE ="Introspectif";
+    public static final String EPIC ="Epique";
+    public static final String WORK ="Travail";
+    public static final String PARTY ="Soirée";
+    public static final String RIDE ="Balade";
+    public static final String WAKE ="Réveil";
+    public static final String SLEEP ="Couché";
+    public static final String WASH ="Ménage";
 }

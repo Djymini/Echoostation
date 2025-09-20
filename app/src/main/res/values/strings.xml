@@ -90,7 +90,6 @@
     <!-- Misc / Test -->
     <string name="test_text">ANDROID</string>
     <string name="test_number">9999</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="recent_listening_icon_description">Recent listening icon</string>
     <string name="recently_listening">Ecouté récemment</string>
@@ -103,11 +102,8 @@
     <string name="good_vibe">Good vibe</string>
     <string name="motivation_icon_description">Motivation icon</string>
     <string name="motivation">Motivation</string>
-    <string name="party">Fête</string>
     <string name="chill">Chill</string>
     <string name="night">Nuit</string>
-    <string name="sad">Tristesse</string>
-    <string name="work">Travail</string>
     <string name="top_artist">TOP ARTISTES DU MOIS</string>
     <string name="top_album">TOP ALBUMS DU MOIS</string>
     <string name="recently_add">AJOUTES RECEMENTS</string>
@@ -125,4 +121,17 @@
     <string name="work_icon_description">Work icon</string>
     <string name="night_icon_description">Night icon</string>
     <string name="image_button_home">Image button home</string>
+
+    <string name="happy">Happy</string>
+    <string name="motivating">Motivating</string>
+    <string name="sad">Sad</string>
+    <string name="relaxing">Relaxing</string>
+    <string name="introspective">Introspective</string>
+    <string name="epic">Epic</string>
+    <string name="work">Work</string>
+    <string name="party">Party</string>
+    <string name="walk">Walk</string>
+    <string name="wake">Wake</string>
+    <string name="sleep">Sleep</string>
+    <string name="cleaning">Cleaning</string>
 </resources>

@@ -206,6 +206,8 @@ public class MusicFragment extends MediaFragment<MusicDto, MusicAdapter> {
                 filtered.sort(option.getComparator());
                 requireActivity().runOnUiThread(() -> adapter.setSortOption(option));
             }
+            List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(filtered);
+            main.playerViewModel.setPlaylist(globalPlaylist);
 
             requireActivity().runOnUiThread(() -> adapter.submitList(filtered));
         });

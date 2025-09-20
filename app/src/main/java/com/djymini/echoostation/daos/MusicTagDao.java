@@ -20,41 +20,41 @@ public interface MusicTagDao {
     @Query("UPDATE music_tag SET favorite_music = :addToMix WHERE id = :id")
     void updateFavoriteTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET good_vibe_music = :addToMix WHERE id = :id")
-    void updateGoodVibeTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET happy_music = :addToMix WHERE id = :id")
+    void updateHappyTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET motivation_music = :addToMix WHERE id = :id")
-    void updateMotivationTag(long id, boolean addToMix);
-
-    @Query("UPDATE music_tag SET party_music = :addToMix WHERE id = :id")
-    void updatePartyTag(long id, boolean addToMix);
-
-    @Query("UPDATE music_tag SET chill_music = :addToMix WHERE id = :id")
-    void updateChillTag(long id, boolean addToMix);
-
-    @Query("UPDATE music_tag SET night_music = :addToMix WHERE id = :id")
-    void updateNightTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET motivated_music = :addToMix WHERE id = :id")
+    void updateMotivatedTag(long id, boolean addToMix);
 
     @Query("UPDATE music_tag SET sad_music = :addToMix WHERE id = :id")
     void updateSadTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET gaming_music = :addToMix WHERE id = :id")
-    void updateGamingTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET relaxing_music = :addToMix WHERE id = :id")
+    void updateRelaxingTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET morning_music = :addToMix WHERE id = :id")
-    void updateMorningTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET introspective_music = :addToMix WHERE id = :id")
+    void updateIntrospectiveTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET walk_music = :addToMix WHERE id = :id")
-    void updateWalkTag(long id, boolean addToMix);
-
-    @Query("UPDATE music_tag SET drive_music = :addToMix WHERE id = :id")
-    void updateDriveTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET epic_music = :addToMix WHERE id = :id")
+    void updateEpicTag(long id, boolean addToMix);
 
     @Query("UPDATE music_tag SET work_music = :addToMix WHERE id = :id")
     void updateWorkTag(long id, boolean addToMix);
 
-    @Query("UPDATE music_tag SET mind_music = :addToMix WHERE id = :id")
-    void updateMindTag(long id, boolean addToMix);
+    @Query("UPDATE music_tag SET party_music = :addToMix WHERE id = :id")
+    void updatePartyTag(long id, boolean addToMix);
+
+    @Query("UPDATE music_tag SET ride_music = :addToMix WHERE id = :id")
+    void updateRideTag(long id, boolean addToMix);
+
+    @Query("UPDATE music_tag SET wake_music = :addToMix WHERE id = :id")
+    void updateWakeTag(long id, boolean addToMix);
+
+    @Query("UPDATE music_tag SET sleep_music = :addToMix WHERE id = :id")
+    void updateSleepTag(long id, boolean addToMix);
+
+    @Query("UPDATE music_tag SET wash_music = :addToMix WHERE id = :id")
+    void updateWashTag(long id, boolean addToMix);
 
     @Insert
     void insertAll(MusicTag... musicTags);

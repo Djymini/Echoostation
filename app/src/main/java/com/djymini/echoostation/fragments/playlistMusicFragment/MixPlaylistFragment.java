@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.ui.HomeImageButton;
 import com.djymini.echoostation.utilities.HomeFragmentContants;
 import com.djymini.echoostation.utilities.UiUtilities;
@@ -50,22 +51,7 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
 
-        mapPlaylist = Map.ofEntries(
-                Map.entry("Good vibe", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeGoodVibeMix())),
-                Map.entry("Motivation", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMotivationMix())),
-                Map.entry("Fête", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makePartyMix())),
-                Map.entry("Détente", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeChillMix())),
-                Map.entry("Nuit", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeNightMix())),
-                Map.entry("Tristesse", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeSadMix())),
-                Map.entry("Travail", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeWorkMix())),
-                Map.entry("Gaming", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeGamingMix())),
-                Map.entry("Conduite", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeDriveeMix())),
-                Map.entry("Reflexion", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMindMix())),
-                Map.entry("Matin", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeMorningMix())),
-                Map.entry("Ménage", new PlaylistParams(R.drawable.echoostation_placeholder_playlist_3x, () -> main.dbService.getMusicService().makeWalkMix()))
-        );
-
-        executor.execute(() -> musicList = getMusicList(playlistName));
+        musicList = main.mixManager.mixMap.get(playlistName);
     }
 
     @Override
@@ -101,7 +87,8 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
         }
 
         String mixName = "Mix " + playlistName;
-        UiUtilities.displayImageWithGlide(musicList.get(0).getCover(), R.drawable.echoostation_placeholder_playlist_3x, playlistMixGenreIllustration, requireContext());
+        if(!musicList.isEmpty())
+            UiUtilities.displayImageWithGlide(musicList.get(0).getCover(), R.drawable.echoostation_placeholder_playlist_3x, playlistMixGenreIllustration, requireContext());
         playlistNameView.setText(mixName);
 
         ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), tag.get(playlistName).getBackgroundColor()));
@@ -109,6 +96,19 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
         playlistMixGenreText.setText(mixName.toUpperCase());
 
         shuffleButton.setVisibility(View.GONE);
+        reloadButton.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setupButton(){
+        super.setupButton();
+        reloadButton.setOnClickListener(v -> {
+            executor.execute(() -> {
+                musicList = main.mixManager.remakeTheMix(playlistName);
+                sortAndDisplayMusics();
+            });
+
+        });
     }
 
     @Override

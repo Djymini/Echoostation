@@ -13,12 +13,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <ImageView
-                android:id="@+id/background_image"
-                android:layout_width="match_parent"
-                android:layout_height="410dp"
-                android:alpha="0.4"
-                android:src="@drawable/echoostation_placeholder_playlist_3x"/>
+
 
             <View
                 android:layout_width="match_parent"
@@ -126,8 +121,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentStart="true"
-                        android:layout_alignParentBottom="true"
-                        app:cardBackgroundColor="@color/cleaning_background">
+                        android:layout_alignParentBottom="true">
                         <TextView
                             android:id="@+id/playlist_illustration_text"
                             android:layout_width="wrap_content"
@@ -247,7 +241,7 @@
                     android:text="Jouer"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
-                    android:drawableLeft="@drawable/round_play_arrow_24"
+                    android:drawableLeft="@drawable/ic_echoostation_play"
                     android:drawableTint="@color/colorText"/>
 
                 <Button
@@ -259,8 +253,21 @@
                     android:text="Aléatoire"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
-                    android:drawableLeft="@drawable/round_shuffle_24"
+                    android:drawableLeft="@drawable/ic_echoostation_shuffle"
                     android:drawableTint="@color/colorText"/>
+
+                <Button
+                    android:id="@+id/reload_button"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/disableText"
+                    android:text="Relancer"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorText"
+                    android:drawableLeft="@drawable/ic_echoostation_reload"
+                    android:drawableTint="@color/colorText"
+                    android:visibility="gone"/>
             </LinearLayout>
         </RelativeLayout>
 

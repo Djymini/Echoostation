@@ -37,53 +37,53 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
 
         this.tagMap = new HashMap<>();
 
-        tagMap.put("Good vibe", new Tag("Good vibe", musicDto.goodVibeMusic, music -> {
-            music.goodVibeMusic = !music.goodVibeMusic;
-            this.main.dbService.getMusicTagDao().updateGoodVibeTag(music.id, music.goodVibeMusic);
+        tagMap.put("Joyeux", new Tag("Joyeux", musicDto.happyMusic, music -> {
+            music.happyMusic = !music.happyMusic;
+            this.main.dbService.getMusicTagDao().updateHappyTag(music.id, music.happyMusic);
         }));
-        tagMap.put("Motivation", new Tag("Motivation", musicDto.motivationMusic, music -> {
-            music.motivationMusic = !music.motivationMusic;
-            this.main.dbService.getMusicTagDao().updateMotivationTag(music.id, music.motivationMusic);
+        tagMap.put("Motivant", new Tag("Motivant", musicDto.motivatedMusic, music -> {
+            music.motivatedMusic = !music.motivatedMusic;
+            this.main.dbService.getMusicTagDao().updateMotivatedTag(music.id, music.motivatedMusic);
         }));
-        tagMap.put("Fête", new Tag("Fête", musicDto.partyMusic, music -> {
-            music.partyMusic = !music.partyMusic;
-            this.main.dbService.getMusicTagDao().updatePartyTag(music.id, music.partyMusic);
-        }));
-        tagMap.put("Détente", new Tag("Détente", musicDto.chillMusic, music -> {
-            music.chillMusic = !music.chillMusic;
-            this.main.dbService.getMusicTagDao().updateChillTag(music.id, music.chillMusic);
-        }));
-        tagMap.put("Nuit", new Tag("Nuit",musicDto.nightMusic, music -> {
-            music.nightMusic = !music.nightMusic;
-            this.main.dbService.getMusicTagDao().updateNightTag(music.id, music.nightMusic);
-        }));
-        tagMap.put("Tristesse", new Tag("Tristesse", musicDto.sadMusic, music -> {
+        tagMap.put("Triste", new Tag("Triste", musicDto.sadMusic, music -> {
             music.sadMusic = !music.sadMusic;
             this.main.dbService.getMusicTagDao().updateSadTag(music.id, music.sadMusic);
         }));
-        tagMap.put("Gaming", new Tag("Gaming", musicDto.gamingMusic, music -> {
-            music.gamingMusic = !music.gamingMusic;
-            this.main.dbService.getMusicTagDao().updateGamingTag(music.id, music.gamingMusic);
+        tagMap.put("Relaxant", new Tag("Relaxant", musicDto.relaxingMusic, music -> {
+            music.relaxingMusic = !music.relaxingMusic;
+            this.main.dbService.getMusicTagDao().updateRelaxingTag(music.id, music.relaxingMusic);
         }));
-        tagMap.put("Matin", new Tag("Matin", musicDto.morningMusic, music -> {
-            music.morningMusic = !music.morningMusic;
-            this.main.dbService.getMusicTagDao().updateMorningTag(music.id, music.morningMusic);
+        tagMap.put("Introspectif", new Tag("Introspectif",musicDto.introspectiveMusic, music -> {
+            music.introspectiveMusic = !music.introspectiveMusic;
+            this.main.dbService.getMusicTagDao().updateIntrospectiveTag(music.id, music.introspectiveMusic);
         }));
-        tagMap.put("Ménage", new Tag("Ménage", musicDto.walkMusic, music -> {
-            music.walkMusic = !music.walkMusic;
-            this.main.dbService.getMusicTagDao().updateWalkTag(music.id, music.walkMusic);
-        }));
-        tagMap.put("Conduite", new Tag("Conduite", musicDto.driveMusic, music -> {
-            music.driveMusic = !music.driveMusic;
-            this.main.dbService.getMusicTagDao().updateDriveTag(music.id, music.driveMusic);
+        tagMap.put("Epique", new Tag("Epique", musicDto.epicMusic, music -> {
+            music.epicMusic = !music.epicMusic;
+            this.main.dbService.getMusicTagDao().updateEpicTag(music.id, music.epicMusic);
         }));
         tagMap.put("Travail", new Tag("Travail", musicDto.workMusic, music -> {
             music.workMusic = !music.workMusic;
             this.main.dbService.getMusicTagDao().updateWorkTag(music.id, music.workMusic);
         }));
-        tagMap.put("Réflexion", new Tag("Réflexion", musicDto.mindMusic, music -> {
-            music.mindMusic = !music.mindMusic;
-            this.main.dbService.getMusicTagDao().updateMindTag(music.id, music.mindMusic);
+        tagMap.put("Soirée", new Tag("Soirée", musicDto.partyMusic, music -> {
+            music.partyMusic = !music.partyMusic;
+            this.main.dbService.getMusicTagDao().updatePartyTag(music.id, music.partyMusic);
+        }));
+        tagMap.put("Balade", new Tag("Balade", musicDto.rideMusic, music -> {
+            music.rideMusic = !music.rideMusic;
+            this.main.dbService.getMusicTagDao().updateRideTag(music.id, music.rideMusic);
+        }));
+        tagMap.put("Réveil", new Tag("Réveil", musicDto.wakeMusic, music -> {
+            music.wakeMusic = !music.wakeMusic;
+            this.main.dbService.getMusicTagDao().updateWakeTag(music.id, music.wakeMusic);
+        }));
+        tagMap.put("Couché", new Tag("Couché", musicDto.sleepMusic, music -> {
+            music.sleepMusic = !music.sleepMusic;
+            this.main.dbService.getMusicTagDao().updateSleepTag(music.id, music.sleepMusic);
+        }));
+        tagMap.put("Ménage", new Tag("Ménage", musicDto.washMusic, music -> {
+            music.washMusic = !music.washMusic;
+            this.main.dbService.getMusicTagDao().updateWashTag(music.id, music.washMusic);
         }));
     }
 

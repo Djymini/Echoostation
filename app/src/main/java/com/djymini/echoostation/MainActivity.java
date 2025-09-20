@@ -18,6 +18,7 @@ import java.util.concurrent.Executors;
 
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.DeleteManager;
+import com.djymini.echoostation.helpers.MixManager;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.Navigator;
 import com.djymini.echoostation.helpers.PermissionManager;
@@ -45,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     public Navigator navigator;
     private boolean hasPermission = false;
     private final Executor executor = Executors.newSingleThreadExecutor();
+
+    public MixManager mixManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
         setupPermissionViewModel();
         setupMusicScanViewModel();
         deleteManager = new DeleteManager(this, this);
+        mixManager = new MixManager(this, this, executor);
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
