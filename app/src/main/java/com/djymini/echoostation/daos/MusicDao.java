@@ -402,8 +402,8 @@ public interface MusicDao {
                     "   GROUP BY am_sorted.id_music " +
                     ") AS artist_data ON artist_data.musicId = m.id " +
                     "WHERE (',' || artist_data.artistId || ',') LIKE ('%,' || :artistId || ',%') " +
-                    "ORDER BY s.listening_number DESC LIMIT 5")
-    LiveData<List<MusicDto>> getMusicDetailByArtistLiveBest5(String artistId);
+                    "ORDER BY s.listening_number DESC")
+    LiveData<List<MusicDto>> getMusicDetailByArtistMostListeningLive(String artistId);
 
 
     @Query("SELECT " +

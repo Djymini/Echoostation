@@ -13,7 +13,7 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.utilities.UiUtilities;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 
 public class TrendPlaylistFragment extends PlaylistMusicFragment{
@@ -40,7 +40,6 @@ public class TrendPlaylistFragment extends PlaylistMusicFragment{
         }
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
-        musicList = main.mixManager.mostListening;
     }
 
     @Override
@@ -48,10 +47,14 @@ public class TrendPlaylistFragment extends PlaylistMusicFragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list_music, container, false);
         bindView(view);
-        setupInfoPlaylist();
-        setupButton();
         setupRecyclerView();
-        sortAndDisplayMusics();
+
+        main.loaderDefaultPlaylistAndMixViewModel.loadMostListening().observe(getViewLifecycleOwner(), musics -> {
+            musicList = new ArrayList<>(musics);
+            setupInfoPlaylist();
+            sortAndDisplayMusics();
+        });
+        setupButton();
         backButtonManager(R.id.home);
         return view;
     }

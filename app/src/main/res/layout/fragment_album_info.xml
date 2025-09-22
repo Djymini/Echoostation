@@ -7,22 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.mediaDetailFragment.AlbumInfoFragment">
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/background_image"
-                android:layout_width="match_parent"
-                android:layout_height="410dp"
-                android:alpha="0.4"
+                android:layout_width="411dp"
+                android:layout_height="411dp"
+                android:alpha="0.3"
                 android:src="@drawable/echoostation_placeholder_album_3x"/>
 
             <View
-                android:layout_width="match_parent"
-                android:layout_height="410dp"
+                android:layout_width="411dp"
+                android:layout_height="411dp"
                 android:background="@drawable/background_album"/>
 
             <androidx.cardview.widget.CardView
@@ -134,7 +134,7 @@
                     android:text="Jouer"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
-                    android:drawableLeft="@drawable/round_play_arrow_24"
+                    android:drawableLeft="@drawable/ic_echoostation_play"
                     android:drawableTint="@color/colorText"/>
 
                 <Button
@@ -146,13 +146,14 @@
                     android:text="Aléatoire"
                     android:textSize="16dp"
                     android:textColor="@color/colorText"
-                    android:drawableLeft="@drawable/round_shuffle_24"
+                    android:drawableLeft="@drawable/ic_echoostation_shuffle"
                     android:drawableTint="@color/colorText"/>
+
             </LinearLayout>
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_song_album"
+            android:id="@+id/recycler_view_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"

@@ -23,6 +23,7 @@ import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.MusicPlayerUtilities;
 import com.djymini.echoostation.utilities.TimeUtilities;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -31,8 +32,8 @@ import java.util.function.Supplier;
 public class PlaylistMusicFragment extends Fragment {
     public MainActivity main;
     public ExecutorService executor;
-    public List<MusicDto> musicList;
-    public List<MediaItem> playlist;
+    public List<MusicDto> musicList = new ArrayList<>();
+    public List<MediaItem> playlist = new ArrayList<>();
 
     public TextView playlistNameView, playlistNumberTrack, playlistDurationTotal;
     public Button playButton, shuffleButton, reloadButton;
@@ -86,7 +87,6 @@ public class PlaylistMusicFragment extends Fragment {
         if (musicList == null) return;
 
         executor.execute(() -> {
-            playlist = MusicPlayerUtilities.loadPlaylist(musicList);
             List<MediaItem> globalPlaylist = MediaItemHelper.loadPlaylist(musicList);
             main.playerViewModel.setPlaylist(globalPlaylist);
 

@@ -15,11 +15,11 @@ import androidx.core.content.ContextCompat;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
-import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.ui.HomeImageButton;
 import com.djymini.echoostation.utilities.HomeFragmentContants;
 import com.djymini.echoostation.utilities.UiUtilities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -50,8 +50,6 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
         }
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
-
-        musicList = main.mixManager.mixMap.get(playlistName);
     }
 
     @Override
@@ -59,10 +57,14 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list_music, container, false);
         bindView(view);
-        setupInfoPlaylist();
+
+        main.loaderDefaultPlaylistAndMixViewModel.getMixMapLive().observe(getViewLifecycleOwner(), map -> {
+            musicList = map.get(playlistName);
+            setupInfoPlaylist();
+            sortAndDisplayMusics();
+        });
         setupButton();
         setupRecyclerView();
-        sortAndDisplayMusics();
         backButtonManager(R.id.home);
         return view;
     }
@@ -103,10 +105,8 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
     public void setupButton(){
         super.setupButton();
         reloadButton.setOnClickListener(v -> {
-            executor.execute(() -> {
-                musicList = main.mixManager.remakeTheMix(playlistName);
-                sortAndDisplayMusics();
-            });
+            main.loaderDefaultPlaylistAndMixViewModel.remakeTheMix(playlistName);
+            sortAndDisplayMusics();
 
         });
     }

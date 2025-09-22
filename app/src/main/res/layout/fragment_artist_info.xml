@@ -9,12 +9,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingBottom="82dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/background_image_artist"
+                android:id="@+id/background_image"
                 android:layout_width="match_parent"
                 android:layout_height="410dp"
                 android:src="@drawable/echoostation_placeholder_album_3x"/>
@@ -67,7 +68,7 @@
                     android:textSize="16dp"/>
 
                 <TextView
-                    android:id="@+id/artist_number_songs"
+                    android:id="@+id/number_tracks"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -98,6 +99,39 @@
                     android:textAlignment="center"
                     android:textSize="16dp"/>
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/button_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/info_container"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:visibility="visible">
+                <Button
+                    android:id="@+id/play_button"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="10dp"
+                    android:backgroundTint="@color/accentColor"
+                    android:text="Jouer"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorText"
+                    android:drawableLeft="@drawable/round_play_arrow_24"
+                    android:drawableTint="@color/colorText"/>
+
+                <Button
+                    android:id="@+id/shuffle_button"
+                    android:layout_width="150dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="10dp"
+                    android:backgroundTint="@color/disableText"
+                    android:text="Aléatoire"
+                    android:textSize="16dp"
+                    android:textColor="@color/colorText"
+                    android:drawableLeft="@drawable/round_shuffle_24"
+                    android:drawableTint="@color/colorText"/>
+            </LinearLayout>
         </RelativeLayout>
 
         <LinearLayout
@@ -107,13 +141,34 @@
             android:orientation="vertical"
             android:layout_marginTop="24dp"
             android:paddingHorizontal="12dp">
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/ibm_plex_sans_bold"
-                android:includeFontPadding="false"
-                android:text="Titres les plus écoutés"
-                android:textSize="22sp"/>
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/title_recycler_view_song"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/ibm_plex_sans_bold"
+                    android:includeFontPadding="false"
+                    android:text="Titres les plus écoutés"
+                    android:textSize="22sp"/>
+
+                <TextView
+                    android:id="@+id/button_display_song"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_plex_sans_medium"
+                    android:includeFontPadding="false"
+                    android:text="Voir tout"
+                    android:textColor="@color/accentColor"
+                    android:textSize="18sp"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_best_song"
@@ -121,6 +176,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:nestedScrollingEnabled="false"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:paddingBottom="82dp"
+                android:nestedScrollingEnabled="false"
+                android:visibility="visible"/>
         </LinearLayout>
 
         <LinearLayout

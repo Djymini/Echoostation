@@ -7,12 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.MediaItem;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
+import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.UiUtilities;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 public class DefaultPlaylistFragment extends PlaylistMusicFragment {
@@ -38,16 +41,6 @@ public class DefaultPlaylistFragment extends PlaylistMusicFragment {
         }
         main = (MainActivity) getActivity();
         executor = Executors.newSingleThreadExecutor();
-        switch (playlistName){
-            case "Récemment écoutés":
-                musicList = main.mixManager.recentlyList;
-                playlistDefaultImage = R.drawable.echoostation_cover_recently_3x;
-                break;
-            default:
-                musicList = main.mixManager.favorite;
-                playlistDefaultImage = R.drawable.echoostation_cover_favorite_3x;
-                break;
-        }
     }
 
     @Override
@@ -55,10 +48,28 @@ public class DefaultPlaylistFragment extends PlaylistMusicFragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list_music, container, false);
         bindView(view);
-        setupInfoPlaylist();
-        setupButton();
         setupRecyclerView();
-        sortAndDisplayMusics();
+
+        switch (playlistName){
+            case "Récemment écoutés":
+                main.loaderDefaultPlaylistAndMixViewModel.loadRecentlyList().observe(getViewLifecycleOwner(), musics -> {
+                    musicList = new ArrayList<>(musics);
+                    setupInfoPlaylist();
+                    sortAndDisplayMusics();
+                });
+                playlistDefaultImage = R.drawable.echoostation_cover_recently_3x;
+                break;
+            default:
+                main.loaderDefaultPlaylistAndMixViewModel.loadFavorite().observe(getViewLifecycleOwner(), musics -> {
+                    musicList = new ArrayList<>(musics);
+                    setupInfoPlaylist();
+                    sortAndDisplayMusics();
+                });
+                playlistDefaultImage = R.drawable.echoostation_cover_favorite_3x;
+                break;
+        }
+
+        setupButton();
         backButtonManager(R.id.home);
         return view;
     }

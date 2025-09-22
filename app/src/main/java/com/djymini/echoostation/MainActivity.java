@@ -18,13 +18,14 @@ import java.util.concurrent.Executors;
 
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.DeleteManager;
-import com.djymini.echoostation.helpers.MixManager;
+import com.djymini.echoostation.viewModels.loaderDefaultPlaylistAndMixViewModel.LoaderDefaultPlaylistAndMixViewModel;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.Navigator;
 import com.djymini.echoostation.helpers.PermissionManager;
 import com.djymini.echoostation.services.DatabaseService;
 import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
+import com.djymini.echoostation.viewModels.loaderDefaultPlaylistAndMixViewModel.LoaderDefaultPlaylistAndMixViewModelFactory;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMediaViewModel;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMusicViewModelFactory;
 import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModelFactory;
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasPermission = false;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
-    public MixManager mixManager;
+    public LoaderDefaultPlaylistAndMixViewModel loaderDefaultPlaylistAndMixViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
         setupPermissionViewModel();
         setupMusicScanViewModel();
         deleteManager = new DeleteManager(this, this);
-        mixManager = new MixManager(this, this, executor);
         navigator.setupTrueMusicPlayer(findViewById(R.id.player_bottom_sheet));
     }
 
@@ -119,6 +119,13 @@ public class MainActivity extends AppCompatActivity {
                 dbService.getPlaylistDao()
         );
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
+
+        LoaderDefaultPlaylistAndMixViewModelFactory factory2 = new LoaderDefaultPlaylistAndMixViewModelFactory(
+                dbService.getMusicDao(),
+                dbService.getMusicService(),
+                executor
+        );
+        loaderDefaultPlaylistAndMixViewModel = new ViewModelProvider(this, factory2).get(LoaderDefaultPlaylistAndMixViewModel.class);
     }
 
     private void setupButtons() {

@@ -30,8 +30,15 @@ public class TimeUtilities {
         for(MusicDto music : musicList){
             durationTotal += music.duration;
         }
-
         return formatDurationWithHour(durationTotal);
+    }
+
+    public static String durationTotalWithText(List<MusicDto> musicList){
+        long durationTotal = 0;
+        for(MusicDto music : musicList){
+            durationTotal += music.duration;
+        }
+        return Constants.DURATION_TEXT + formatDurationWithHour(durationTotal);
     }
 
 }

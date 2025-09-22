@@ -13,13 +13,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.PlaylistAdapter;
 import com.djymini.echoostation.dtos.PlaylistDto;
+import com.djymini.echoostation.fragments.playlistMusicFragment.DefaultPlaylistFragment;
 import com.djymini.echoostation.fragments.playlistMusicFragment.PlaylistPersoFragment;
+import com.djymini.echoostation.fragments.playlistMusicFragment.TrendPlaylistFragment;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
+import com.djymini.echoostation.utilities.UiUtilities;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
 
 import java.util.ArrayList;
@@ -28,6 +34,8 @@ import java.util.List;
 import java.util.Set;
 
 public class PlaylistFragment extends MediaFragment<PlaylistDto, PlaylistAdapter> {
+    private TextView recentlyCounter, favoriteCounter, mostCounter;
+    private ImageView albumImage1, albumImage2, albumImage3;
     private final ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -72,17 +80,28 @@ public class PlaylistFragment extends MediaFragment<PlaylistDto, PlaylistAdapter
         setupUI(view);
         setupObservers();
         loadMedias();
-
         return view;
     }
 
     @Override
     public void setupUI(View view) {
+        LinearLayout recentlyItem = view.findViewById(R.id.recently_item);
+        LinearLayout favoriteItem = view.findViewById(R.id.favorite_item);
+        LinearLayout mostItem = view.findViewById(R.id.most_listening_item);
+        favoriteCounter = view.findViewById(R.id.favorite_counter);
+        recentlyCounter = view.findViewById(R.id.recently_counter);
+        mostCounter = view.findViewById(R.id.tracks_counter);
+        albumImage1 = view.findViewById(R.id.album_image_first);
+        albumImage2 = view.findViewById(R.id.album_image_second);
+        albumImage3 = view.findViewById(R.id.album_image_third);
+
         recyclerView = view.findViewById(R.id.recycler_view_media);
         ImageButton addButton = view.findViewById(R.id.add_button);
 
         addButton.setOnClickListener(v -> main.appInitializer.getMusicDialogManager().showAddPlaylistDialog());
-
+        recentlyItem.setOnClickListener(v -> main.navigator.showFragment(DefaultPlaylistFragment.newInstance("Récemment écoutés"), false));
+        favoriteItem.setOnClickListener(v -> main.navigator.showFragment(DefaultPlaylistFragment.newInstance("Favoris"), false));
+        mostItem.setOnClickListener(v -> main.navigator.showFragment(TrendPlaylistFragment.newInstance("Les plus écoutés"), false));
 
         setupRecyclerView();
         main.deleteManager.setupDeleteLauncher(executor, this);
@@ -140,6 +159,24 @@ public class PlaylistFragment extends MediaFragment<PlaylistDto, PlaylistAdapter
         main.loaderMediaViewModel.loadPlaylistss().observe(getViewLifecycleOwner(), playlists -> {
             mediaList = new ArrayList<>(playlists);
             requireActivity().runOnUiThread(() -> adapter.submitList(mediaList));
+        });
+
+        main.loaderDefaultPlaylistAndMixViewModel.loadRecentlyList().observe(getViewLifecycleOwner(), musics ->{
+            String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
+            recentlyCounter.setText(totalMusic);
+        });
+
+        main.loaderDefaultPlaylistAndMixViewModel.loadFavorite().observe(getViewLifecycleOwner(), musics ->{
+            String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
+            favoriteCounter.setText(totalMusic);
+        });
+
+        main.loaderDefaultPlaylistAndMixViewModel.loadMostListening().observe(getViewLifecycleOwner(), musics ->{
+            String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
+            mostCounter.setText(totalMusic);
+            UiUtilities.displayImageWithGlide(musics.get(0).getCover(), R.drawable.echoostation_placeholder_album_3x, albumImage1, requireContext());
+            UiUtilities.displayImageWithGlide(musics.get(1).getCover(), R.drawable.echoostation_placeholder_album_3x, albumImage2, requireContext());
+            UiUtilities.displayImageWithGlide(musics.get(2).getCover(), R.drawable.echoostation_placeholder_album_3x, albumImage3, requireContext());
         });
     }
 

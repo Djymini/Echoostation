@@ -2,13 +2,19 @@ package com.djymini.echoostation.helpers;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.motion.widget.MotionLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -85,7 +91,11 @@ public class Navigator {
             transaction.show(fragment);
         }
 
-        transaction.hide(activeFragment).commit();
+        if (activeFragment != null && activeFragment.isAdded()) {
+            transaction.hide(activeFragment);
+        }
+        transaction.commit();
+
         if(changeTheTitle)
             modifyTitle(fragmentInitializer.getTitle(fragment));
         setActiveFragment(fragment);
@@ -97,7 +107,7 @@ public class Navigator {
         if (fragment == null) return;
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (activeFragment != null) {
+        if (activeFragment != null && activeFragment.isAdded()) {
             transaction.remove(activeFragment);
         }
 
@@ -110,6 +120,7 @@ public class Navigator {
         transaction.commit();
         activeFragment = fragment;
         updateToolbarMenu(fragment);
+        modifyTitle(fragmentInitializer.getTitle(fragment));
     }
 
 
@@ -216,16 +227,45 @@ public class Navigator {
     public FragmentManager getFragmentManager() {
         return fragmentManager;
     }
-
     public Fragment getActiveFragment() {
         return activeFragment;
     }
-
     public void setActiveFragment(Fragment activeFragment) {
         this.activeFragment = activeFragment;
     }
-
     public Toolbar getToolbar() {
         return toolbar;
+    }
+
+    public void backButtonManager(int fragmentBackId, Resources resources, MainActivity main, LifecycleOwner lifecycleOwner, Context context){
+        Toolbar toolbar = getToolbar();
+        main.setSupportActionBar(toolbar);
+
+        AppCompatActivity activity = main;
+        if (activity.getSupportActionBar() != null) {
+            activity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            boolean nightMode = (resources.getConfiguration().uiMode
+                    & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+
+            Drawable upArrow = ContextCompat.getDrawable(context,
+                    nightMode ?  R.drawable.ic_echoostation_arrow_back_night : R.drawable.ic_echoostation_arrow_back);
+
+            if (upArrow != null) {
+                activity.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            }
+        }
+
+        toolbar.setNavigationOnClickListener(v -> goBackToLibrary(fragmentBackId));
+
+        main.getOnBackPressedDispatcher().addCallback(
+                lifecycleOwner,
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        goBackToLibrary(fragmentBackId);
+                    }
+                }
+        );
     }
 }

@@ -68,4 +68,11 @@ public class Constants {
     public static final String WAKE ="Réveil";
     public static final String SLEEP ="Couché";
     public static final String WASH ="Ménage";
+
+    public static final String DURATION_TEXT = "Durée : ";
+    public static final String ALBUM_COUNTER = " album";
+    public static final String ALBUM_COUNTER_PLURAL = ALBUM_COUNTER + "s";
+
+    public static final String TRACK_COUNTER = " titre";
+    public static final String TRACK_COUNTER_PLURAL = TRACK_COUNTER + "s";
 }

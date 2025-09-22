@@ -125,23 +125,6 @@ public class AlbumFragment extends MediaFragment<AlbumDto, AlbumAdapter> {
                 updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
                 main.navigator.showFragment(AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle);
-                if(getActivity() instanceof MainActivity){
-                    MainActivity main = (MainActivity) getActivity();
-                    FragmentTransaction transaction = main.navigator.getFragmentManager().beginTransaction();
-
-                    Fragment fragment = AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library);
-
-                    if (!fragment.isAdded()) {
-                        transaction.add(R.id.frame_layout, fragment);
-                    } else {
-                        transaction.show(fragment);
-                    }
-
-                    transaction.hide(main.navigator.getActiveFragment()).commit();
-
-                    main.navigator.setActiveFragment(fragment);
-                    main.navigator.updateToolbarMenu(fragment);
-                }
             }
         });
     }
