@@ -23,7 +23,6 @@ import com.djymini.echoostation.adapters.PlaylistAdapter;
 import com.djymini.echoostation.dtos.PlaylistDto;
 import com.djymini.echoostation.fragments.playlistMusicFragment.DefaultPlaylistFragment;
 import com.djymini.echoostation.fragments.playlistMusicFragment.PlaylistPersoFragment;
-import com.djymini.echoostation.fragments.playlistMusicFragment.TrendPlaylistFragment;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.UiUtilities;
 import com.djymini.echoostation.viewModels.ShareSearchViewModel;
@@ -101,7 +100,7 @@ public class PlaylistFragment extends MediaFragment<PlaylistDto, PlaylistAdapter
         addButton.setOnClickListener(v -> main.appInitializer.getMusicDialogManager().showAddPlaylistDialog());
         recentlyItem.setOnClickListener(v -> main.navigator.showFragment(DefaultPlaylistFragment.newInstance("Récemment écoutés"), false));
         favoriteItem.setOnClickListener(v -> main.navigator.showFragment(DefaultPlaylistFragment.newInstance("Favoris"), false));
-        mostItem.setOnClickListener(v -> main.navigator.showFragment(TrendPlaylistFragment.newInstance("Les plus écoutés"), false));
+        mostItem.setOnClickListener(v -> main.navigator.showFragment(DefaultPlaylistFragment.newInstance("Les plus écoutés"), false));
 
         setupRecyclerView();
         main.deleteManager.setupDeleteLauncher(executor, this);
@@ -156,22 +155,22 @@ public class PlaylistFragment extends MediaFragment<PlaylistDto, PlaylistAdapter
     @Override
     public void loadMedias(){
         super.loadMedias();
-        main.loaderMediaViewModel.loadPlaylistss().observe(getViewLifecycleOwner(), playlists -> {
+        main.loaderMediaViewModel.loadPlaylists().observe(getViewLifecycleOwner(), playlists -> {
             mediaList = new ArrayList<>(playlists);
             requireActivity().runOnUiThread(() -> adapter.submitList(mediaList));
         });
 
-        main.loaderDefaultPlaylistAndMixViewModel.loadRecentlyList().observe(getViewLifecycleOwner(), musics ->{
+        main.playlistAndMixViewModel.loadRecentlyList().observe(getViewLifecycleOwner(), musics ->{
             String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
             recentlyCounter.setText(totalMusic);
         });
 
-        main.loaderDefaultPlaylistAndMixViewModel.loadFavorite().observe(getViewLifecycleOwner(), musics ->{
+        main.playlistAndMixViewModel.loadFavorite().observe(getViewLifecycleOwner(), musics ->{
             String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
             favoriteCounter.setText(totalMusic);
         });
 
-        main.loaderDefaultPlaylistAndMixViewModel.loadMostListening().observe(getViewLifecycleOwner(), musics ->{
+        main.playlistAndMixViewModel.loadMostListening().observe(getViewLifecycleOwner(), musics ->{
             String totalMusic = musics.size() > 1 ? musics.size() + " morceaux" : musics.size() + " morceau";
             mostCounter.setText(totalMusic);
             UiUtilities.displayImageWithGlide(musics.get(0).getCover(), R.drawable.echoostation_placeholder_album_3x, albumImage1, requireContext());

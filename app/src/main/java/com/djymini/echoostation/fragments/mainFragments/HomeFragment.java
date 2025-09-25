@@ -23,8 +23,8 @@ import com.djymini.echoostation.adapters.ArtistAdapter;
 import com.djymini.echoostation.adapters.HomeImageButtonAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.ArtistDto;
-import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumInfoFragment;
-import com.djymini.echoostation.fragments.mediaDetailFragment.ArtistInfoFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumDetailFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.ArtistDetailFragment;
 import com.djymini.echoostation.helpers.FragmentHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.ListMediaUtilities;
@@ -111,7 +111,7 @@ public class HomeFragment extends Fragment {
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopArtist, getContext(), artistAdapter, 3, false);
 
         artistAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = ArtistInfoFragment.newInstance(artistAdapter.getCurrentList().get(position), R.id.home);
+            Fragment fragment = ArtistDetailFragment.newInstance(artistAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, artistAdapter.getCurrentList().get(position).name);
         });
     }
@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
         RecyclerViewHelper.setupRecyclerViewGrid(recyclerViewTopAlbum, getContext(), albumAdapter, 3, false);
 
         albumAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = AlbumInfoFragment.newInstance(albumAdapter.getCurrentList().get(position), R.id.home);
+            Fragment fragment = AlbumDetailFragment.newInstance(albumAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, albumAdapter.getCurrentList().get(position).name);
         });
     }
@@ -133,7 +133,7 @@ public class HomeFragment extends Fragment {
         );
 
         recentAlbumAdapter.setOnItemClickListener(position -> {
-            Fragment fragment = AlbumInfoFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position), R.id.home);
+            Fragment fragment = AlbumDetailFragment.newInstance(recentAlbumAdapter.getCurrentList().get(position), R.id.home);
             FragmentHelper.fragmentManager(main, fragment, recentAlbumAdapter.getCurrentList().get(position).name);
         });
     }

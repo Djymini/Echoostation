@@ -60,14 +60,10 @@ public class Constants {
     public static final String MOTIVATED ="Motivant";
     public static final String SAD ="Triste";
     public static final String RELAXING ="Relaxant";
-    public static final String INTROSPECTIVE ="Introspectif";
-    public static final String EPIC ="Epique";
+    public static final String EPIC ="Du moment";
     public static final String WORK ="Travail";
     public static final String PARTY ="Soirée";
     public static final String RIDE ="Balade";
-    public static final String WAKE ="Réveil";
-    public static final String SLEEP ="Couché";
-    public static final String WASH ="Ménage";
 
     public static final String DURATION_TEXT = "Durée : ";
     public static final String ALBUM_COUNTER = " album";

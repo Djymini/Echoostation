@@ -16,6 +16,7 @@ import com.djymini.echoostation.R;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.ui.HomeImageButton;
 import com.djymini.echoostation.ui.Tag;
+import com.djymini.echoostation.utilities.Constants;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,54 +38,35 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.TagViewHolder> {
 
         this.tagMap = new HashMap<>();
 
-        tagMap.put("Joyeux", new Tag("Joyeux", musicDto.happyMusic, music -> {
+        tagMap.put(Constants.HAPPY, new Tag(Constants.HAPPY, musicDto.happyMusic, music -> {
             music.happyMusic = !music.happyMusic;
             this.main.dbService.getMusicTagDao().updateHappyTag(music.id, music.happyMusic);
         }));
-        tagMap.put("Motivant", new Tag("Motivant", musicDto.motivatedMusic, music -> {
+        tagMap.put(Constants.MOTIVATED, new Tag(Constants.MOTIVATED, musicDto.motivatedMusic, music -> {
             music.motivatedMusic = !music.motivatedMusic;
             this.main.dbService.getMusicTagDao().updateMotivatedTag(music.id, music.motivatedMusic);
         }));
-        tagMap.put("Triste", new Tag("Triste", musicDto.sadMusic, music -> {
+        tagMap.put(Constants.SAD, new Tag(Constants.SAD, musicDto.sadMusic, music -> {
             music.sadMusic = !music.sadMusic;
             this.main.dbService.getMusicTagDao().updateSadTag(music.id, music.sadMusic);
         }));
-        tagMap.put("Relaxant", new Tag("Relaxant", musicDto.relaxingMusic, music -> {
+        tagMap.put(Constants.RELAXING, new Tag(Constants.RELAXING, musicDto.relaxingMusic, music -> {
             music.relaxingMusic = !music.relaxingMusic;
             this.main.dbService.getMusicTagDao().updateRelaxingTag(music.id, music.relaxingMusic);
         }));
-        tagMap.put("Introspectif", new Tag("Introspectif",musicDto.introspectiveMusic, music -> {
-            music.introspectiveMusic = !music.introspectiveMusic;
-            this.main.dbService.getMusicTagDao().updateIntrospectiveTag(music.id, music.introspectiveMusic);
-        }));
-        tagMap.put("Epique", new Tag("Epique", musicDto.epicMusic, music -> {
-            music.epicMusic = !music.epicMusic;
-            this.main.dbService.getMusicTagDao().updateEpicTag(music.id, music.epicMusic);
-        }));
-        tagMap.put("Travail", new Tag("Travail", musicDto.workMusic, music -> {
+        tagMap.put(Constants.WORK, new Tag(Constants.WORK, musicDto.workMusic, music -> {
             music.workMusic = !music.workMusic;
             this.main.dbService.getMusicTagDao().updateWorkTag(music.id, music.workMusic);
         }));
-        tagMap.put("Soirée", new Tag("Soirée", musicDto.partyMusic, music -> {
+        tagMap.put(Constants.PARTY, new Tag(Constants.PARTY, musicDto.partyMusic, music -> {
             music.partyMusic = !music.partyMusic;
             this.main.dbService.getMusicTagDao().updatePartyTag(music.id, music.partyMusic);
         }));
-        tagMap.put("Balade", new Tag("Balade", musicDto.rideMusic, music -> {
+        tagMap.put(Constants.RIDE, new Tag(Constants.RIDE, musicDto.rideMusic, music -> {
             music.rideMusic = !music.rideMusic;
             this.main.dbService.getMusicTagDao().updateRideTag(music.id, music.rideMusic);
         }));
-        tagMap.put("Réveil", new Tag("Réveil", musicDto.wakeMusic, music -> {
-            music.wakeMusic = !music.wakeMusic;
-            this.main.dbService.getMusicTagDao().updateWakeTag(music.id, music.wakeMusic);
-        }));
-        tagMap.put("Couché", new Tag("Couché", musicDto.sleepMusic, music -> {
-            music.sleepMusic = !music.sleepMusic;
-            this.main.dbService.getMusicTagDao().updateSleepTag(music.id, music.sleepMusic);
-        }));
-        tagMap.put("Ménage", new Tag("Ménage", musicDto.washMusic, music -> {
-            music.washMusic = !music.washMusic;
-            this.main.dbService.getMusicTagDao().updateWashTag(music.id, music.washMusic);
-        }));
+
     }
 
     @NonNull

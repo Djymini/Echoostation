@@ -23,11 +23,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
@@ -100,9 +103,57 @@ public class ArtistService {
         return null;
     }
 
-    private String[] separateArtist(String artistName){
-        String regex = "(?<!/)(?<!/)(?:,\\s&\\s|,\\s|;\\s|\\s&\\s|\\sfeat\\.\\s|\\sand\\s|/)(?!/)(?!/)";
-        return artistName.split(regex);
+    private static final List<String> EXCEPTION_ARTISTS = Arrays.asList(
+            "Lous and The Yakuza"
+    );
+
+    private String[] separateArtist(String artistName) {
+        if (artistName == null || artistName.isEmpty()) return new String[]{};
+
+        // --- 1. Extraire les featurings dans le titre ---
+        List<String> featuredArtists = new ArrayList<>();
+        Pattern featPattern = Pattern.compile("(?i)[(\\[]?feat\\.? ([^)\\]]+)[)\\]]?");
+        Matcher matcher = featPattern.matcher(artistName);
+        String mainArtistPart = artistName;
+
+        if (matcher.find()) {
+            String featPart = matcher.group(1); // extrait le texte après feat
+            featuredArtists.addAll(Arrays.asList(featPart.split("\\s*,\\s*|\\s*&\\s*")));
+            mainArtistPart = matcher.replaceAll("");
+        }
+
+        // --- 2. Protéger les exceptions ---
+        Map<String, String> placeholders = new HashMap<>();
+        String modifiedName = mainArtistPart;
+        int counter = 0;
+        for (String exception : EXCEPTION_ARTISTS) {
+            if (modifiedName.contains(exception)) {
+                String placeholder = "___ARTIST_" + counter + "___";
+                modifiedName = modifiedName.replace(exception, placeholder);
+                placeholders.put(placeholder, exception);
+                counter++;
+            }
+        }
+
+        // --- 3. Split sur la regex normale ---
+        String regex = "(?<!/)(?<!/)(?:,\\s&\\s|,\\s|;\\s|\\s&\\s|\\sand\\s|/)(?!/)(?!/)";
+        String[] splitArtists = modifiedName.split(regex);
+
+        // --- 4. Restaurer les exceptions ---
+        List<String> finalArtists = new ArrayList<>();
+        for (String s : splitArtists) {
+            s = s.trim();
+            if (placeholders.containsKey(s)) s = placeholders.get(s);
+            if (!s.isEmpty()) finalArtists.add(s);
+        }
+
+        // --- 5. Ajouter les featurings ---
+        for (String feat : featuredArtists) {
+            feat = feat.trim();
+            if (!feat.isEmpty()) finalArtists.add(feat);
+        }
+
+        return finalArtists.toArray(new String[0]);
     }
 
     private String fixNameArtist(String artistName) {
@@ -125,6 +176,25 @@ public class ArtistService {
         }
         return null;
     }
+
+    private static final Pattern FEAT_PATTERN = Pattern.compile(
+            "(?i)\\bfeat\\.?[\\s:.-]*([^\\[\\]()]+)"
+    );
+
+
+    public List<String> extractFeaturedArtists(String title) {
+        List<String> result = new ArrayList<>();
+        if (title == null) return result;
+
+        Matcher matcher = FEAT_PATTERN.matcher(title);
+        if (matcher.find()) {
+            String artistsPart = matcher.group(1);
+            String[] splitArtists = separateArtist(artistsPart);
+            result.addAll(Arrays.asList(splitArtists));
+        }
+        return result;
+    }
+
 
     public void incrementListeningNumberStatistic(Artist artist){
         statisticHelper.incrementListeningNumber(artist, artist.id);
@@ -185,7 +255,6 @@ public class ArtistService {
                                     Log.w(TAG, "Aucun artiste trouvé sur Spotify pour : " + nameArtist);
                                 }
 
-                                // Récupérer bio via Last.fm
                                 Retrofit lastFmRetrofit = new Retrofit.Builder()
                                         .baseUrl("https://ws.audioscrobbler.com/")
                                         .addConverterFactory(GsonConverterFactory.create())

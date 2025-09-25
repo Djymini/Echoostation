@@ -19,7 +19,6 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.fragments.playlistMusicFragment.DefaultPlaylistFragment;
 import com.djymini.echoostation.fragments.playlistMusicFragment.MixPlaylistFragment;
-import com.djymini.echoostation.fragments.playlistMusicFragment.TrendPlaylistFragment;
 import com.djymini.echoostation.ui.HomeImageButton;
 
 import java.util.List;
@@ -59,12 +58,10 @@ public class HomeImageButtonAdapter extends RecyclerView.Adapter<HomeImageButton
             Fragment fragment;
 
             switch (homeImageButtonList.get(position).getNameButton()){
+                case "Les plus écoutés" :
                 case "Favoris" :
                 case "Récemment écoutés" :
                     fragment = DefaultPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());
-                    break;
-                case "Les plus écoutés" :
-                    fragment = TrendPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());
                     break;
                 default:
                     fragment = MixPlaylistFragment.newInstance(homeImageButtonList.get(position).getNameButton());

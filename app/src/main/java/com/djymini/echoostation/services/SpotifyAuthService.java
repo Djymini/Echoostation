@@ -92,7 +92,6 @@ public class SpotifyAuthService {
                     @Override
                     public void onResourceReady(@NonNull File resource, @Nullable Transition<? super File> transition) {
                         try {
-                            // Stocker l'image dans le dossier permanent de l'app
                             File filesDir = new File(context.getFilesDir(), "artist_images");
                             if (!filesDir.exists()) filesDir.mkdirs();
 
@@ -107,7 +106,6 @@ public class SpotifyAuthService {
                                 }
                             }
 
-                            // Renvoie le chemin local absolu
                             callback.onSuccess(Uri.fromFile(permanentFile));
 
                         } catch (Exception e) {

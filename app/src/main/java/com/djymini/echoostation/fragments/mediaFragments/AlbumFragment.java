@@ -5,8 +5,6 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -21,7 +19,7 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.AlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
-import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumInfoFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.AlbumDetailFragment;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.SortOption;
@@ -124,7 +122,7 @@ public class AlbumFragment extends MediaFragment<AlbumDto, AlbumAdapter> {
                 adapter.toggleSelection(album);
                 updateActionModeTitle(adapter.getSelectedItems().size());
             } else {
-                main.navigator.showFragment(AlbumInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle);
+                main.navigator.showFragment(AlbumDetailFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle);
             }
         });
     }

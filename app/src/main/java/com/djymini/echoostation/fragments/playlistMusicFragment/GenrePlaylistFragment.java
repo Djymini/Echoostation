@@ -25,10 +25,6 @@ public class GenrePlaylistFragment extends PlaylistMusicFragment{
     private String genreName;
     private long genreId;
 
-    private ImageView playlistMixGenreIllustration;
-    private TextView playlistMixGenreText;
-    private RelativeLayout playlistMixGenreContainer;
-
     public GenrePlaylistFragment() {}
 
     public static GenrePlaylistFragment newInstance(String playlistName, String genreName, long genreId) {
@@ -73,20 +69,9 @@ public class GenrePlaylistFragment extends PlaylistMusicFragment{
     }
 
     @Override
-    public void bindView(View view){
-        super.bindView(view);
-        playlistMixGenreContainer = view.findViewById(R.id.playlist_illustration_mix_and_genre_container);
-        playlistMixGenreIllustration = view.findViewById(R.id.playlist_illustration_mix_and_genre);
-        playlistMixGenreText = view.findViewById(R.id.playlist_illustration_text);
-    }
-
-    @Override
     public void setupInfoPlaylist(){
         super.setupInfoPlaylist();
-        playlistMixGenreContainer.setVisibility(View.VISIBLE);
-        UiUtilities.displayImageWithGlide(playlistDefaultImage, R.drawable.echoostation_placeholder_genre_3x, playlistMixGenreIllustration, requireContext());
         playlistNameView.setText(genreName);
-        playlistMixGenreText.setText(genreName.toUpperCase());
     }
 
     @Override

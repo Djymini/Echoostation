@@ -44,7 +44,7 @@ public class PlaylistAdapter2 extends RecyclerView.Adapter<PlaylistAdapter2.Play
     @NonNull
     @Override
     public PlaylistAdapter2.PlaylistView2Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_playlist2, parent, false);
         return new PlaylistAdapter2.PlaylistView2Holder(view);
     }
 
@@ -52,33 +52,33 @@ public class PlaylistAdapter2 extends RecyclerView.Adapter<PlaylistAdapter2.Play
     public void onBindViewHolder(@NonNull PlaylistView2Holder holder, int position) {
         PlaylistDto playlist = playlists.get(position);
         holder.playlistName.setText(playlist.name);
-        holder.trackCounter.setText(String.valueOf(playlist.tracksNumber));
-
-        if(playlist.tracksNumber >= 1){
-            String[] coverPlaylists = playlist.coverList.split(",");
-            Set<String> set = new LinkedHashSet<>(Arrays.asList(coverPlaylists));
-            List<String> coverForDisplay = new ArrayList<>(set);
-            if (coverForDisplay.size() > 4) {
-                holder.playlistCover1.setVisibility(View.GONE);
-                holder.playlistCover2.setVisibility(View.VISIBLE);
-                UiUtilities.displayImageWithGlide(Uri.parse(coverForDisplay.get(0)), R.drawable.echoostation_placeholder_album_3x, holder.playlistCover2Image1, holder.itemView.getContext());
-                UiUtilities.displayImageWithGlide(Uri.parse(coverForDisplay.get(1)), R.drawable.echoostation_placeholder_album_3x, holder.playlistCover2Image2, holder.itemView.getContext());
-                UiUtilities.displayImageWithGlide(Uri.parse(coverForDisplay.get(2)), R.drawable.echoostation_placeholder_album_3x, holder.playlistCover2Image3, holder.itemView.getContext());
-                UiUtilities.displayImageWithGlide(Uri.parse(coverForDisplay.get(3)), R.drawable.echoostation_placeholder_album_3x, holder.playlistCover2Image4, holder.itemView.getContext());
+        executor.execute(() ->{
+            ColorStateList tint;
+            if(main.dbService.getPlaylistDao().existsInPlaylist(musicDto.id, playlist.id)){
+                holder.checkBox.setImageResource(R.drawable.ic_echoostation_checkbox);
+                tint = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(),R.color.colorText));
             }else {
-                holder.playlistCover1.setVisibility(View.VISIBLE);
-                holder.playlistCover2.setVisibility(View.GONE);
-                UiUtilities.displayImageWithGlide(Uri.parse(coverForDisplay.get(0)), R.drawable.echoostation_placeholder_album_3x, holder.playlistCover1, holder.itemView.getContext());
+                holder.checkBox.setImageResource(R.drawable.ic_echoostation_checkbox_blank);
+                tint = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(),R.color.disableText));
             }
-        }else {
-            holder.playlistCover1.setVisibility(View.VISIBLE);
-            holder.playlistCover2.setVisibility(View.GONE);
-            UiUtilities.displayImageWithGlide(R.drawable.echoostation_placeholder_playlist_3x, R.drawable.echoostation_placeholder_album_3x, holder.playlistCover1, holder.itemView.getContext());
-        }
+            holder.checkBox.setImageTintList(tint);
+
+        });
+
 
         holder.itemView.setOnClickListener(v -> {
             executor.execute(() ->{
-                main.dbService.getMusicDao().insertMusicPlaylist(playlist.id, musicDto.id);
+                ColorStateList tint;
+                if(main.dbService.getPlaylistDao().existsInPlaylist(musicDto.id, playlist.id)){
+                    holder.checkBox.setImageResource(R.drawable.ic_echoostation_checkbox);
+                    tint = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(),R.color.colorText));
+                    main.dbService.getMusicDao().deleteMusicPlaylist(playlist.id, musicDto.id);
+                }else {
+                    holder.checkBox.setImageResource(R.drawable.ic_echoostation_checkbox_blank);
+                    tint = ColorStateList.valueOf(ContextCompat.getColor(holder.itemView.getContext(),R.color.disableText));
+                    main.dbService.getMusicDao().insertMusicPlaylist(playlist.id, musicDto.id);
+                }
+                holder.checkBox.setImageTintList(tint);
             });
         });
     }
@@ -89,28 +89,13 @@ public class PlaylistAdapter2 extends RecyclerView.Adapter<PlaylistAdapter2.Play
     }
 
     public static class PlaylistView2Holder extends RecyclerView.ViewHolder {
-        final ImageView playlistCover1;
-        final GridLayout playlistCover2;
-        final ImageView playlistCover2Image1;
-        final ImageView playlistCover2Image2;
-        final ImageView playlistCover2Image3;
-        final ImageView playlistCover2Image4;
-        final ImageButton menuButton;
+        final ImageView checkBox;
         final TextView playlistName;
-        final TextView trackCounter;
-
 
         PlaylistView2Holder(@NonNull View itemView) {
             super(itemView);
-            playlistCover1 = itemView.findViewById(R.id.playlist_cover);
-            playlistCover2 = itemView.findViewById(R.id.playlist_cover2);
-            playlistCover2Image1 = itemView.findViewById(R.id.playlist_cover2_image1);
-            playlistCover2Image2 = itemView.findViewById(R.id.playlist_cover2_image2);
-            playlistCover2Image3 = itemView.findViewById(R.id.playlist_cover2_image3);
-            playlistCover2Image4 = itemView.findViewById(R.id.playlist_cover2_image4);
-            menuButton = itemView.findViewById(R.id.item_menu_button);
             playlistName = itemView.findViewById(R.id.playlist_name);
-            trackCounter = itemView.findViewById(R.id.tracks_counter);
+            checkBox = itemView.findViewById(R.id.checkbox);
         }
     }
 }

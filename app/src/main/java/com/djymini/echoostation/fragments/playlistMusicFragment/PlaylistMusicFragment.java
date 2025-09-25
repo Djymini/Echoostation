@@ -2,6 +2,7 @@ package com.djymini.echoostation.fragments.playlistMusicFragment;
 
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.MusicAdapter;
+import com.djymini.echoostation.customView.ParallelogramImageView;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.utilities.MusicPlayerUtilities;
 import com.djymini.echoostation.utilities.TimeUtilities;
+import com.djymini.echoostation.utilities.UiUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +42,8 @@ public class PlaylistMusicFragment extends Fragment {
     public Button playButton, shuffleButton, reloadButton;
     public RecyclerView recyclerView;
     public MusicAdapter adapter;
+
+    public List<ParallelogramImageView> parallelogramImageViewList = new ArrayList<>();
 
     public String playlistName;
     public int playlistDefaultImage;
@@ -62,6 +67,19 @@ public class PlaylistMusicFragment extends Fragment {
         shuffleButton = view.findViewById(R.id.shuffle_button);
         reloadButton = view.findViewById(R.id.reload_button);
         recyclerView = view.findViewById(R.id.recycler_view_song_playlist);
+
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage1));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage2));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage3));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage4));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage5));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage6));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage7));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage8));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage9));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage10));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage11));
+        parallelogramImageViewList.add(view.findViewById(R.id.parallelogramImage12));
     }
 
     public void setupInfoPlaylist(){
@@ -70,6 +88,16 @@ public class PlaylistMusicFragment extends Fragment {
         String duration = "Durée : " + TimeUtilities.durationTotal(musicList);
         playlistNumberTrack.setText(totalMusic);
         playlistDurationTotal.setText(duration);
+
+        for (int i = 0; i < musicList.size() && i < 12; i++) {
+            if(musicList.get(i) != null) {
+                parallelogramImageViewList.get(i).setVisibility(View.VISIBLE);
+                UiUtilities.displayImageWithGlide(musicList.get(i).getCover(), R.drawable.echoostation_placeholder_album_3x, parallelogramImageViewList.get(i), requireContext());
+            }else{
+
+            }
+
+        }
     }
 
     public void setupButton(){

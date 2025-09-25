@@ -19,18 +19,12 @@ import com.djymini.echoostation.ui.HomeImageButton;
 import com.djymini.echoostation.utilities.HomeFragmentContants;
 import com.djymini.echoostation.utilities.UiUtilities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
 
 public class MixPlaylistFragment extends PlaylistMusicFragment{
     private static final String ARG_PLAYLIST = "playlist";
-
-    private ImageView playlistMixGenreIllustration;
-    private TextView playlistMixGenreText;
-    private RelativeLayout playlistMixGenreContainer;
-    private CardView playlistMixGenreTextContainer;
 
     public MixPlaylistFragment() {}
 
@@ -53,12 +47,11 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_playlist_list_music, container, false);
         bindView(view);
 
-        main.loaderDefaultPlaylistAndMixViewModel.getMixMapLive().observe(getViewLifecycleOwner(), map -> {
+        main.playlistAndMixViewModel.getMixMapLive().observe(getViewLifecycleOwner(), map -> {
             musicList = map.get(playlistName);
             setupInfoPlaylist();
             sortAndDisplayMusics();
@@ -70,18 +63,8 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
     }
 
     @Override
-    public void bindView(View view){
-        super.bindView(view);
-        playlistMixGenreContainer = view.findViewById(R.id.playlist_illustration_mix_and_genre_container);
-        playlistMixGenreIllustration = view.findViewById(R.id.playlist_illustration_mix_and_genre);
-        playlistMixGenreTextContainer = view.findViewById(R.id.playlist_illustration_text_container);
-        playlistMixGenreText = view.findViewById(R.id.playlist_illustration_text);
-    }
-
-    @Override
     public void setupInfoPlaylist(){
         super.setupInfoPlaylist();
-        playlistMixGenreContainer.setVisibility(View.VISIBLE);
 
         Map<String, HomeImageButton> tag = new HashMap<>();
         for (HomeImageButton imageButton : HomeFragmentContants.homeImageButtonListMix){
@@ -89,13 +72,7 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
         }
 
         String mixName = "Mix " + playlistName;
-        if(!musicList.isEmpty())
-            UiUtilities.displayImageWithGlide(musicList.get(0).getCover(), R.drawable.echoostation_placeholder_playlist_3x, playlistMixGenreIllustration, requireContext());
         playlistNameView.setText(mixName);
-
-        ColorStateList tint = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), tag.get(playlistName).getBackgroundColor()));
-        playlistMixGenreTextContainer.setCardBackgroundColor(tint);
-        playlistMixGenreText.setText(mixName.toUpperCase());
 
         shuffleButton.setVisibility(View.GONE);
         reloadButton.setVisibility(View.VISIBLE);
@@ -105,7 +82,7 @@ public class MixPlaylistFragment extends PlaylistMusicFragment{
     public void setupButton(){
         super.setupButton();
         reloadButton.setOnClickListener(v -> {
-            main.loaderDefaultPlaylistAndMixViewModel.remakeTheMix(playlistName);
+            main.playlistAndMixViewModel.remakeTheMix(playlistName);
             sortAndDisplayMusics();
 
         });

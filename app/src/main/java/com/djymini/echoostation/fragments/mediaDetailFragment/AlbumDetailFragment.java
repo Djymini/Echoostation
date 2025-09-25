@@ -5,15 +5,12 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.media3.common.MediaItem;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,20 +20,17 @@ import com.djymini.echoostation.adapters.MusicAlbumAdapter;
 import com.djymini.echoostation.dtos.AlbumDto;
 import com.djymini.echoostation.dtos.MusicDto;
 import com.djymini.echoostation.helpers.MediaItemHelper;
-import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.utilities.UiUtilities;
 
-import java.io.File;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AlbumInfoFragment extends MediaDetailFragment<AlbumDto, MusicAlbumAdapter> {
+public class AlbumDetailFragment extends MediaDetailFragment<AlbumDto, MusicAlbumAdapter> {
     private static final String ARG_ALBUM = "album";
     private static final String ARG_FRAGMENT_BACK = "fragment back id";
 
@@ -46,10 +40,10 @@ public class AlbumInfoFragment extends MediaDetailFragment<AlbumDto, MusicAlbumA
     private TextView albumName, albumDate;
 
 
-    public AlbumInfoFragment() {}
+    public AlbumDetailFragment() {}
 
-    public static AlbumInfoFragment newInstance(AlbumDto newAlbum, int fragmentId) {
-        AlbumInfoFragment fragment = new AlbumInfoFragment();
+    public static AlbumDetailFragment newInstance(AlbumDto newAlbum, int fragmentId) {
+        AlbumDetailFragment fragment = new AlbumDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_ALBUM, newAlbum);
         args.putInt(ARG_FRAGMENT_BACK, fragmentId);
@@ -73,7 +67,7 @@ public class AlbumInfoFragment extends MediaDetailFragment<AlbumDto, MusicAlbumA
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
                 Set<MusicDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
-                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), AlbumInfoFragment.this, executor);
+                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), AlbumDetailFragment.this, executor);
                 mode.finish();
                 return true;
             }
@@ -83,7 +77,7 @@ public class AlbumInfoFragment extends MediaDetailFragment<AlbumDto, MusicAlbumA
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             adapter.clearSelection();
-            AlbumInfoFragment.this.actionMode = null;
+            AlbumDetailFragment.this.actionMode = null;
         }
     };
 

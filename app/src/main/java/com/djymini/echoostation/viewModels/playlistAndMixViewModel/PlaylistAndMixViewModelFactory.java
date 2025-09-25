@@ -1,4 +1,4 @@
-package com.djymini.echoostation.viewModels.loaderDefaultPlaylistAndMixViewModel;
+package com.djymini.echoostation.viewModels.playlistAndMixViewModel;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
@@ -9,12 +9,12 @@ import com.djymini.echoostation.services.MusicService;
 
 import java.util.concurrent.Executor;
 
-public class LoaderDefaultPlaylistAndMixViewModelFactory implements ViewModelProvider.Factory {
+public class PlaylistAndMixViewModelFactory implements ViewModelProvider.Factory {
     private MusicDao musicDao;
     private MusicService musicService;
     private Executor executor;
 
-    public LoaderDefaultPlaylistAndMixViewModelFactory(MusicDao musicDao, MusicService musicService, Executor executor) {
+    public PlaylistAndMixViewModelFactory(MusicDao musicDao, MusicService musicService, Executor executor) {
         this.musicDao = musicDao;
         this.musicService = musicService;
         this.executor = executor;
@@ -24,8 +24,8 @@ public class LoaderDefaultPlaylistAndMixViewModelFactory implements ViewModelPro
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(LoaderDefaultPlaylistAndMixViewModel.class)) {
-            return (T) new LoaderDefaultPlaylistAndMixViewModel(musicDao, musicService, executor);
+        if (modelClass.isAssignableFrom(PlaylistAndMixViewModel.class)) {
+            return (T) new PlaylistAndMixViewModel(musicDao, musicService, executor);
         }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }

@@ -123,7 +123,7 @@ public class TrueMusicPlayer {
         musicPlayerDialogManager = new MusicPlayerDialogManager(main, this.main, executor, context);
 
         addButton.setOnClickListener(v -> {
-            musicPlayerDialogManager.showBottomDialog(currentMusicDto, playlistDtoList, this.main);
+            musicPlayerDialogManager.showBottomDialog(currentMusicDto, this.main);
         });
     }
 

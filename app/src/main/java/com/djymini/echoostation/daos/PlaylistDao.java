@@ -36,6 +36,10 @@ public interface PlaylistDao {
             "GROUP BY p.id ORDER BY p.name DESC")
     LiveData<List<PlaylistDto>> getAllDtoLive();
 
+    @Query("SELECT EXISTS(SELECT 1 FROM music_playlist WHERE id_music = :musicId AND id_playlist = :playlistId)")
+    boolean existsInPlaylist(long musicId, long playlistId);
+
+
     @Query("SELECT " +
             "p.id AS id, " +
             "p.name AS name, " +

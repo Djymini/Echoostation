@@ -38,6 +38,13 @@ public class MusicService {
         try{
             List<Long> artistIds = artistService.addAllArtist(artistName, statisticService);
 
+            List<String> featuredArtists = artistService.extractFeaturedArtists(musicTitle);
+            if (!featuredArtists.isEmpty()) {
+                for (String featArtist : featuredArtists) {
+                    artistIds.addAll(artistService.addAllArtist(featArtist, statisticService));
+                }
+            }
+
             if (musicTitle == null || musicTitle.isEmpty()){
                 musicTitle = getNameFile(musicPath);
             }
@@ -282,5 +289,15 @@ public class MusicService {
         }else {
             return buildMixedPlaylist(mindList);
         }
+    }
+
+    public List<MusicDto> makeTopMonthMix(){
+        List<MusicDto> topList = musicDao.getMusicDetailMostListeningMonth();
+        Collections.shuffle(topList);
+        List<MusicDto> newList = topList.stream()
+                .limit(25)
+                .collect(Collectors.toList());
+
+        return newList;
     }
 }

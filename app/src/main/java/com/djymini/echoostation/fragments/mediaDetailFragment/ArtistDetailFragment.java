@@ -35,7 +35,6 @@ import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.utilities.TimeUtilities;
 import com.djymini.echoostation.utilities.UiUtilities;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -44,7 +43,7 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
-public class ArtistInfoFragment extends MediaDetailFragment<ArtistDto, MusicAdapter> {
+public class ArtistDetailFragment extends MediaDetailFragment<ArtistDto, MusicAdapter> {
     private static final String ARG_ARTIST = "artist";
     private static final String ARG_FRAGEMENT_BACK = "fragment back id";
 
@@ -63,11 +62,11 @@ public class ArtistInfoFragment extends MediaDetailFragment<ArtistDto, MusicAdap
     private AlbumAdapter adapterAlbum, adapterAlbumApparition;
     private List<MediaItem> bestListeningMusicPlaylist;
 
-    public ArtistInfoFragment() {
+    public ArtistDetailFragment() {
     }
 
-    public static ArtistInfoFragment newInstance(ArtistDto newArtist, int fragmentId) {
-        ArtistInfoFragment fragment = new ArtistInfoFragment();
+    public static ArtistDetailFragment newInstance(ArtistDto newArtist, int fragmentId) {
+        ArtistDetailFragment fragment = new ArtistDetailFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_ARTIST, newArtist);
         args.putInt(ARG_FRAGEMENT_BACK, fragmentId);
@@ -91,7 +90,7 @@ public class ArtistInfoFragment extends MediaDetailFragment<ArtistDto, MusicAdap
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             if (item.getItemId() == R.id.action_delete) {
                 Set<MusicDto> selectedCopy = new HashSet<>(adapter.getSelectedItems());
-                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), ArtistInfoFragment.this, executor);
+                main.deleteManager.confirmAndDeleteSelectedMedia(selectedCopy, requireContext(), ArtistDetailFragment.this, executor);
                 mode.finish();
                 return true;
             }
@@ -101,7 +100,7 @@ public class ArtistInfoFragment extends MediaDetailFragment<ArtistDto, MusicAdap
         @Override
         public void onDestroyActionMode(ActionMode mode) {
             adapter.clearSelection();
-            ArtistInfoFragment.this.actionMode = null;
+            ArtistDetailFragment.this.actionMode = null;
         }
     };
 
@@ -212,14 +211,14 @@ public class ArtistInfoFragment extends MediaDetailFragment<ArtistDto, MusicAdap
         adapterAlbum = new AlbumAdapter();
         RecyclerViewHelper.setupRecyclerViewLinear(recyclerViewAlbum, getContext(), adapterAlbum, LinearLayoutManager.HORIZONTAL, true);
         adapterAlbum.setOnMusicMenuClickListener((album, anchorView) -> main.appInitializer.getMusicDialogManager().showBottomDialog(album));
-        adapterAlbum.setOnItemClickListener(position -> main.navigator.showFragment(AlbumInfoFragment.newInstance(adapterAlbum.getCurrentList().get(position), R.id.library), true));
+        adapterAlbum.setOnItemClickListener(position -> main.navigator.showFragment(AlbumDetailFragment.newInstance(adapterAlbum.getCurrentList().get(position), R.id.library), true));
     }
 
     private void setupRecyclerViewAlbumApparition() {
         adapterAlbumApparition = new AlbumAdapter();
         RecyclerViewHelper.setupRecyclerViewLinear(recyclerViewAlbumApparition, getContext(), adapterAlbumApparition, LinearLayoutManager.HORIZONTAL, true);
         adapterAlbumApparition.setOnMusicMenuClickListener((album, anchorView) -> main.appInitializer.getMusicDialogManager().showBottomDialog(album));
-        adapterAlbumApparition.setOnItemClickListener(position -> main.navigator.showFragment(AlbumInfoFragment.newInstance(adapterAlbumApparition.getCurrentList().get(position), R.id.library), true));
+        adapterAlbumApparition.setOnItemClickListener(position -> main.navigator.showFragment(AlbumDetailFragment.newInstance(adapterAlbumApparition.getCurrentList().get(position), R.id.library), true));
     }
 
     private void loadMusics() {

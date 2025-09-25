@@ -23,6 +23,9 @@ public interface MusicDao {
     @Query("INSERT INTO music_playlist (id_playlist, id_music) VALUES (:playlistId, :musicId)")
     void insertMusicPlaylist(long playlistId, long musicId);
 
+    @Query("DELETE FROM music_playlist WHERE id_playlist = :playlistId AND id_music = :musicId")
+    void deleteMusicPlaylist(long playlistId, long musicId);
+
     @Delete
     void delete(Music music);
 
@@ -431,6 +434,32 @@ public interface MusicDao {
             ") AS artist_data ON artist_data.musicId = m.id " +
             "ORDER BY m.last_played DESC LIMIT 50")
     List<MusicDto> getMusicDetailRecentlyLstening();
+
+    @Query("SELECT " +
+            "m.id AS id, m.path AS path, m.title AS title, " +
+            "m.duration AS duration, m.track AS track, m.created_at AS createdAt, m.last_played AS lastPlayed, " +
+            "al.id AS albumId, al.name AS albumName, al.cover_path AS coverPath, al.year AS year, " +
+            "g.id AS genreId, g.name AS genreName, " +
+            "mt.id AS musicTagId, mt.favorite_music AS favoriteMusic, mt.happy_music AS happyMusic, mt.motivated_music AS motivatedMusic, mt.sad_music AS sadMusic, mt.relaxing_music AS relaxingMusic, mt.introspective_music AS introspectiveMusic, mt.epic_music AS epicMusic, mt.work_music AS workMusic, mt.party_music AS partyMusic, mt.ride_music AS rideMusic, mt.wake_music AS wakeMusic, mt.sleep_music AS sleepMusic, mt.wash_music AS washMusic, " +
+            "s.id AS statisticId, s.listening_number AS listeningNumber, " +
+            "s.month_listening_number AS monthListeningNumber, " +
+            "s.listening_time AS listeningTime, s.month_listening_time AS monthListeningTime, " +
+            "artist_data.artistId, artist_data.artistName " +
+            "FROM music m " +
+            "JOIN album al ON m.id_album = al.id " +
+            "JOIN genre g ON m.id_genre = g.id " +
+            "JOIN music_tag mt ON m.id_music_tag = mt.id " +
+            "JOIN statistic s ON m.id_statistic = s.id " +
+            "LEFT JOIN ( " +
+            "   SELECT am_sorted.id_music AS musicId, " +
+            "          GROUP_CONCAT(am_sorted.id_artist, ', ') AS artistId, " +
+            "          GROUP_CONCAT(a.name, ', ') AS artistName " +
+            "   FROM (SELECT * FROM artist_music ORDER BY position ASC) AS am_sorted " +
+            "   JOIN artist a ON a.id = am_sorted.id_artist " +
+            "   GROUP BY am_sorted.id_music " +
+            ") AS artist_data ON artist_data.musicId = m.id " +
+            "ORDER BY s.month_listening_time DESC LIMIT 35")
+    List<MusicDto> getMusicDetailMostListeningMonth();
 
     @Query("SELECT " +
             "m.id AS id, m.path AS path, m.title AS title, " +

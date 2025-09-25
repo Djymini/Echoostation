@@ -28,13 +28,13 @@ import com.djymini.echoostation.MainActivity;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.fragments.mainFragments.LibraryFragment;
 import com.djymini.echoostation.fragments.TrueMusicPlayer;
-import com.djymini.echoostation.fragments.playlistMusicFragment.PlaylistPersoFragment;
 import com.djymini.echoostation.utilities.Constants;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 public class Navigator {
+    private final Activity activity;
     private final FragmentManager fragmentManager;
     private final FragmentInitializer fragmentInitializer;
     private final Toolbar toolbar;
@@ -52,6 +52,7 @@ public class Navigator {
         this.bottomNavMenu = bottomNavMenu;
         this.playerViewModel = playerViewModel;
         this.fragmentInitializer = new FragmentInitializer();
+        this.activity = activity;
         this.trueMusicPlayer = new TrueMusicPlayer(view, lifecycleOwner, storeOwner, context, activity);
         this.context = context;
 
@@ -91,9 +92,8 @@ public class Navigator {
             transaction.show(fragment);
         }
 
-        if (activeFragment != null && activeFragment.isAdded()) {
-            transaction.hide(activeFragment);
-        }
+        transaction.hide(activeFragment);
+
         transaction.commit();
 
         if(changeTheTitle)
@@ -107,9 +107,7 @@ public class Navigator {
         if (fragment == null) return;
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if (activeFragment != null && activeFragment.isAdded()) {
-            transaction.remove(activeFragment);
-        }
+        transaction.remove(activeFragment);
 
         if (!fragment.isAdded()) {
             transaction.add(R.id.frame_layout, fragment);
@@ -197,6 +195,11 @@ public class Navigator {
             String tag = String.valueOf(item.getItemId());
             if (fragmentForLoad != null) {
                 showFragment(fragmentForLoad, true);
+                AppCompatActivity appCompatActivity = (AppCompatActivity) activity;
+                if (appCompatActivity != null && appCompatActivity.getSupportActionBar() != null) {
+                    appCompatActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                    appCompatActivity.getSupportActionBar().setHomeAsUpIndicator(null);
+                }
                 return true;
             }
             return false;

@@ -18,14 +18,14 @@ import java.util.concurrent.Executors;
 
 import com.djymini.echoostation.helpers.AppInitializer;
 import com.djymini.echoostation.helpers.DeleteManager;
-import com.djymini.echoostation.viewModels.loaderDefaultPlaylistAndMixViewModel.LoaderDefaultPlaylistAndMixViewModel;
+import com.djymini.echoostation.viewModels.playlistAndMixViewModel.PlaylistAndMixViewModel;
 import com.djymini.echoostation.helpers.MusicScanner;
 import com.djymini.echoostation.helpers.Navigator;
 import com.djymini.echoostation.helpers.PermissionManager;
 import com.djymini.echoostation.services.DatabaseService;
 import com.djymini.echoostation.ui.MusicDialogManager;
 import com.djymini.echoostation.viewModels.MusicPlayerViewModel;
-import com.djymini.echoostation.viewModels.loaderDefaultPlaylistAndMixViewModel.LoaderDefaultPlaylistAndMixViewModelFactory;
+import com.djymini.echoostation.viewModels.playlistAndMixViewModel.PlaylistAndMixViewModelFactory;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMediaViewModel;
 import com.djymini.echoostation.viewModels.loaderMediaViewModel.LoaderMusicViewModelFactory;
 import com.djymini.echoostation.viewModels.musicScannerViewModel.MusicScannerViewModelFactory;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean hasPermission = false;
     private final Executor executor = Executors.newSingleThreadExecutor();
 
-    public LoaderDefaultPlaylistAndMixViewModel loaderDefaultPlaylistAndMixViewModel;
+    public PlaylistAndMixViewModel playlistAndMixViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +120,12 @@ public class MainActivity extends AppCompatActivity {
         );
         loaderMediaViewModel = new ViewModelProvider(this, factory).get(LoaderMediaViewModel.class);
 
-        LoaderDefaultPlaylistAndMixViewModelFactory factory2 = new LoaderDefaultPlaylistAndMixViewModelFactory(
+        PlaylistAndMixViewModelFactory factory2 = new PlaylistAndMixViewModelFactory(
                 dbService.getMusicDao(),
                 dbService.getMusicService(),
                 executor
         );
-        loaderDefaultPlaylistAndMixViewModel = new ViewModelProvider(this, factory2).get(LoaderDefaultPlaylistAndMixViewModel.class);
+        playlistAndMixViewModel = new ViewModelProvider(this, factory2).get(PlaylistAndMixViewModel.class);
     }
 
     private void setupButtons() {
@@ -174,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
     private void scanDeviceMusic() {
         musicScannerViewModel.startScan();
     }
-
     public void openLibraryTab(int tabIndex) {
         navigator.openLibraryTab(tabIndex);
     }

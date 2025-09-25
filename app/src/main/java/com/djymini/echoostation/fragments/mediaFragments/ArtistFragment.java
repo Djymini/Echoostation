@@ -14,7 +14,7 @@ import android.widget.ArrayAdapter;
 import com.djymini.echoostation.R;
 import com.djymini.echoostation.adapters.ArtistAdapter;
 import com.djymini.echoostation.dtos.ArtistDto;
-import com.djymini.echoostation.fragments.mediaDetailFragment.ArtistInfoFragment;
+import com.djymini.echoostation.fragments.mediaDetailFragment.ArtistDetailFragment;
 import com.djymini.echoostation.helpers.MediaItemHelper;
 import com.djymini.echoostation.helpers.RecyclerViewHelper;
 import com.djymini.echoostation.utilities.SortOption;
@@ -61,7 +61,7 @@ public class ArtistFragment extends MediaFragment<ArtistDto, ArtistAdapter> {
         recyclerView.setBubbleTextColor(ContextCompat.getColor(requireContext(), R.color.colorText));
         recyclerView.setHandleColor(ContextCompat.getColor(requireContext(), R.color.colorThird));
 
-        adapter.setOnItemClickListener(position -> main.navigator.showFragment(ArtistInfoFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle));
+        adapter.setOnItemClickListener(position -> main.navigator.showFragment(ArtistDetailFragment.newInstance(adapter.getCurrentList().get(position), R.id.library), changeTheTitle));
     }
 
     private void setupSpinner() {
